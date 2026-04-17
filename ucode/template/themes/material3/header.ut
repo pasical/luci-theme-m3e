@@ -26,6 +26,28 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
+		<script>
+		(function () {
+			var html = document.documentElement;
+			var mode = html.getAttribute('data-darkmode') || 'auto';
+			var manual = null;
+
+			try {
+				manual = localStorage.getItem('luci-theme-manual');
+			} catch (e) {
+				manual = null;
+			}
+
+			if (manual === 'true' || manual === 'false') {
+				mode = manual;
+			} else if (mode === 'auto') {
+				mode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'true' : 'false';
+			}
+
+			html.setAttribute('data-darkmode', mode);
+			html.style.colorScheme = (mode === 'true') ? 'dark' : 'light';
+		}());
+		</script>
 		<link rel="stylesheet" href="{{ media }}/cascade.css">
 		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css" />
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
@@ -223,24 +245,18 @@
 			// 初始化主题（自动检测+记忆手动设置）
 			function initTheme() {
 				const manualMode = localStorage.getItem('luci-theme-manual');
+				const currentMode = html.getAttribute('data-darkmode');
 				const autoMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'true' : 'false';
-				const initMode = manualMode || autoMode;
-				
-				// 添加过渡类
-				html.classList.add('theme-transition');
+				const initMode = manualMode || currentMode || autoMode;
+
 				html.setAttribute('data-darkmode', initMode);
 				updateToggleState(initMode);
-				
-				// 移除过渡类
-				setTimeout(() => {
-					html.classList.remove('theme-transition');
-				}, transitionDuration);
 			}
 
 			// 更新开关状态
 			function updateToggleState(isDark) {
 				if (toggle) {
-					toggle.checked = isDark === 'true';
+					toggle.setAttribute('aria-pressed', isDark === 'true' ? 'true' : 'false');
 					// 添加切换动画
 					toggle.classList.add('theme-switching');
 					setTimeout(() => {
