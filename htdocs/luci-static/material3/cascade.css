@@ -210,6 +210,9 @@
 		--md-sys-color-refresh-button-hover: #a9a0c2;
 		--md-sys-color-font: #000;
 		--md-sys-color-light: #fff;
+		--background-color-h: 256;
+		--background-color-s: 10%;
+		--md-sys-color-surface-dim: hsl(var(--background-color-h), var(--background-color-s), 94%);
 	}
 
 	:root[data-theme="blue"] {
@@ -250,8 +253,8 @@
 		--md-sys-color-font: #000;
 		--md-sys-color-light: #fff;
 		--background-color-h: 160;
-		--background-color-s: 30%;
-		--md-sys-color-surface-dim: hsl(var(--background-color-h), var(--background-color-s), 91%);
+		--background-color-s: 8%;
+		--md-sys-color-surface-dim: hsl(var(--background-color-h), var(--background-color-s), 94%);
 	}
 
 	:root[data-theme="red"] {
@@ -271,7 +274,7 @@
 		--md-sys-color-font: #000;
 		--md-sys-color-light: #fff;
 		--background-color-h: 10;
-		--background-color-s: 35%;
+		--background-color-s: 10%;
 		--md-sys-color-surface-dim: hsl(var(--background-color-h), var(--background-color-s), 94%);
 	}
 
@@ -284,6 +287,8 @@
 		--md-sys-color-refresh-button-hover: color-mix(in srgb, var(--md-sys-color-primary) 50%, transparent);
 		--md-sys-color-dropdown-hover: color-mix(in srgb, var(--md-sys-color-primary-container) 20%, transparent);
 		--md-sys-color-primary-container-hover: color-mix(in srgb, var(--md-sys-color-primary-container) 50%, transparent);
+		--background-color-h: 256;
+		--background-color-s: 10%;
 	}
 
 	[data-darkmode=true][data-theme="blue"] {
