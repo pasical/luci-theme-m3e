@@ -8,17 +8,9 @@ on:
   workflow_call:
 
 jobs:
-  build:
-    name: ${{ matrix.branch }}
+  build-24_10-ipk:
+    name: openwrt-24.10 (ipk)
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        arch:
-          - x86_64
-        branch:
-          - openwrt-24.10
-          - SNAPSHOT
 
     steps:
       - name: checkout
@@ -30,14 +22,40 @@ jobs:
       - name: build
         uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: ${{ matrix.arch }}-${{ matrix.branch }}
+          ARCH: x86_64-openwrt-24.10
           PACKAGES: ${{ github.event.repository.name }}
           NO_REFRESH_CHECK: true
 
       - name: upload
         uses: actions/upload-artifact@v5
         with:
-          name: ${{ matrix.branch }}-packages
+          name: openwrt-24.10-ipk
           path: |
-            bin/packages/${{ matrix.arch }}/action/*.ipk
-            bin/packages/${{ matrix.arch }}/action/*.apk
+            bin/packages/x86_64/action/*.ipk
+          if-no-files-found: error
+
+  build-snapshot-apk:
+    name: SNAPSHOT (apk)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          path: ${{ github.event.repository.name }}
+
+      - name: build
+        uses: openwrt/gh-action-sdk@main
+        env:
+          ARCH: x86_64-SNAPSHOT
+          PACKAGES: ${{ github.event.repository.name }}
+          NO_REFRESH_CHECK: true
+
+      - name: upload
+        uses: actions/upload-artifact@v5
+        with:
+          name: snapshot-apk
+          path: |
+            bin/packages/x86_64/action/*.apk
+          if-no-files-found: error
