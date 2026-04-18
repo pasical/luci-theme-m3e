@@ -11,10 +11,6 @@ uci set luci.themes.M3ERed=/luci-static/m3e-red
 uci -q delete luci.themes.M3E-Blue
 uci -q delete luci.themes.M3E-Green
 uci -q delete luci.themes.M3E-Red
-uci -q delete luci.themes.Material3
-uci -q delete luci.themes.Material3Blue
-uci -q delete luci.themes.Material3Green
-uci -q delete luci.themes.Material3Red
 
 if [ "$PKG_UPGRADE" != 1 ]; then
 	uci set luci.main.mediaurlbase=/luci-static/m3e

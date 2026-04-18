@@ -21,8 +21,8 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           pattern: |
-            openwrt-24.10-ipk
-            snapshot-apk
+            openwrt-24.10-packages
+            SNAPSHOT-packages
           merge-multiple: true
 
       - name: Create Release

@@ -6,10 +6,10 @@
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=M3E Theme
+LUCI_TITLE:=A Material 3 Expressive theme
 LUCI_DEPENDS:=
-PKG_VERSION:=0.0.1
-PKG_RELEASE:=2
+PKG_VERSION:=0.1.0
+PKG_RELEASE:=1
 
 PKG_LICENSE:=Apache-2.0
 
@@ -22,11 +22,8 @@ define Package/luci-theme-m3e/postrm
 	uci -q delete luci.themes.M3ERed
 	uci -q delete luci.themes.M3E-Blue
 	uci -q delete luci.themes.M3E-Green
-	uci -q delete luci.themes.M3E-Red	uci -q delete luci.themes.M3E-Blue
-	uci -q delete luci.themes.M3E-Green
-	uci -q delete luci.themes.M3E-Red	uci set luci.main.mediaurlbase='/luci-static/bootstrap'
-	# uci -q delete luci.themes.M3EDark
-	# uci -q delete luci.themes.M3ELight
+	uci -q delete luci.themes.M3E-Red
+	uci set luci.main.mediaurlbase='/luci-static/bootstrap'
 	uci commit luci
 }
 endef

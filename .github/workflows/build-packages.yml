@@ -11,15 +11,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - arch: x86_64
-            branch: openwrt-24.10
-            artifact_name: openwrt-24.10-ipk
-            package_glob: '*.ipk'
-          - arch: x86_64
-            branch: SNAPSHOT
-            artifact_name: snapshot-apk
-            package_glob: '*.apk'
+        arch:
+          - x86_64
+        branch:
+          - openwrt-24.10
+          - SNAPSHOT
 
     steps:
       - name: checkout
@@ -38,7 +34,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v5
         with:
-          name: ${{ matrix.artifact_name }}
+          name: ${{ matrix.branch }}-packages
           path: |
-            bin/packages/${{ matrix.arch }}/action/${{ matrix.package_glob }}
-          if-no-files-found: error
+            bin/packages/${{ matrix.arch }}/action/*.ipk
+            bin/packages/${{ matrix.arch }}/action/*.apk
