@@ -1,8 +1,5 @@
 name: release-packages
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 on:
   push:
     tags:
@@ -24,7 +21,7 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           pattern: |
-            openwrt-23.05.5-ipk
+            openwrt-24.10-ipk
             snapshot-apk
           merge-multiple: true
 

@@ -1,16 +1,25 @@
 name: build-packages
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 on:
   workflow_dispatch:
   workflow_call:
 
 jobs:
-  build-23_05-ipk:
-    name: openwrt-23.05.5 (ipk)
+  build:
+    name: ${{ matrix.branch }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            branch: openwrt-24.10
+            artifact_name: openwrt-24.10-ipk
+            package_glob: '*.ipk'
+          - arch: x86_64
+            branch: SNAPSHOT
+            artifact_name: snapshot-apk
+            package_glob: '*.apk'
 
     steps:
       - name: checkout
@@ -22,57 +31,14 @@ jobs:
       - name: build
         uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: x86_64-openwrt-23.05.5
-          PACKAGES: ${{ github.event.repository.name }}
-          NO_REFRESH_CHECK: true
-
-      - name: validate ipk
-        shell: bash
-        run: |
-          shopt -s nullglob
-          packages=(bin/packages/x86_64/action/*.ipk)
-
-          if [[ ${#packages[@]} -eq 0 ]]; then
-            echo "No ipk package was produced"
-            exit 1
-          fi
-
-          for package in "${packages[@]}"; do
-            echo "Checking ${package}"
-            file "${package}"
-            ar t "${package}" >/dev/null
-          done
-
-      - name: upload
-        uses: actions/upload-artifact@v5
-        with:
-          name: openwrt-23.05.5-ipk
-          path: |
-            bin/packages/x86_64/action/*.ipk
-          if-no-files-found: error
-
-  build-snapshot-apk:
-    name: SNAPSHOT (apk)
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
-          path: ${{ github.event.repository.name }}
-
-      - name: build
-        uses: openwrt/gh-action-sdk@main
-        env:
-          ARCH: x86_64-SNAPSHOT
+          ARCH: ${{ matrix.arch }}-${{ matrix.branch }}
           PACKAGES: ${{ github.event.repository.name }}
           NO_REFRESH_CHECK: true
 
       - name: upload
         uses: actions/upload-artifact@v5
         with:
-          name: snapshot-apk
+          name: ${{ matrix.artifact_name }}
           path: |
-            bin/packages/x86_64/action/*.apk
+            bin/packages/${{ matrix.arch }}/action/${{ matrix.package_glob }}
           if-no-files-found: error
