@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-23_05-ipk:
-    name: openwrt-23.05 (ipk)
+    name: openwrt-23.05.5 (ipk)
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
       - name: build
         uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: x86_64-23.05.5
+          ARCH: x86_64-openwrt-23.05.5
           PACKAGES: ${{ github.event.repository.name }}
           NO_REFRESH_CHECK: true
 
@@ -46,7 +46,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v5
         with:
-          name: openwrt-23.05-ipk
+          name: openwrt-23.05.5-ipk
           path: |
             bin/packages/x86_64/action/*.ipk
           if-no-files-found: error

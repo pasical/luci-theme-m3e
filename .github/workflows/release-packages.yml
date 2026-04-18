@@ -23,6 +23,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v5
         with:
+          pattern: |
+            openwrt-23.05.5-ipk
+            snapshot-apk
           merge-multiple: true
 
       - name: Create Release
