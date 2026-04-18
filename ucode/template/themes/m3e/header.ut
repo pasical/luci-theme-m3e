@@ -12,9 +12,9 @@
 	const darkpref = uci.get('luci', 'main', 'darkmode') || 'auto';
 	let themepref = null;
 	switch (theme) {
-		case 'material3-blue': themepref = 'blue'; break;
-		case 'material3-green': themepref = 'green'; break;
-		case 'material3-red': themepref = 'red'; break;
+		case 'm3e-blue': themepref = 'blue'; break;
+		case 'm3e-green': themepref = 'green'; break;
+		case 'm3e-red': themepref = 'red'; break;
 	}
 
 	http.prepare_content('text/html; charset=UTF-8');

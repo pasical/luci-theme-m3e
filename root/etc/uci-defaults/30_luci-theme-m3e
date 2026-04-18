@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Keep M3E paths in its own namespace so it can coexist with luci-theme-material3.
+uci set luci.themes.M3E=/luci-static/m3e
+uci set luci.themes.M3E-Blue=/luci-static/m3e-blue
+uci set luci.themes.M3E-Green=/luci-static/m3e-green
+uci set luci.themes.M3E-Red=/luci-static/m3e-red
+
+if [ "$PKG_UPGRADE" != 1 ]; then
+	uci set luci.main.mediaurlbase=/luci-static/m3e
+fi
+
+uci commit luci
+
+exit 0

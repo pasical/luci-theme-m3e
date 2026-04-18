@@ -15,7 +15,7 @@
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"></ul>
 		</footer>
 		</div>
-				<script>L.require('menu-material3')</script>
+				<script>L.require('menu-m3e')</script>
 		{% endif %}
 	</body>
 </html>
