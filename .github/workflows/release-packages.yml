@@ -4,12 +4,9 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version (e.g. v1.0.0)'
-        required: true
-        type: string
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -31,8 +28,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.version }}
-          name: Release ${{ inputs.version }}
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
           generate_release_notes: true
