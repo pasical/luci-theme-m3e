@@ -22,7 +22,7 @@ jobs:
       - name: build
         uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: x86_64-openwrt-23.05
+          ARCH: x86_64-23.05.5
           PACKAGES: ${{ github.event.repository.name }}
           NO_REFRESH_CHECK: true
 
