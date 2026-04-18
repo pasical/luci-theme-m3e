@@ -1,19 +1,23 @@
 #!/bin/sh
 
-# Keep M3E in a separate namespace while reusing existing material3 static directories.
+# M3E Theme UCI configuration
 # Use option names without '-' for better UCI compatibility.
-uci set luci.themes.M3E=/luci-static/material3
-uci set luci.themes.M3EBlue=/luci-static/material3-blue
-uci set luci.themes.M3EGreen=/luci-static/material3-green
-uci set luci.themes.M3ERed=/luci-static/material3-red
+uci set luci.themes.M3E=/luci-static/m3e
+uci set luci.themes.M3EBlue=/luci-static/m3e-blue
+uci set luci.themes.M3EGreen=/luci-static/m3e-green
+uci set luci.themes.M3ERed=/luci-static/m3e-red
 
 # Clean up legacy keys from previous naming experiments.
 uci -q delete luci.themes.M3E-Blue
 uci -q delete luci.themes.M3E-Green
 uci -q delete luci.themes.M3E-Red
+uci -q delete luci.themes.Material3
+uci -q delete luci.themes.Material3Blue
+uci -q delete luci.themes.Material3Green
+uci -q delete luci.themes.Material3Red
 
 if [ "$PKG_UPGRADE" != 1 ]; then
-	uci set luci.main.mediaurlbase=/luci-static/material3
+	uci set luci.main.mediaurlbase=/luci-static/m3e
 fi
 
 uci commit luci
