@@ -26,6 +26,23 @@ jobs:
           PACKAGES: ${{ github.event.repository.name }}
           NO_REFRESH_CHECK: true
 
+      - name: validate ipk
+        shell: bash
+        run: |
+          shopt -s nullglob
+          packages=(bin/packages/x86_64/action/*.ipk)
+
+          if [[ ${#packages[@]} -eq 0 ]]; then
+            echo "No ipk package was produced"
+            exit 1
+          fi
+
+          for package in "${packages[@]}"; do
+            echo "Checking ${package}"
+            file "${package}"
+            ar t "${package}" >/dev/null
+          done
+
       - name: upload
         uses: actions/upload-artifact@v5
         with:
