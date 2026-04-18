@@ -10,7 +10,7 @@
 	*
 	* Designed and built with all the love in the world @twitter by @mdo and @fat.
 	*
-	* LuCI Material3 Theme
+	* LuCI M3E Theme
 	* Copyright 2024 AngelaCooljx
 	* By AngelaCooljx <bilibili@att.net>
 	* Based on LuCI Bootstrap Theme
@@ -137,7 +137,7 @@
 		--md-sys-color-on-surface: var(--text-color-highest);
 		--md-sys-color-surface-dim: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) - 5%));
 		--md-sys-color-surface-bright: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) + 5%));
-		/* 状态层透明度 (Material3标准) */
+		/* 状态层透明度 (M3E 标准) */
 		--state-layer-hover-opacity: 0.08;
 		--state-layer-focus-opacity: 0.12;
 		--state-layer-pressed-opacity: 0.12;
@@ -332,7 +332,7 @@
 	}
 
 	:root[data-darkmode=true] {
-		/* Material3暗色表面系统 */
+		/* M3E 暗色表面系统 */
 		--md-sys-color-surface: hsl(var(--background-color-h), var(--background-color-s), 6%);
 		--md-sys-color-surface-dim: hsl(var(--background-color-h), var(--background-color-s), 12%);
 		--md-sys-color-surface-translucent: hsla(var(--background-color-h), var(--background-color-s), 12%, 0.84);
@@ -344,7 +344,7 @@
 		/* 文字对比度增强 */
 		--text-color-medium-hsl: var(--text-color-h), var(--text-color-s), 85%;
 		--text-color-low-hsl: var(--text-color-h), var(--text-color-s), 65%;
-		/* 强制文字颜色为Material3的on-surface色系 */
+		/* 强制文字颜色为 M3E 的 on-surface 色系 */
 		--text-color-highest: hsl(0, 0%, 100%);
 		/* 纯白 - 主要文字 */
 		--text-color-high: hsl(0, 0%, 90%);
