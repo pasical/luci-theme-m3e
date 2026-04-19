@@ -565,11 +565,13 @@
 	input[type=submit] {
 		cursor: pointer;
 		-webkit-appearance: button;
+		appearance: button;
 		word-break: break-all
 	}
 
 	input[type=search] {
 		-webkit-appearance: textfield;
+		appearance: textfield;
 		box-sizing: content-box
 	}
 
@@ -745,10 +747,6 @@
 
 	ol {
 		list-style: decimal
-	}
-
-	li {
-		/* color: var(--text-color-medium); */
 	}
 
 	.cbi-button-down,
@@ -1970,10 +1968,6 @@
 		/* color: #fff; */
 	}
 
-	.cbi-dropdown>ul>li[display] {
-		/* color: var(--md-sys-color-primary); */
-	}
-
 	.cbi-value-field em {
 		color: var(--md-sys-color-primary);
 	}
@@ -3129,11 +3123,6 @@
 		border-color var(--transition-color);
 	}
 
-	header .pull-right {
-		/* padding-top: 0; */
-		/* display: flex; */
-	}
-
 	h1,
 	h2,
 	h3 {
@@ -3293,10 +3282,6 @@
 	.cbi-progressbar {
 		background: var(--md-sys-color-progressbar);
 		border: none;
-		/* border-radius: 20px; */
-	}
-
-	.cbi-progressbar>div {
 		/* border-radius: 20px; */
 	}
 
