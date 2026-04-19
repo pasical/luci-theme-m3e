@@ -193,7 +193,7 @@
 		--on-warn-color: var(--text-color-highest);
 		--disabled-opacity: .7;
 		color-scheme: light;
-		--sidebar-width: 240px;
+		--sidebar-width: 220px;
 		--header-height: 4rem;
 		--md-sys-color-primary: hsl(256, 34%, 48%);
 		--md-sys-color-primary-container: hsl(263, 65%, 92%);
@@ -1492,8 +1492,8 @@
 		background: var(--md-sys-color-primary-container);
 		color: #000;
 		font-size: 15px;
-		height: 38px;
-		border-radius: 20px;
+		height: 42px;
+		border-radius: 21px;
 		padding: 0;
 		white-space: nowrap;
 		min-width: fit-content;
@@ -2065,6 +2065,7 @@
 	.cbi-progressbar>div {
 		background: var(--md-sys-color-primary);
 		height: 100%;
+		border-radius: 20px;
 		transition: width .25s ease-in;
 		width: 0%
 	}
@@ -2896,7 +2897,7 @@
 	.nav {
 		flex-direction: column;
 		margin: 0;
-		padding: 1rem;
+		padding: 1rem 0.5rem 1rem 1rem;
 		float: none
 	}
 
@@ -3289,7 +3290,8 @@
 	.cbi-progressbar {
 		background: var(--md-sys-color-progressbar);
 		border: none;
-		/* border-radius: 20px; */
+		border-radius: 20px;
+		overflow: hidden;
 	}
 
 	.table .td,
