@@ -54,8 +54,8 @@ header h3 a {
 		padding: 1rem !important;
 	}
 
-	footer {
-		padding: 1rem !important; /* Remove large side padding on mobile */
+	footer.footer-m3e {
+		padding: 2.5rem 1rem 1rem !important; /* Keep top padding for the wavy line */
 	}
 
 	.modal {
