@@ -1318,10 +1318,12 @@
 
 	header .brand {
 		flex: 0 1 auto;
-		text-align: center;
-		float: left;
+		text-align: left;
 		display: block;
-		color: #404040
+		color: #404040;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	header .pull-right {
@@ -1413,25 +1415,30 @@
 		--tab-active-background-color: var(--background-color-high);
 		--tab-active-text-color: #0069d6;
 		--tab-active-border-color: var(--border-color-medium);
-		margin: 0 0px 10px;
-		/* padding: 0 2px; */
+		margin: 0 0 12px;
 		list-style: none;
-		display: inline-flex;
+		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
 		background: var(--md-sys-color-card);
-		border-radius: 1rem
+		border-radius: 1.5rem;
+		gap: 6px;
+		padding: 6px;
 	}
 
 	.cbi-tabmenu>li>a,
 	.tabs>li>a {
-		padding: 0 6px;
+		padding: 0 16px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		color: inherit;
 		text-decoration: none;
-		line-height: 26px;
-		outline: 0
+		outline: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
 	}
 
 	.cbi-tabmenu>li:hover,
@@ -1472,9 +1479,10 @@
 
 	.cbi-tabmenu>li,
 	.tabs>li {
-		flex: 0 1 auto;
+		flex: 1 1 auto;
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		background: var(--tab-active-background-color);
 		border: 1px solid var(--tab-active-border-color);
 		border-bottom: none;
@@ -1483,13 +1491,12 @@
 		margin: 0;
 		background: var(--md-sys-color-primary-container);
 		color: #000;
-		font-size: 14px;
-		height: 32px;
-		border-radius: 1rem;
-		padding: 0 12px;
-		display: flex;
-		align-items: center;
-		white-space: nowrap
+		font-size: 15px;
+		height: 38px;
+		border-radius: 20px;
+		padding: 0;
+		white-space: nowrap;
+		min-width: fit-content;
 	}
 
 	.cbi-dropdown.btn.spinning>ul:not(.dropdown),
@@ -3130,8 +3137,8 @@
 	}
 
 	header .brand {
-		/* padding: 0 57px 1px; */
-		width: var(--sidebar-width);
+		/* width: var(--sidebar-width); Removed so long title extends naturally into header space */
+		padding-left: 2rem; /* Add clear spacing from left edge */
 		font-size: 25px;
 		line-height: 40px
 	}
@@ -3337,11 +3344,11 @@
 		box-shadow: none
 	}
 
-	[data-page^=admin-services-openclash] .tabs>li:last-child {
+	[data-page^=admin-services-openclash] #cbi-openclash .tabs>li:last-child {
 		justify-content: center
 	}
 
-	[data-page^=admin-services-openclash] ul li a {
+	[data-page^=admin-services-openclash] #cbi-openclash .tabs li a {
 		margin: auto
 	}
 
