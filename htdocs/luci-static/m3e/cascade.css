@@ -193,7 +193,7 @@
 		--on-warn-color: var(--text-color-highest);
 		--disabled-opacity: .7;
 		color-scheme: light;
-		--sidebar-width: 220px;
+		--sidebar-width: 195px;
 		--header-height: 4rem;
 		--md-sys-color-primary: hsl(256, 34%, 48%);
 		--md-sys-color-primary-container: hsl(263, 65%, 92%);
@@ -2563,7 +2563,7 @@
 	}
 
 	.nav>li>a {
-		padding: 0.6rem 1rem;
+		padding: 0.6rem 0.8rem;
 		margin: 0.2rem 0.4rem;
 		border-radius: 2rem;
 		line-height: 1.5rem;
@@ -2910,7 +2910,7 @@
 		align-items: center;
 		color: var(--text-color-high);
 		border-radius: 2rem;
-		padding: 0.6rem 1rem;
+		padding: 0.6rem 0.8rem;
 	}
 
 	.nav>li>a::before {
@@ -3396,7 +3396,7 @@
 
 	@keyframes m3-state-layer {
 		0% {
-			transform: scaleX(0);
+			transform: scaleX(0.7);
 			opacity: 0.2;
 		}
 		50% {
