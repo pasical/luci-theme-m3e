@@ -193,7 +193,7 @@
 		--on-warn-color: var(--text-color-highest);
 		--disabled-opacity: .7;
 		color-scheme: light;
-		--sidebar-width: clamp(180px, 18vw, 320px);
+		--sidebar-width: clamp(180px, 10vw, 320px);
 		--header-height: 4rem;
 		--md-sys-color-primary: hsl(256, 34%, 48%);
 		--md-sys-color-primary-container: hsl(263, 65%, 92%);
@@ -1458,8 +1458,21 @@
 
 	.cbi-tabmenu>li:hover,
 	.tabs>li:hover {
-		background: rgba(0, 0, 0, .05);
 		transition: .3s
+	}
+	.cbi-tabmenu>li::before,
+	.tabs>li::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background-color: transparent;
+		pointer-events: none;
+		transition: background-color .3s;
+	}
+	.cbi-tabmenu>li:hover::before,
+	.tabs>li:hover::before {
+		background-color: rgba(0, 0, 0, .05);
 	}
 
 	.cbi-tabmenu>li>a:focus-visible,
@@ -1480,7 +1493,12 @@
 	.tabs>li:not(.active) {
 		color: var(--tab-inactive-text-color);
 		background: 0 0;
-		border: none
+		border: none;
+		font-weight: 400;
+	}
+	.tabs>li.active,
+	.cbi-tabmenu>li.cbi-tab-active {
+		font-weight: 500;
 	}
 
 	.breadcrumb .active a,
@@ -1488,8 +1506,8 @@
 		color: var(--text-color-medium)
 	}
 
-	.tabs>li:hover {
-		background: rgba(128, 128, 128, 0.1)
+	.tabs>li:hover::before {
+		background-color: rgba(128, 128, 128, 0.1);
 	}
 
 	.cbi-tabmenu>li,
@@ -3417,11 +3435,24 @@
 	.tabs>li {
 		position: relative;
 		overflow: hidden;
+		z-index: 0;
 		
 	}
 
 	.cbi-tabmenu>.cbi-tab:hover {
-		background: var(--md-sys-color-primary-container-hover);
+		transition: .3s;
+	}
+	.cbi-tabmenu>.cbi-tab::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background-color: transparent;
+		pointer-events: none;
+		transition: background-color .3s;
+	}
+	.cbi-tabmenu>.cbi-tab:hover::before {
+		background-color: var(--md-sys-color-primary-container-hover);
 	}
 
 	.ripple {
