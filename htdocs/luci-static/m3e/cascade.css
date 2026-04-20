@@ -193,7 +193,7 @@
 		--on-warn-color: var(--text-color-highest);
 		--disabled-opacity: .7;
 		color-scheme: light;
-		--sidebar-width: 195px;
+		--sidebar-width: minmax(160px, max-content);
 		--header-height: 4rem;
 		--md-sys-color-primary: hsl(256, 34%, 48%);
 		--md-sys-color-primary-container: hsl(263, 65%, 92%);
@@ -1596,7 +1596,6 @@
                 color: var(--text-color-medium);
         }
 
-	/* Fallback in case a rogue </div> from third-party plugins pushes footer into body */
 	body > footer.footer-m3e {
 		grid-area: main;
 		align-self: end;
@@ -3378,7 +3377,8 @@
 	.nav>li>a,
 	.tabs>li {
 		position: relative;
-		overflow: hidden
+		overflow: hidden;
+		isolation: isolate;
 	}
 
 	.cbi-tabmenu>.cbi-tab:hover {
@@ -3392,28 +3392,26 @@
 		width: 100%;
 		height: 100%;
 		border-radius: inherit;
-		background-color: var(--md-sys-color-primary, currentColor);
+		background-color: var(--md-sys-color-primary-container);
 		pointer-events: none;
 		transform-origin: center;
-		animation: .4s cubic-bezier(0.2, 0, 0, 1) m3-state-layer forwards;
+		animation: .3s cubic-bezier(0.2, 0, 0, 1) m3-state-layer forwards;
+		z-index: -1;
 	}
 
 	@keyframes m3-state-layer {
 		0% {
 			transform: scaleX(0.7);
-			opacity: 0.2;
-		}
-		50% {
-			opacity: 0.15;
+			opacity: 1;
 		}
 		100% {
 			transform: scaleX(1);
-			opacity: 0;
+			opacity: 1;
 		}
 	}
 
 	[data-darkmode=true] .ripple {
-		background-color: var(--md-sys-color-primary, currentColor);
+		background-color: var(--md-sys-color-primary-container);
 	}
 
 	header [data-indicator] {
