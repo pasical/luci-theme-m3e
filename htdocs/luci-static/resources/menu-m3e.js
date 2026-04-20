@@ -11,6 +11,13 @@ return baseclass.extend({
 	},
 
 	createRipple: function (event, target) {
+		// 如果元素已经处于 active 状态，直接阻断水波纹渲染，避免重复触发和离场动画
+		var p = target.parentNode;
+		if ((p && p.classList && (p.classList.contains('active') || p.classList.contains('cbi-tab-active'))) ||
+			(target.classList && (target.classList.contains('active') || target.classList.contains('cbi-tab-active') || target.classList.contains('open')))) {
+			return;
+		}
+
 		// 移除已有的水波纹
 		var oldRipple = target.querySelector('.ripple');
 		if (oldRipple) {

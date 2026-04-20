@@ -193,7 +193,7 @@
 		--on-warn-color: var(--text-color-highest);
 		--disabled-opacity: .7;
 		color-scheme: light;
-		--sidebar-width: clamp(240px, 18vw, 320px);
+		--sidebar-width: minmax(180px, max-content);
 		--header-height: 4rem;
 		--md-sys-color-primary: hsl(256, 34%, 48%);
 		--md-sys-color-primary-container: hsl(263, 65%, 92%);
@@ -2571,6 +2571,8 @@
 	.cbi-filebrowser>*,
 	.dropdown-menu li a,
 	.nav>li>a {
+		/* 限定最大宽度以允许 max-content 完美收缩至最长250px但阻止无限网格溢出 */
+		max-width: 250px;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -3438,14 +3440,7 @@
                 z-index: -1;
         }
 
-        /* 隐藏已经是 active 状态元素内的波纹，防止重复点击动画 */
-        .active > a > .ripple,
-        .active > .ripple,
-        li.active .ripple,
-        .cbi-tab .ripple,
-        .cbi-tab-active .ripple {
-                display: none !important;
-        }
+        
 
         @keyframes m3-state-layer {
                 0% {
