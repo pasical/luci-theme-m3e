@@ -1468,6 +1468,7 @@
 		border-radius: inherit;
 		background-color: transparent;
 		pointer-events: none;
+		z-index: -1;
 		transition: background-color .3s;
 	}
 	.cbi-tabmenu>li:hover::before,
@@ -3449,6 +3450,7 @@
 		border-radius: inherit;
 		background-color: transparent;
 		pointer-events: none;
+		z-index: -1;
 		transition: background-color .3s;
 	}
 	.cbi-tabmenu>.cbi-tab:hover::before {
@@ -3466,7 +3468,7 @@
                 pointer-events: none;
                 transform-origin: center;
                 animation: .3s cubic-bezier(0.2, 0, 0, 1) m3-state-layer forwards;
-                z-index: -1;
+                z-index: -2;
         }
 
         
