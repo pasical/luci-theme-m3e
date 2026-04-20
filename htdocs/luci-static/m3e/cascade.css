@@ -193,7 +193,7 @@
 		--on-warn-color: var(--text-color-highest);
 		--disabled-opacity: .7;
 		color-scheme: light;
-		--sidebar-width: minmax(160px, max-content);
+		--sidebar-width: clamp(240px, 18vw, 320px);
 		--header-height: 4rem;
 		--md-sys-color-primary: hsl(256, 34%, 48%);
 		--md-sys-color-primary-container: hsl(263, 65%, 92%);
@@ -1602,8 +1602,8 @@
 	/* Material 3 Expressive Footer */
         footer.footer-m3e {
                 position: relative;
-                margin: 2rem 5% 1rem 5%;
-                padding: 1.5rem 2rem 1rem;
+                margin: 2rem 5% 0.5rem 5%;
+		padding: 1rem 2rem 0.5rem;
                 background: var(--md-sys-color-surface);
                 display: flex;
                 flex-direction: column;
@@ -1616,7 +1616,7 @@
                 grid-area: main;
                 align-self: end;
                 width: auto;
-                z-index: 50;
+                z-index: 0;
         }
 
         .footer-wavy-line {
@@ -2090,6 +2090,7 @@
 		background: var(--md-sys-color-primary);
 		height: 100%;
 		
+		border-radius: 20px;
 		transition: width .25s ease-in;
 		width: 0%
 	}
@@ -2568,9 +2569,11 @@
 	}
 
 	.cbi-filebrowser>*,
-	.dropdown-menu li a {
+	.dropdown-menu li a,
+	.nav>li>a {
 		white-space: nowrap;
-		text-overflow: ellipsis
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.uci-dialog div>del,
@@ -3015,6 +3018,14 @@
 		font-weight: bold;
 	}
 
+	.nav>li.active:not(.dropdown)>a:hover,
+	.nav .dropdown-menu li.active>a:hover {
+		background-color: color-mix(in srgb, var(--text-color-highest) 5%, var(--md-sys-color-primary-container)) !important;
+	}
+	.nav>li.active.dropdown>a:hover {
+		background-color: color-mix(in srgb, var(--text-color-highest) 12%, transparent) !important;
+	}
+
 	.nav>li>a:hover,
 	.nav .dropdown-menu li a:hover {
 		background-color: color-mix(in srgb, var(--text-color-highest) 5%, transparent) !important;
@@ -3319,11 +3330,12 @@
 		background: var(--md-sys-color-progressbar);
 		border: none;
 		
+		border-radius: 20px;
 		/* overflow: hidden; Removed to fix text clipping bug */
 	}
 
 	.cbi-progressbar>div {
-		
+		border-radius: 20px;
 	}
 
 	.table .td,
@@ -3413,29 +3425,38 @@
 	}
 
 	.ripple {
-		position: absolute;
-		left: 0 !important;
-		top: 0 !important;
-		width: 100%;
-		height: 100%;
-		border-radius: inherit;
-		background-color: var(--md-sys-color-primary-container);
-		pointer-events: none;
-		transform-origin: center;
-		animation: .3s cubic-bezier(0.2, 0, 0, 1) m3-state-layer forwards;
-		z-index: -1;
-	}
+                position: absolute;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100%;
+                height: 100%;
+                border-radius: inherit;
+                background-color: var(--md-sys-color-primary-container);
+                pointer-events: none;
+                transform-origin: center;
+                animation: .3s cubic-bezier(0.2, 0, 0, 1) m3-state-layer forwards;
+                z-index: -1;
+        }
 
-	@keyframes m3-state-layer {
-		0% {
-			transform: scaleX(0.7);
-			opacity: 1;
-		}
-		100% {
-			transform: scaleX(1);
-			opacity: 1;
-		}
-	}
+        /* 隐藏已经是 active 状态元素内的波纹，防止重复点击动画 */
+        .active > a > .ripple,
+        .active > .ripple,
+        li.active .ripple,
+        .cbi-tab .ripple,
+        .cbi-tab-active .ripple {
+                display: none !important;
+        }
+
+        @keyframes m3-state-layer {
+                0% {
+                        transform: scaleX(0.7);
+                        opacity: 1;
+                }
+                100% {
+                        transform: scaleX(1);
+                        opacity: 1;
+                }
+        }
 
 	[data-darkmode=true] .ripple {
 		background-color: var(--md-sys-color-primary-container);
