@@ -2564,7 +2564,7 @@
 
 	.nav>li>a {
 		padding: 0.6rem 1rem;
-		margin: 0.2rem 0.6rem;
+		margin: 0.2rem 0.4rem;
 		border-radius: 2rem;
 		line-height: 1.5rem;
 		font-size: 14px;
@@ -3088,7 +3088,7 @@
 		color: var(--text-color-medium);
 		transition: .3s;
 		padding: .5rem 1rem;
-		margin: 0.1rem 0.6rem 0.1rem 1.2rem;
+		margin: 0.1rem 0.4rem 0.1rem 0.6rem; /* reduced left/right margin */
 		border-radius: 2rem;
 		display: block
 	}
@@ -3190,7 +3190,7 @@
 		padding: 0;
 		margin: 0;
 		border-radius: 0;
-		background: var(--background-color-medium);
+		background: transparent;
 		height: 0;
 		transition: height .3s ease-in-out;
 		overflow: hidden
@@ -3198,9 +3198,9 @@
 
 	.nav .dropdown-menu {
 		border: none;
-		backdrop-filter: blur(15px);
+		backdrop-filter: none;
 		box-shadow: none;
-		background: var(--md-sys-color-surface-translucent);
+		background: transparent;
 	}
 
 	header {
@@ -3271,12 +3271,12 @@
 	}
 
 	.nav>li>.dropdown-menu {
-		padding-left: 2.5rem
+		padding-left: 1rem
 	}
 
 	.nav>li.open>.dropdown-menu {
 		display: block;
-		background: 0 0
+		background: transparent;
 	}
 
 	.nav>li:has(>.dropdown-menu>li.active) {
@@ -3291,7 +3291,11 @@
 		background: var(--md-sys-color-progressbar);
 		border: none;
 		border-radius: 20px;
-		overflow: hidden;
+		/* overflow: hidden; Removed to fix text clipping bug */
+	}
+
+	.cbi-progressbar>div {
+		border-radius: 20px;
 	}
 
 	.table .td,
