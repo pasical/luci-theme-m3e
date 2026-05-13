@@ -1,0 +1,37 @@
+# ----- OS / file explorer -----
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# ----- Editors / IDE -----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ----- Logs / temp -----
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+
+# ----- Local preview / tooling cache -----
+.cache/
+.sdk-cache/
+.pytest_cache/
+
+# ----- Build artifacts -----
+dist/
+build/
+out/
+bin/
+*.ipk
+*.apk
+
+# ----- Python local server artifacts -----
+__pycache__/
+
