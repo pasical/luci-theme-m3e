@@ -158,7 +158,138 @@ FEEDS=all bash scripts/local-build.sh 24.10
 
 Apple Silicon 上默认会使用 `linux/amd64` Docker 平台来匹配官方 `Linux-x86_64` SDK。下载如果中断，脚本会使用断点续传；如果解压留下了不完整目录，脚本会自动清理后重新解压。
 
-## 5. 开发循环
+## 5. 快速真实预览
+
+静态 preview 容易和真实 LuCI 分叉，因此本仓库推荐使用真实 OpenWrt/LuCI 环境做预览，但不走编译安装包流程。核心做法是把本地源码直接同步到真实 LuCI 环境，再刷新浏览器。
+
+### 5.1 本机 Docker OpenWrt 预览
+
+如果只是做主题开发，最快的方式是启动本仓库提供的 Docker OpenWrt/LuCI 预览环境：
+
+```sh
+scripts/preview-openwrt.sh start
+```
+
+启动后直接打开：
+
+```text
+http://127.0.0.1:8080/
+```
+
+登录用户是 `root`，密码留空即可。容器端口默认只绑定到 `127.0.0.1`。
+
+该容器基于 `openwrt/rootfs:x86-64`，预装 `luci`、`uhttpd`、`uhttpd-mod-ubus` 和 `rsync`，启动时注册 M3E 主题并把本地主题文件同步进去。它不模拟 LuCI 页面，而是运行真实 LuCI。
+
+常用命令：
+
+```sh
+# 启动并同步 assets + templates
+scripts/preview-openwrt.sh start
+
+# 改 CSS/JS/图片后快速同步
+scripts/preview-openwrt.sh sync assets
+
+# 改 header.ut/footer.ut/sysauth.ut 后同步并重启 uhttpd
+scripts/preview-openwrt.sh sync templates
+
+# 停止预览容器
+scripts/preview-openwrt.sh stop
+
+# 查看容器日志或进入 shell
+scripts/preview-openwrt.sh logs
+scripts/preview-openwrt.sh shell
+```
+
+想要保存后自动同步，可以安装 `fswatch` 后运行：
+
+```sh
+brew install fswatch
+scripts/preview-openwrt.sh watch templates
+```
+
+可用环境变量：
+
+```sh
+OPENWRT_PREVIEW_PORT=8080 \
+OPENWRT_THEME=m3e \
+scripts/preview-openwrt.sh start
+```
+
+### 5.2 外部测试机或 OpenWrt VM 快速同步
+
+如果你已经有真实路由器、旁路测试机或独立 OpenWrt VM，也可以用 SSH/rsync 同步源码。
+
+目标 OpenWrt 需要安装 `rsync`，首次准备测试机时执行一次：
+
+```sh
+opkg update
+opkg install rsync
+```
+
+首次同步到默认测试机 `root@192.168.1.1`：
+
+```sh
+OPENWRT_HOST=root@192.168.1.1 scripts/dev-sync.sh all
+```
+
+如果只是改 CSS、JS、图片，使用最快的 assets 模式。它只同步 `htdocs/`，不清 LuCI 缓存，不重启 `uhttpd`：
+
+```sh
+scripts/dev-sync.sh assets
+```
+
+如果改了 `header.ut`、`footer.ut` 或登录页模板，使用 templates 模式。它同步 `htdocs/` 和 `ucode/`，清理 LuCI 缓存并重启 `uhttpd`：
+
+```sh
+scripts/dev-sync.sh templates
+```
+
+可用环境变量：
+
+```sh
+OPENWRT_HOST=root@192.168.1.1 \
+OPENWRT_PORT=22 \
+OPENWRT_THEME=m3e \
+scripts/dev-sync.sh all
+```
+
+同步只覆盖 M3E 主题自己的路径，不会删除 LuCI 自带资源：
+
+```text
+htdocs/luci-static/m3e*/                  -> /www/luci-static/m3e*/
+htdocs/luci-static/resources/menu-m3e.js  -> /www/luci-static/resources/menu-m3e.js
+htdocs/luci-static/resources/view/m3e/    -> /www/luci-static/resources/view/m3e/
+ucode/template/themes/m3e*/               -> /usr/share/ucode/luci/template/themes/m3e*/
+root/                                     -> /
+```
+
+需要先看会同步哪些文件时，可以使用 dry run：
+
+```sh
+DRY_RUN=1 scripts/dev-sync.sh templates
+```
+
+想要保存后自动同步，可以安装 `fswatch` 后运行：
+
+```sh
+brew install fswatch
+scripts/dev-watch.sh templates
+```
+
+常用模式：
+
+```sh
+# CSS/JS/图片：最快，通常刷新浏览器即可
+scripts/dev-watch.sh assets
+
+# CSS + ucode 模板：适合大多数主题开发
+scripts/dev-watch.sh templates
+
+# 包含 root overlay 和主题注册：适合首次部署或注册脚本调整
+scripts/dev-watch.sh all
+```
+
+## 6. 发布前编译验证
 
 日常修改主要集中在以下文件：
 
@@ -167,18 +298,16 @@ Apple Silicon 上默认会使用 `linux/amd64` Docker 平台来匹配官方 `Lin
 - 主题变体：同步修改 `m3e-blue`、`m3e-green`、`m3e-red` 下对应文件。
 - 菜单脚本：`htdocs/luci-static/resources/menu-m3e.js`。
 
-推荐流程：
+快速预览确认后，再用 SDK 编译安装包做发布前验证：
 
 ```sh
-# 1. 修改模板或 CSS
-
-# 2. 本地编译安装包
+# 1. 本地编译安装包
 bash scripts/local-build.sh 24.10
 
-# 3. 将产物传到路由器
+# 2. 将产物传到路由器
 scp .sdk-cache/openwrt-sdk-*/bin/packages/*/*/luci-theme-m3e_*.ipk root@192.168.1.1:/tmp/
 
-# 4. 在路由器上安装并重启 Web 服务
+# 3. 在路由器上安装并重启 Web 服务
 ssh root@192.168.1.1
 opkg install /tmp/luci-theme-*.ipk
 rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
@@ -187,7 +316,7 @@ rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
 
 OpenWrt 24.10 仍常见 `.ipk`，snapshot 或未来版本可能输出 `.apk`。脚本最后会列出实际产物路径，以该路径为准。
 
-## 6. 常见问题
+## 7. 常见问题
 
 **找不到 SDK**
 
@@ -219,7 +348,21 @@ rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
 /etc/init.d/uhttpd restart
 ```
 
-## 7. 从零创建新主题的最小步骤
+**快速同步连不上测试机**
+
+确认可以直接 SSH 登录：
+
+```sh
+ssh root@192.168.1.1
+```
+
+如果端口或地址不同，使用：
+
+```sh
+OPENWRT_HOST=root@192.168.31.1 OPENWRT_PORT=2222 scripts/dev-sync.sh all
+```
+
+## 8. 从零创建新主题的最小步骤
 
 1. 新建包目录，例如 `package/luci-theme-mytheme`。
 2. 写入 `Makefile` 并引入 `rules.mk`、`luci.mk`。
