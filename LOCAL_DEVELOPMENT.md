@@ -42,6 +42,7 @@ luci-theme-xxx/
 
 当前 `luci-theme-m3e` 采用 ucode 模板，主要目录是：
 
+- `ucode/template/m3e/`：共享模板片段，例如各主题 `header.ut` 引用的 `m3e/header`。
 - `ucode/template/themes/m3e/`：默认 M3E 主题模板。
 - `ucode/template/themes/m3e-blue/`、`m3e-green/`、`m3e-red/`：不同配色变体模板。
 - `htdocs/luci-static/m3e/`：默认主题的 CSS、移动端 CSS 和图标。
@@ -293,6 +294,7 @@ scripts/dev-watch.sh all
 
 日常修改主要集中在以下文件：
 
+- 共享模板片段：`ucode/template/m3e/header.ut`。
 - 页面骨架：`ucode/template/themes/m3e/header.ut`、`footer.ut`、`sysauth.ut`。
 - 样式：`htdocs/luci-static/m3e/cascade.css` 和 `mobile.css`。
 - 主题变体：同步修改 `m3e-blue`、`m3e-green`、`m3e-red` 下对应文件。

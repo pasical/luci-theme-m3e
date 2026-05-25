@@ -126,7 +126,9 @@ sync_assets() {
 
 sync_templates() {
   local theme
-  remote "mkdir -p /usr/share/ucode/luci/template/themes"
+  remote "mkdir -p /usr/share/ucode/luci/template/themes /usr/share/ucode/luci/template/m3e"
+
+  sync_dir_to "ucode/template/m3e/" "/usr/share/ucode/luci/template/m3e/"
 
   for theme in m3e m3e-blue m3e-green m3e-red; do
     sync_dir_to "ucode/template/themes/${theme}/" "/usr/share/ucode/luci/template/themes/${theme}/"
