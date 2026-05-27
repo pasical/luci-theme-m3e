@@ -48,8 +48,8 @@
 			html.style.colorScheme = (mode === 'true') ? 'dark' : 'light';
 		}());
 		</script>
-		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.1.3">
-		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.1.3" />
+		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.2.2">
+		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.2.2" />
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
 		<link rel="stylesheet" href="{{ resource }}/{{ node.css }}">
@@ -63,22 +63,14 @@
 
 		<style title="darkmode-support">
 			:root {
-				--transition-duration: 0.3s;
-				--theme-switch-size: 42px;
-				--theme-switch-height: 24px;
-				--theme-switch-handle-size: 16px;
-			}
-
-			.theme-switch-container {
-				display: flex;
-				align-items: center;
-				position: relative;
+				--transition-duration: 0.2s;
+				--md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
 			}
 
 			.header-controls {
 				display: flex;
 				align-items: center;
-				gap: 16px;
+				gap: 12px;
 				margin-left: auto;
 				padding: 0 8px;
 			}
@@ -88,52 +80,6 @@
 					gap: 12px;
 				}
 			}
-
-			.theme-switch {
-				position: relative;
-				display: inline-block;
-				width: var(--theme-switch-size);
-				height: var(--theme-switch-height);
-				cursor: pointer;
-			}
-
-			.theme-switch input {
-				opacity: 0;
-				width: 0;
-				height: 0;
-			}
-
-			.slider {
-				position: absolute;
-				cursor: pointer;
-				inset: 0;
-				background-color: var(--switch-bg, #ccc);
-				transition: all var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
-				border-radius: var(--theme-switch-height);
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			}
-
-			.slider:before {
-				position: absolute;
-				content: "";
-				height: var(--theme-switch-handle-size);
-				width: var(--theme-switch-handle-size);
-				left: 4px;
-				bottom: 4px;
-				background-color: var(--switch-handle, white);
-				transition: all var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
-				border-radius: 50%;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-			}
-
-			input:checked + .slider {
-				background-color: var(--primary);
-			}
-
-			input:checked + .slider:before {
-				transform: translateX(18px);
-			}
-
 			html {
 				transition: background-color var(--transition-duration) ease,
 							color var(--transition-duration) ease;
@@ -144,21 +90,48 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				width: 32px;
-				height: 32px;
+				width: 40px;
+				height: 40px;
 				border-radius: 50%;
-				transition: all var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
 				background: transparent;
+				color: var(--md-sys-color-on-surface-variant, currentColor);
+				overflow: hidden;
+				outline: none;
+				transition: color var(--transition-duration) var(--md-sys-motion-easing-standard);
+			}
+
+			.theme-toggle::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				background: currentColor;
+				opacity: 0;
+				transition: opacity var(--transition-duration) var(--md-sys-motion-easing-standard);
 			}
 
 			.theme-toggle:hover {
-				background-color: var(--md-sys-color-surface-variant);
+				color: var(--md-sys-color-on-surface, currentColor);
+			}
+
+			.theme-toggle:hover::before {
+				opacity: var(--md-sys-state-hover-state-layer-opacity, 0.08);
+			}
+
+			.theme-toggle:active::before {
+				opacity: var(--md-sys-state-pressed-state-layer-opacity, 0.12);
+			}
+
+			.theme-toggle:focus-visible {
+				outline: 3px solid var(--md-sys-color-secondary, currentColor);
+				outline-offset: 2px;
 			}
 
 			.theme-toggle .icon {
 				position: absolute;
-				transition: all var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
-				fill: var(--md-sys-color-refresh-button);
+				transition: opacity var(--transition-duration) var(--md-sys-motion-easing-standard),
+							transform var(--transition-duration) var(--md-sys-motion-easing-standard);
+				fill: currentColor;
 				width: 20px;
 				height: 20px;
 			}
@@ -183,25 +156,11 @@
 				transform: scale(1) rotate(0);
 			}
 
-			.theme-toggle:hover .icon {
-				transform: rotate(15deg) scale(1.1);
-			}
-
-			html[data-darkmode="true"] .theme-toggle:hover .icon {
-				transform: rotate(-15deg) scale(1.1);
-			}
-
-			.theme-toggle:active .icon {
-				transform: scale(0.95);
-			}
-
-			@media (prefers-color-scheme: dark) {
-				html[data-darkmode="auto"] {
-					--primary: #bb86fc;
-					--surface-1: #121212;
-					--surface-2: #1e1e1e;
-					--on-surface: #ffffff;
-					--on-surface-variant: rgba(255, 255, 255, 0.7);
+			@media (prefers-reduced-motion: reduce) {
+				.theme-toggle,
+				.theme-toggle::before,
+				.theme-toggle .icon {
+					transition: none;
 				}
 			}
 		</style>

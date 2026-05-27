@@ -1,7 +1,6 @@
 		{% if (!blank_page): %}
 		</div>
 		<footer class="footer-m3e">
-                        <div class="footer-wavy-line"></div>
                         <div class="footer-content">
                                 <div class="footer-info">
                                         <span class="powered-by">Powered by <a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">{{ version.luciname }} {{ version.luciversion }}</a></span>

@@ -6,35 +6,7 @@ return baseclass.extend({
 	__init__: function () {
 		ui.menu.load().then(L.bind(this.render, this));
 		this.initMenuToggle();
-		this.initRippleEffect();
 		this.initHeaderShadow();
-	},
-
-	createRipple: function (event, target) {
-		// 如果元素已经处于 active 状态，直接阻断水波纹渲染，避免重复触发和离场动画
-		var p = target.parentNode;
-		if ((p && p.classList && (p.classList.contains('active') || p.classList.contains('cbi-tab-active'))) ||
-			(target.classList && (target.classList.contains('active') || target.classList.contains('cbi-tab-active') || target.classList.contains('open')))) {
-			return;
-		}
-
-		// 移除已有的水波纹
-		var oldRipple = target.querySelector('.ripple');
-		if (oldRipple) {
-			oldRipple.remove();
-		}
-
-		// 创建并设置水波纹
-		var ripple = document.createElement('div');
-		ripple.className = 'ripple';
-		ripple.style.left = event.clientX - target.getBoundingClientRect().left + 'px';
-		ripple.style.top = event.clientY - target.getBoundingClientRect().top + 'px';
-
-		// 添加水波纹并设置自动移除
-		target.appendChild(ripple);
-		ripple.addEventListener('animationend', function () {
-			ripple.remove();
-		});
 	},
 
 	initMenuToggle: function () {
@@ -173,9 +145,6 @@ return baseclass.extend({
 					'class': linkclass,
 					'href': linkurl,
 					'click': (function (submenu, hasSubmenu, targetUrl, ev) {
-						// 添加水波纹效果
-						self.createRipple(ev, ev.currentTarget);
-
 						if (hasSubmenu) {
 							ev.preventDefault();
 							ev.stopPropagation();
@@ -234,23 +203,15 @@ return baseclass.extend({
 			ul.style.display = '';
 	},
 
-	initRippleEffect: function () {
-		var self = this;
-		document.addEventListener('click', function (e) {
-			// 排除一级菜单的点击，因为它们已经在自己的点击事件中处理了水波纹
-			var target = e.target.closest('.dropdown-menu>li>a, .tabs>li, .cbi-tabmenu>li');
-			if (!target) return;
-
-			self.createRipple(e, target);
-		});
-	},
-
 	initHeaderShadow: function () {
 		var header = document.querySelector('header');
+		var scrollTarget = document.getElementById('scroll-wrapper') || window;
 		var scrollThreshold = 10; // 滚动阈值
 
-		window.addEventListener('scroll', function () {
-			if (window.scrollY > scrollThreshold) {
+		scrollTarget.addEventListener('scroll', function () {
+			var scrollTop = scrollTarget === window ? window.scrollY : scrollTarget.scrollTop;
+
+			if (scrollTop > scrollThreshold) {
 				header.classList.add('with-shadow');
 			} else {
 				header.classList.remove('with-shadow');
