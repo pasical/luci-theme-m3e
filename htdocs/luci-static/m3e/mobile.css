@@ -815,31 +815,11 @@ table {
 	padding: 12px;
 }
 
-.cbi-tabmenu,
-.tabs {
-	border-radius: var(--md-sys-shape-corner-full);
-	flex-wrap: nowrap;
-	margin: 0;
-	padding: 8px;
-}
-
-.m3e-tab-strip {
-	margin: 0 0 16px;
-	padding: 0 10px 2px;
-	scroll-padding-inline: 14px;
-}
-
 input[type="password"] + .cbi-button,
 input[type="text"] + .cbi-button {
 	border-radius: var(--md-outlined-text-field-container-shape);
 	min-height: 44px;
 	min-width: 44px;
-}
-
-.cbi-tabmenu > li,
-.tabs > li {
-	height: 48px;
-	min-width: 108px;
 }
 
 body.m3e-login-page.modal-overlay-active #modal_overlay {

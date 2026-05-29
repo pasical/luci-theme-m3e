@@ -3661,6 +3661,48 @@
     isolation: isolate;
 }
 
+#tabmenu > .cbi-tabmenu,
+#tabmenu > .tabs {
+	background: #f7f2fa;
+	border-radius: 24px;
+	gap: 6px;
+	padding: 6px;
+}
+
+#tabmenu > .cbi-tabmenu > li,
+#tabmenu > .tabs > li {
+	background: transparent;
+	border-radius: 21px;
+	height: 42px;
+	color: #000;
+}
+
+#tabmenu > .cbi-tabmenu > li.cbi-tab-active,
+#tabmenu > .tabs > li.active {
+	background: rgb(232, 221, 248);
+	color: #000;
+}
+
+[data-darkmode=true] #tabmenu > .cbi-tabmenu,
+[data-darkmode=true] #tabmenu > .tabs {
+	background: color-mix(in srgb, rgb(168, 117, 240) 20%, transparent);
+	border-radius: 24px;
+}
+
+[data-darkmode=true] #tabmenu > .cbi-tabmenu > li,
+[data-darkmode=true] #tabmenu > .tabs > li {
+	background: transparent;
+	border-radius: 21px;
+	height: 42px;
+	color: #fff;
+}
+
+[data-darkmode=true] #tabmenu > .cbi-tabmenu > li.cbi-tab-active,
+[data-darkmode=true] #tabmenu > .tabs > li.active {
+	background: rgb(168, 117, 240);
+	color: #fff;
+}
+
 /* Material Web token bridge for LuCI's server-rendered classes. */
 :root {
 	--md-ref-typeface-brand: Roboto, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -3846,7 +3888,7 @@
 	--background-color-high: var(--md-sys-color-surface);
 	--background-color-medium: var(--md-sys-color-surface-container-low);
 	--background-color-low: var(--md-sys-color-surface-container);
-	--sidebar-width: clamp(256px, 18vw, var(--md-navigation-drawer-container-width));
+	--sidebar-width: clamp(220px, 10vw, 320px);
 	--header-height: 64px;
 	color-scheme: light;
 }
@@ -4807,118 +4849,6 @@ table {
 	color: var(--md-sys-color-inverse-on-surface);
 	padding: 8px 12px;
 }
-
-#tabmenu {
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	min-width: 0;
-	text-align: left;
-}
-
-.m3e-tab-strip {
-	cursor: default;
-	display: block;
-	margin: 0 0 24px;
-	overflow-x: auto;
-	overflow-y: hidden;
-	overscroll-behavior-x: contain;
-	padding: 0 4px 2px;
-	scroll-padding-inline: 12px;
-	scrollbar-width: none;
-	touch-action: pan-x;
-	-webkit-overflow-scrolling: touch;
-	width: 100%;
-}
-
-.m3e-tab-strip::-webkit-scrollbar {
-	display: none;
-}
-
-.m3e-tab-strip.is-scrollable {
-	cursor: grab;
-}
-
-.m3e-tab-strip.is-dragging {
-	cursor: grabbing;
-	user-select: none;
-}
-
-.m3e-tab-strip > .cbi-tabmenu,
-.m3e-tab-strip > .tabs {
-	background: var(--md-secondary-tab-container-color);
-	border-radius: var(--md-sys-shape-corner-full);
-	box-shadow: none;
-	display: inline-flex;
-	flex-wrap: nowrap;
-	gap: 8px;
-	justify-content: flex-start;
-	margin: 0;
-	min-width: 100%;
-	overflow: visible;
-	padding: 8px;
-	width: max-content;
-}
-
-.m3e-tab-strip > .cbi-tabmenu > li:first-child,
-.m3e-tab-strip > .tabs > li:first-child {
-	margin-left: 2px;
-}
-
-.m3e-tab-strip > .cbi-tabmenu > li:last-child,
-.m3e-tab-strip > .tabs > li:last-child {
-	margin-right: 2px;
-}
-
-.cbi-tabmenu > li,
-.tabs > li {
-	background: transparent;
-	border: 0;
-	border-radius: var(--md-sys-shape-corner-full);
-	color: var(--md-sys-color-on-surface-variant);
-	flex: 0 0 auto;
-	font-size: var(--md-sys-typescale-title-small-size);
-	font-weight: var(--md-sys-typescale-title-small-weight);
-	height: 48px;
-	min-width: max-content;
-	padding-inline: 0;
-	position: relative;
-	scroll-snap-align: start;
-}
-
-.cbi-tabmenu > li::after,
-.tabs > li::after {
-	display: none;
-}
-
-.cbi-tabmenu > li.cbi-tab,
-.cbi-tabmenu > li.cbi-tab-active,
-.tabs > li.active {
-	background: var(--md-sys-color-secondary-container);
-	color: var(--md-sys-color-on-secondary-container);
-	font-weight: 700;
-}
-
-.cbi-tabmenu > li.cbi-tab::after,
-.cbi-tabmenu > li.cbi-tab-active::after,
-.tabs > li.active::after {
-	display: none;
-}
-
-.cbi-tabmenu > li:hover::before,
-.tabs > li:hover::before,
-.cbi-tabmenu > .cbi-tab:hover::before {
-	background: color-mix(in srgb, currentColor 8%, transparent);
-}
-
-.cbi-tabmenu > li > a,
-.tabs > li > a {
-	color: inherit;
-	font: inherit;
-	padding: 0 16px;
-	text-overflow: clip;
-}
-
 .actions,
 .cbi-page-actions {
 	align-items: center;
@@ -5081,10 +5011,6 @@ body {
 	grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
 }
 
-:root {
-	--sidebar-width: clamp(208px, 16vw, 272px);
-}
-
 #modal_overlay {
 	bottom: 0;
 	box-sizing: border-box;
@@ -5141,21 +5067,6 @@ body.m3e-login-page.modal-overlay-active #modal_overlay {
 	margin: 2px 6px 2px 22px;
 	min-height: 38px;
 	padding: 0 14px !important;
-}
-
-.m3e-tab-strip {
-	scroll-snap-type: x proximity;
-}
-
-.m3e-tab-strip > .cbi-tabmenu > li,
-.m3e-tab-strip > .tabs > li {
-	max-width: none;
-}
-
-.m3e-tab-strip > .cbi-tabmenu > li > a,
-.m3e-tab-strip > .tabs > li > a {
-	overflow: visible;
-	padding: 0 18px;
 }
 
 .actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown.btn,

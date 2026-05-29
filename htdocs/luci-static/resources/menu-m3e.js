@@ -185,7 +185,6 @@ return baseclass.extend({
 
 	renderTabMenu: function (tree, url, level) {
 		var container = document.querySelector('#tabmenu'),
-			strip = E('div', { 'class': 'm3e-tab-strip' }),
 			ul = E('ul', { 'class': 'tabs' }),
 			children = ui.menu.getChildren(tree),
 			activeNode = null;
@@ -205,111 +204,13 @@ return baseclass.extend({
 		if (ul.children.length == 0)
 			return E([]);
 
-		strip.appendChild(ul);
-		container.appendChild(strip);
-		this.initTabScroller(strip);
+		container.appendChild(ul);
 		container.style.display = '';
 
 		if (activeNode)
 			this.renderTabMenu(activeNode, url + '/' + activeNode.name, (level || 0) + 1);
 
 		return ul;
-	},
-
-	initTabScroller: function (scroller) {
-		if (!scroller || scroller.dataset.m3eScrollable === 'true')
-			return;
-
-		scroller.dataset.m3eScrollable = 'true';
-
-		var startX = 0,
-			startScrollLeft = 0,
-			isDragging = false,
-			suppressClick = false,
-			mouseDown = false;
-
-		function updateScrollableState() {
-			scroller.classList.toggle('is-scrollable', scroller.scrollWidth > scroller.clientWidth + 2);
-		}
-
-		function stopDrag() {
-			mouseDown = false;
-
-			if (isDragging) {
-				isDragging = false;
-				scroller.classList.remove('is-dragging');
-			}
-
-			window.clearTimeout(scroller._m3eClickTimer);
-			scroller._m3eClickTimer = window.setTimeout(function () {
-				suppressClick = false;
-			}, 0);
-		}
-
-		updateScrollableState();
-
-		if (window.ResizeObserver) {
-			(new ResizeObserver(updateScrollableState)).observe(scroller);
-		}
-
-		window.addEventListener('resize', updateScrollableState);
-
-		scroller.addEventListener('wheel', function (ev) {
-			var delta = Math.abs(ev.deltaX) > Math.abs(ev.deltaY) ? ev.deltaX : ev.deltaY;
-
-			if (!delta || scroller.scrollWidth <= scroller.clientWidth + 2)
-				return;
-
-			scroller.scrollLeft += delta;
-			ev.preventDefault();
-		}, { passive: false });
-
-		scroller.addEventListener('mousedown', function (ev) {
-			if (ev.button !== 0)
-				return;
-
-			if (scroller.scrollWidth <= scroller.clientWidth + 2)
-				return;
-
-			mouseDown = true;
-			startX = ev.clientX;
-			startScrollLeft = scroller.scrollLeft;
-			isDragging = false;
-			suppressClick = false;
-			ev.preventDefault();
-		});
-
-		window.addEventListener('mousemove', function (ev) {
-			var delta;
-
-			if (!mouseDown)
-				return;
-
-			delta = ev.clientX - startX;
-
-			if (!isDragging && Math.abs(delta) < 6)
-				return;
-
-			isDragging = true;
-			suppressClick = true;
-			scroller.classList.add('is-dragging');
-			scroller.scrollLeft = startScrollLeft - delta;
-			ev.preventDefault();
-		});
-
-		window.addEventListener('mouseup', stopDrag);
-
-		scroller.addEventListener('click', function (ev) {
-			if (!suppressClick)
-				return;
-
-			ev.preventDefault();
-			ev.stopPropagation();
-		}, true);
-
-		scroller.addEventListener('dragstart', function (ev) {
-			ev.preventDefault();
-		});
 	},
 
 	renderMainMenu: function (tree, url, level) {

@@ -10,7 +10,7 @@ LUCI_TITLE:=A Material 3 Expressive theme
 LUCI_DEPENDS:=
 PKG_NAME:=luci-theme-m3e
 PKG_VERSION:=0.1.5
-PKG_RELEASE:=4
+PKG_RELEASE:=6
 
 PKG_LICENSE:=Apache-2.0
 
