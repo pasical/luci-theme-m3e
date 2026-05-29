@@ -4809,26 +4809,65 @@ table {
 }
 
 #tabmenu {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
 	text-align: left;
 }
 
-.cbi-tabmenu,
-.tabs {
+.m3e-tab-strip {
+	cursor: default;
+	display: block;
+	margin: 0 0 24px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior-x: contain;
+	padding: 0 4px 2px;
+	scroll-padding-inline: 12px;
+	scrollbar-width: none;
+	touch-action: pan-x;
+	-webkit-overflow-scrolling: touch;
+	width: 100%;
+}
+
+.m3e-tab-strip::-webkit-scrollbar {
+	display: none;
+}
+
+.m3e-tab-strip.is-scrollable {
+	cursor: grab;
+}
+
+.m3e-tab-strip.is-dragging {
+	cursor: grabbing;
+	user-select: none;
+}
+
+.m3e-tab-strip > .cbi-tabmenu,
+.m3e-tab-strip > .tabs {
 	background: var(--md-secondary-tab-container-color);
 	border-radius: var(--md-sys-shape-corner-full);
 	box-shadow: none;
+	display: inline-flex;
 	flex-wrap: nowrap;
 	gap: 8px;
-	justify-content: stretch;
-	margin: 0 0 24px;
-	overflow-x: auto;
+	justify-content: flex-start;
+	margin: 0;
+	min-width: 100%;
+	overflow: visible;
 	padding: 8px;
-	scrollbar-width: none;
+	width: max-content;
 }
 
-.cbi-tabmenu::-webkit-scrollbar,
-.tabs::-webkit-scrollbar {
-	display: none;
+.m3e-tab-strip > .cbi-tabmenu > li:first-child,
+.m3e-tab-strip > .tabs > li:first-child {
+	margin-left: 2px;
+}
+
+.m3e-tab-strip > .cbi-tabmenu > li:last-child,
+.m3e-tab-strip > .tabs > li:last-child {
+	margin-right: 2px;
 }
 
 .cbi-tabmenu > li,
@@ -4837,12 +4876,14 @@ table {
 	border: 0;
 	border-radius: var(--md-sys-shape-corner-full);
 	color: var(--md-sys-color-on-surface-variant);
-	flex: 1 1 0;
+	flex: 0 0 auto;
 	font-size: var(--md-sys-typescale-title-small-size);
 	font-weight: var(--md-sys-typescale-title-small-weight);
 	height: 48px;
-	min-width: 112px;
+	min-width: max-content;
+	padding-inline: 0;
 	position: relative;
+	scroll-snap-align: start;
 }
 
 .cbi-tabmenu > li::after,
@@ -4875,6 +4916,7 @@ table {
 	color: inherit;
 	font: inherit;
 	padding: 0 16px;
+	text-overflow: clip;
 }
 
 .actions,
@@ -4890,11 +4932,11 @@ table {
 .actions:has(> .btn + .btn),
 .cbi-page-actions:has(> .cbi-button + .cbi-button),
 .cbi-page-actions:has(> .btn + .btn) {
-	background: transparent;
-	border-radius: 0;
+	background: var(--md-sys-color-surface-container-high);
+	border-radius: var(--md-sys-shape-corner-full);
 	gap: 2px;
 	margin-left: auto;
-	padding: 0;
+	padding: 3px;
 	width: fit-content;
 }
 
@@ -4908,10 +4950,10 @@ table {
 .actions:has(> .btn + .btn) > .btn,
 .cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-button,
 .cbi-page-actions:has(> .btn + .btn) > .btn {
-	background: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface-container-low));
+	background: var(--md-filled-tonal-button-container-color);
 	border-color: transparent;
 	border-radius: var(--md-sys-shape-corner-medium);
-	color: var(--md-sys-color-primary);
+	color: var(--md-filled-tonal-button-label-text-color);
 	min-height: 36px;
 }
 
@@ -4937,9 +4979,9 @@ table {
 .actions:has(> .cbi-button + .cbi-button) > .cbi-button-reset,
 .cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-button-negative,
 .cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-button-reset {
-	background: transparent;
+	background: var(--md-filled-tonal-button-container-color);
 	border-color: transparent;
-	color: var(--md-sys-color-error);
+	color: var(--md-filled-tonal-button-label-text-color);
 }
 
 .actions:has(> .cbi-button + .cbi-button) > .cbi-button:first-child,
@@ -4960,23 +5002,23 @@ table {
 .td.cbi-section-actions > *:has(> .btn + .btn),
 td.cbi-section-actions > *:has(> .cbi-button + .cbi-button),
 td.cbi-section-actions > *:has(> .btn + .btn) {
-	background: transparent;
-	border-radius: 0;
+	background: var(--md-sys-color-surface-container-high);
+	border-radius: var(--md-sys-shape-corner-full);
 	display: inline-flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 2px;
 	max-width: 100%;
-	padding: 0;
+	padding: 2px;
 }
 
 .td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button,
 .td.cbi-section-actions > *:has(> .btn + .btn) > .btn,
 td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button,
 td.cbi-section-actions > *:has(> .btn + .btn) > .btn {
-	background: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface-container-low));
+	background: var(--md-filled-tonal-button-container-color);
 	border-color: transparent;
 	border-radius: var(--md-sys-shape-corner-medium);
-	color: var(--md-sys-color-primary);
+	color: var(--md-filled-tonal-button-label-text-color);
 	flex: 0 0 auto;
 	min-height: 32px;
 	min-width: max-content;
@@ -4986,9 +5028,9 @@ td.cbi-section-actions > *:has(> .btn + .btn) > .btn {
 .td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button-remove,
 td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button-negative,
 td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button-remove {
-	background: transparent;
+	background: var(--md-filled-tonal-button-container-color);
 	border-color: transparent;
-	color: var(--md-sys-color-error);
+	color: var(--md-filled-tonal-button-label-text-color);
 }
 
 .td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button:first-child,
@@ -5035,11 +5077,425 @@ td.cbi-section-actions > *:has(> .btn + .btn) > .btn:last-child {
 	border-radius: inherit;
 }
 
+body {
+	grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+
+:root {
+	--sidebar-width: clamp(208px, 16vw, 272px);
+}
+
+#modal_overlay {
+	bottom: 0;
+	box-sizing: border-box;
+	display: flex;
+	inset: 0;
+	justify-content: center;
+	left: 0;
+	padding: clamp(24px, 7vh, 64px) 24px 24px;
+	right: 0;
+	top: 0;
+	align-items: flex-start;
+}
+
+#modal_overlay > .modal {
+	margin: 0;
+	max-width: min(600px, 100%);
+	width: min(600px, 100%);
+}
+
+body.m3e-login-page.modal-overlay-active #modal_overlay {
+	align-items: center;
+	padding: clamp(20px, 6vh, 48px) 16px;
+}
+
+.sidebar {
+	padding: 8px 0 16px;
+}
+
+.nav {
+	gap: 1px;
+	padding: 8px 10px 16px;
+}
+
+.nav > li > a,
+.nav .dropdown-menu > li > a {
+	font-size: 13px;
+	line-height: 18px;
+	min-height: 44px;
+	padding: 0 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.nav > li > a::before {
+	flex: 0 0 20px;
+	height: 20px;
+	margin-right: 10px;
+	width: 20px;
+}
+
+.nav .dropdown-menu > li > a {
+	font-size: 13px;
+	margin: 2px 6px 2px 22px;
+	min-height: 38px;
+	padding: 0 14px !important;
+}
+
+.m3e-tab-strip {
+	scroll-snap-type: x proximity;
+}
+
+.m3e-tab-strip > .cbi-tabmenu > li,
+.m3e-tab-strip > .tabs > li {
+	max-width: none;
+}
+
+.m3e-tab-strip > .cbi-tabmenu > li > a,
+.m3e-tab-strip > .tabs > li > a {
+	overflow: visible;
+	padding: 0 18px;
+}
+
+.actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown.btn,
+.actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown.cbi-button,
+.actions:has(> .btn + .btn) > .cbi-dropdown.btn,
+.actions:has(> .btn + .btn) > .cbi-dropdown.cbi-button,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown.btn,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown.cbi-button,
+.cbi-page-actions:has(> .btn + .btn) > .cbi-dropdown.btn,
+.cbi-page-actions:has(> .btn + .btn) > .cbi-dropdown.cbi-button,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown.btn,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown.cbi-button,
+.td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown.btn,
+.td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown.cbi-button,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown.btn,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown.cbi-button,
+td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown.btn,
+td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown.cbi-button {
+	background: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface-container-low));
+	border-color: transparent;
+	border-radius: var(--md-sys-shape-corner-medium);
+	color: var(--md-sys-color-primary);
+	overflow: hidden;
+	padding: 0 !important;
+}
+
+.actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown:first-child,
+.actions:has(> .btn + .btn) > .cbi-dropdown:first-child,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown:first-child,
+.cbi-page-actions:has(> .btn + .btn) > .cbi-dropdown:first-child,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown:first-child,
+.td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown:first-child,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown:first-child,
+td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown:first-child {
+	border-radius: var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-full);
+}
+
+.actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown:last-child,
+.actions:has(> .btn + .btn) > .cbi-dropdown:last-child,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-dropdown:last-child,
+.cbi-page-actions:has(> .btn + .btn) > .cbi-dropdown:last-child,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown:last-child,
+.td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown:last-child,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-dropdown:last-child,
+td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-dropdown:last-child {
+	border-radius: var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-medium);
+}
+
+.cbi-dropdown.btn,
+.cbi-dropdown.cbi-button {
+	align-items: stretch;
+	gap: 0;
+	padding: 0 !important;
+}
+
+.cbi-dropdown.btn > ul:not(.dropdown),
+.cbi-dropdown.cbi-button > ul:not(.dropdown) {
+	align-items: stretch;
+	min-width: 0;
+	padding-left: 14px;
+}
+
+.cbi-dropdown.btn > ul:not(.dropdown) > li[selected],
+.cbi-dropdown.cbi-button > ul:not(.dropdown) > li[selected] {
+	min-width: 0;
+	padding-right: 2px;
+	white-space: nowrap;
+}
+
+.cbi-dropdown.btn > .open,
+.cbi-dropdown.cbi-button > .open {
+	align-items: center;
+	border-left-color: color-mix(in srgb, currentColor 18%, transparent);
+	border-radius: 0 inherit inherit 0;
+	justify-content: center;
+	margin-left: 8px;
+	min-width: 34px;
+	padding: 0 12px 0 10px;
+}
+
+.cbi-dropdown.btn > .open::before,
+.cbi-dropdown.cbi-button > .open::before {
+	left: 0;
+	right: 0;
+}
+
+.actions:has(> .cbi-button + .cbi-button) > .cbi-button,
+.actions:has(> .btn + .btn) > .btn,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-button,
+.cbi-page-actions:has(> .btn + .btn) > .btn,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button,
+.td.cbi-section-actions > *:has(> .btn + .btn) > .btn,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button,
+td.cbi-section-actions > *:has(> .btn + .btn) > .btn {
+	border: 1px solid transparent !important;
+	margin: 0 !important;
+}
+
+.actions:has(> .cbi-button + .cbi-button) > .cbi-button-reset,
+.actions:has(> .btn + .btn) > .cbi-button-reset,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > .cbi-button-reset,
+.cbi-page-actions:has(> .btn + .btn) > .cbi-button-reset,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button-reset,
+.td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-button-reset,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > .cbi-button-reset,
+td.cbi-section-actions > *:has(> .btn + .btn) > .cbi-button-reset {
+	background: var(--md-filled-tonal-button-container-color) !important;
+	color: var(--md-filled-tonal-button-label-text-color) !important;
+}
+
+.actions:has(> .cbi-button + .cbi-button) > :first-child,
+.actions:has(> .btn + .btn) > :first-child,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > :first-child,
+.cbi-page-actions:has(> .btn + .btn) > :first-child,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > :first-child,
+.td.cbi-section-actions > *:has(> .btn + .btn) > :first-child,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > :first-child,
+td.cbi-section-actions > *:has(> .btn + .btn) > :first-child {
+	border-radius: var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-full) !important;
+}
+
+.actions:has(> .cbi-button + .cbi-button) > :last-child,
+.actions:has(> .btn + .btn) > :last-child,
+.cbi-page-actions:has(> .cbi-button + .cbi-button) > :last-child,
+.cbi-page-actions:has(> .btn + .btn) > :last-child,
+.td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > :last-child,
+.td.cbi-section-actions > *:has(> .btn + .btn) > :last-child,
+td.cbi-section-actions > *:has(> .cbi-button + .cbi-button) > :last-child,
+td.cbi-section-actions > *:has(> .btn + .btn) > :last-child {
+	border-radius: var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-medium) !important;
+}
+
 .breadcrumb {
 	background: transparent;
 	border: 0;
 	border-radius: 0;
 	padding: 0;
+}
+
+:root {
+	--m3e-app-background-color: var(--md-navigation-drawer-container-color);
+	--m3e-app-background-image: none;
+	--m3e-app-background-position: center center;
+	--m3e-app-background-size: cover;
+	--m3e-app-background-repeat: no-repeat;
+	--m3e-app-background-attachment: scroll;
+	--m3e-shell-background: var(--md-navigation-drawer-container-color);
+	--m3e-content-background: var(--md-sys-color-surface-bright);
+	--m3e-maincontent-background: transparent;
+}
+
+html,
+body {
+	background-attachment: var(--m3e-app-background-attachment);
+	background-color: var(--m3e-app-background-color);
+	background-image: var(--m3e-app-background-image);
+	background-position: var(--m3e-app-background-position);
+	background-repeat: var(--m3e-app-background-repeat);
+	background-size: var(--m3e-app-background-size);
+}
+
+body.m3e-login-page {
+	--m3e-app-background-color: var(--md-sys-color-surface-dim);
+	--m3e-shell-background: transparent;
+	--m3e-content-background: transparent;
+}
+
+header,
+header.with-shadow,
+.sidebar {
+	background: var(--m3e-shell-background) !important;
+}
+
+#scroll-wrapper {
+	background: var(--m3e-content-background);
+}
+
+#maincontent {
+	background: var(--m3e-maincontent-background);
+}
+
+.m3e-button-group {
+	align-items: center;
+	background: transparent !important;
+	border-radius: 0 !important;
+	display: inline-flex !important;
+	flex-wrap: nowrap !important;
+	gap: 6px !important;
+	margin: 0 !important;
+	max-width: 100%;
+	padding: 0 !important;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.actions.m3e-button-group,
+.cbi-page-actions.m3e-button-group {
+	justify-content: flex-end;
+	margin-left: auto;
+	width: fit-content;
+}
+
+.td.cbi-section-actions > .m3e-button-group,
+td.cbi-section-actions > .m3e-button-group {
+	width: max-content;
+}
+
+.m3e-button-group > .m3e-button-group-item {
+	display: inline-flex;
+	margin: 0 !important;
+}
+
+.m3e-button-group > .btn,
+.m3e-button-group > .cbi-button,
+.m3e-button-group > .cbi-dropdown.btn,
+.m3e-button-group > .cbi-dropdown.cbi-button,
+.m3e-button-group > form.m3e-button-group-item > .btn,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button,
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.btn,
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.cbi-button {
+	background: var(--md-filled-tonal-button-container-color) !important;
+	border: 1px solid transparent !important;
+	border-left-width: 1px !important;
+	border-right-width: 1px !important;
+	border-radius: var(--md-sys-shape-corner-full) !important;
+	color: var(--md-filled-tonal-button-label-text-color) !important;
+	min-height: 36px;
+	overflow: hidden;
+	padding: 0 16px;
+	white-space: nowrap;
+}
+
+.td.cbi-section-actions > .m3e-button-group > .btn,
+.td.cbi-section-actions > .m3e-button-group > .cbi-button,
+.td.cbi-section-actions > .m3e-button-group > .cbi-dropdown.btn,
+.td.cbi-section-actions > .m3e-button-group > .cbi-dropdown.cbi-button,
+.td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .btn,
+.td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .cbi-button,
+.td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.btn,
+.td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.cbi-button,
+td.cbi-section-actions > .m3e-button-group > .btn,
+td.cbi-section-actions > .m3e-button-group > .cbi-button,
+td.cbi-section-actions > .m3e-button-group > .cbi-dropdown.btn,
+td.cbi-section-actions > .m3e-button-group > .cbi-dropdown.cbi-button,
+td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .btn,
+td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .cbi-button,
+td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.btn,
+td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.cbi-button {
+	min-height: 32px;
+	padding: 0 12px;
+}
+
+.m3e-button-group > .cbi-button-apply,
+.m3e-button-group > .cbi-button-edit,
+.m3e-button-group > .cbi-button-action.important,
+.m3e-button-group > .primary,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-apply,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-edit,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-action.important,
+.m3e-button-group > form.m3e-button-group-item > .primary {
+	background: var(--md-filled-button-container-color) !important;
+	border-color: var(--md-filled-button-container-color) !important;
+	color: var(--md-filled-button-label-text-color) !important;
+}
+
+.m3e-button-group > .cbi-button-save,
+.m3e-button-group > .cbi-button-positive,
+.m3e-button-group > .cbi-button-reset,
+.m3e-button-group > .cbi-button-negative,
+.m3e-button-group > .cbi-button-remove,
+.m3e-button-group > .cbi-button-action,
+.m3e-button-group > .cbi-button-reload,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-save,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-positive,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-reset,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-negative,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-remove,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-action,
+.m3e-button-group > form.m3e-button-group-item > .cbi-button-reload {
+	background: var(--md-filled-tonal-button-container-color) !important;
+	border-color: transparent !important;
+	color: var(--md-filled-tonal-button-label-text-color) !important;
+}
+
+.m3e-button-group > .cbi-dropdown.btn,
+.m3e-button-group > .cbi-dropdown.cbi-button,
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.btn,
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.cbi-button {
+	padding: 0 !important;
+}
+
+.m3e-button-group > .cbi-dropdown.btn > ul:not(.dropdown),
+.m3e-button-group > .cbi-dropdown.cbi-button > ul:not(.dropdown),
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.btn > ul:not(.dropdown),
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.cbi-button > ul:not(.dropdown) {
+	padding-left: 14px;
+}
+
+.m3e-button-group > .cbi-dropdown.btn > .open,
+.m3e-button-group > .cbi-dropdown.cbi-button > .open,
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.btn > .open,
+.m3e-button-group > form.m3e-button-group-item > .cbi-dropdown.cbi-button > .open {
+	border-left-color: color-mix(in srgb, currentColor 18%, transparent) !important;
+	margin-left: 6px;
+	min-width: 34px;
+	padding: 0 12px 0 10px;
+}
+
+.m3e-button-group > :first-child,
+.m3e-button-group > :last-child,
+.m3e-button-group > form.m3e-button-group-item > :first-child,
+.m3e-button-group > form.m3e-button-group-item > :last-child {
+	border-radius: var(--md-sys-shape-corner-full) !important;
+}
+
+.td.cbi-section-actions > .m3e-button-group > :first-child,
+.td.cbi-section-actions > .m3e-button-group > :last-child,
+.td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > :first-child,
+.td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > :last-child,
+td.cbi-section-actions > .m3e-button-group > :first-child,
+td.cbi-section-actions > .m3e-button-group > :last-child,
+td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > :first-child,
+td.cbi-section-actions > .m3e-button-group > form.m3e-button-group-item > :last-child {
+	border-radius: var(--md-sys-shape-corner-full) !important;
+	border-left-width: 1px !important;
+	border-right-width: 1px !important;
+	border-style: solid !important;
+}
+
+@media screen and (min-width: 855px) and (max-width: 1099px) {
+	.td.cbi-section-actions,
+	td.cbi-section-actions {
+		width: 1%;
+		white-space: nowrap;
+	}
+
+	.td.cbi-section-actions > .m3e-button-group,
+	td.cbi-section-actions > .m3e-button-group {
+		flex-wrap: nowrap !important;
+	}
 }
 
 footer.footer-m3e {

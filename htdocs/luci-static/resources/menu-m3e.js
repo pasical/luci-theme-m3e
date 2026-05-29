@@ -4,9 +4,117 @@
 
 return baseclass.extend({
 	__init__: function () {
-		ui.menu.load().then(L.bind(this.render, this));
+		ui.menu.load().then(L.bind(function (tree) {
+			this.render(tree);
+			this.decorateActionGroups();
+		}, this));
 		this.initMenuToggle();
 		this.initHeaderShadow();
+		this.initActionGroupObserver();
+	},
+
+	initActionGroupObserver: function () {
+		var self = this,
+			scheduled = false,
+			root = document.getElementById('maincontent') || document.body;
+
+		function schedule() {
+			if (scheduled)
+				return;
+
+			scheduled = true;
+			window.requestAnimationFrame(function () {
+				scheduled = false;
+				self.decorateActionGroups();
+			});
+		}
+
+		schedule();
+
+		if (!root || !window.MutationObserver)
+			return;
+
+		this.actionGroupObserver = new MutationObserver(schedule);
+		this.actionGroupObserver.observe(root, {
+			childList: true,
+			subtree: true
+		});
+	},
+
+	decorateActionGroups: function () {
+		function applyFullPillRadius(control) {
+			if (!control || !control.style)
+				return;
+
+			control.style.setProperty('border-radius', '999px', 'important');
+			control.style.setProperty('border-top-left-radius', '999px', 'important');
+			control.style.setProperty('border-top-right-radius', '999px', 'important');
+			control.style.setProperty('border-bottom-right-radius', '999px', 'important');
+			control.style.setProperty('border-bottom-left-radius', '999px', 'important');
+		}
+
+		function isActionControl(node) {
+			return !!node && node.nodeType === 1 && node.matches('.btn, .cbi-button, .cbi-dropdown.btn, .cbi-dropdown.cbi-button');
+		}
+
+		function getActionControl(item) {
+			if (!item || item.nodeType !== 1)
+				return null;
+
+			if (isActionControl(item))
+				return item;
+
+			if (item.tagName === 'FORM' && isActionControl(item.firstElementChild))
+				return item.firstElementChild;
+
+			return null;
+		}
+
+		function getActionItems(wrapper) {
+			return Array.prototype.filter.call(wrapper.children || [], function (child) {
+				return !!getActionControl(child);
+			});
+		}
+
+		Array.prototype.forEach.call(document.querySelectorAll('.actions, .cbi-page-actions, .td.cbi-section-actions > *, td.cbi-section-actions > *'), function (wrapper) {
+			var items = getActionItems(wrapper);
+
+			wrapper.classList.remove('m3e-button-group');
+
+			Array.prototype.forEach.call(wrapper.children || [], function (child) {
+				child.classList.remove('m3e-button-group-item');
+
+				var control = getActionControl(child);
+
+				if (control) {
+					control.classList.remove('m3e-button-group-first', 'm3e-button-group-middle', 'm3e-button-group-last');
+					control.style.removeProperty('border-radius');
+					control.style.removeProperty('border-top-left-radius');
+					control.style.removeProperty('border-top-right-radius');
+					control.style.removeProperty('border-bottom-right-radius');
+					control.style.removeProperty('border-bottom-left-radius');
+				}
+			});
+
+			if (items.length < 2)
+				return;
+
+			wrapper.classList.add('m3e-button-group');
+
+			items.forEach(function (item, index) {
+				var control = getActionControl(item),
+					positionClass = (index === 0)
+						? 'm3e-button-group-first'
+						: (index === items.length - 1 ? 'm3e-button-group-last' : 'm3e-button-group-middle');
+
+				item.classList.add('m3e-button-group-item');
+
+				if (control) {
+					control.classList.add(positionClass);
+					applyFullPillRadius(control);
+				}
+			});
+		});
 	},
 
 	initMenuToggle: function () {
@@ -77,6 +185,7 @@ return baseclass.extend({
 
 	renderTabMenu: function (tree, url, level) {
 		var container = document.querySelector('#tabmenu'),
+			strip = E('div', { 'class': 'm3e-tab-strip' }),
 			ul = E('ul', { 'class': 'tabs' }),
 			children = ui.menu.getChildren(tree),
 			activeNode = null;
@@ -96,13 +205,111 @@ return baseclass.extend({
 		if (ul.children.length == 0)
 			return E([]);
 
-		container.appendChild(ul);
+		strip.appendChild(ul);
+		container.appendChild(strip);
+		this.initTabScroller(strip);
 		container.style.display = '';
 
 		if (activeNode)
 			this.renderTabMenu(activeNode, url + '/' + activeNode.name, (level || 0) + 1);
 
 		return ul;
+	},
+
+	initTabScroller: function (scroller) {
+		if (!scroller || scroller.dataset.m3eScrollable === 'true')
+			return;
+
+		scroller.dataset.m3eScrollable = 'true';
+
+		var startX = 0,
+			startScrollLeft = 0,
+			isDragging = false,
+			suppressClick = false,
+			mouseDown = false;
+
+		function updateScrollableState() {
+			scroller.classList.toggle('is-scrollable', scroller.scrollWidth > scroller.clientWidth + 2);
+		}
+
+		function stopDrag() {
+			mouseDown = false;
+
+			if (isDragging) {
+				isDragging = false;
+				scroller.classList.remove('is-dragging');
+			}
+
+			window.clearTimeout(scroller._m3eClickTimer);
+			scroller._m3eClickTimer = window.setTimeout(function () {
+				suppressClick = false;
+			}, 0);
+		}
+
+		updateScrollableState();
+
+		if (window.ResizeObserver) {
+			(new ResizeObserver(updateScrollableState)).observe(scroller);
+		}
+
+		window.addEventListener('resize', updateScrollableState);
+
+		scroller.addEventListener('wheel', function (ev) {
+			var delta = Math.abs(ev.deltaX) > Math.abs(ev.deltaY) ? ev.deltaX : ev.deltaY;
+
+			if (!delta || scroller.scrollWidth <= scroller.clientWidth + 2)
+				return;
+
+			scroller.scrollLeft += delta;
+			ev.preventDefault();
+		}, { passive: false });
+
+		scroller.addEventListener('mousedown', function (ev) {
+			if (ev.button !== 0)
+				return;
+
+			if (scroller.scrollWidth <= scroller.clientWidth + 2)
+				return;
+
+			mouseDown = true;
+			startX = ev.clientX;
+			startScrollLeft = scroller.scrollLeft;
+			isDragging = false;
+			suppressClick = false;
+			ev.preventDefault();
+		});
+
+		window.addEventListener('mousemove', function (ev) {
+			var delta;
+
+			if (!mouseDown)
+				return;
+
+			delta = ev.clientX - startX;
+
+			if (!isDragging && Math.abs(delta) < 6)
+				return;
+
+			isDragging = true;
+			suppressClick = true;
+			scroller.classList.add('is-dragging');
+			scroller.scrollLeft = startScrollLeft - delta;
+			ev.preventDefault();
+		});
+
+		window.addEventListener('mouseup', stopDrag);
+
+		scroller.addEventListener('click', function (ev) {
+			if (!suppressClick)
+				return;
+
+			ev.preventDefault();
+			ev.stopPropagation();
+		}, true);
+
+		scroller.addEventListener('dragstart', function (ev) {
+			ev.preventDefault();
+		});
 	},
 
 	renderMainMenu: function (tree, url, level) {
