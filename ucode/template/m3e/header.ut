@@ -1,0 +1,299 @@
+{#
+ Copyright 2008 Steven Barth <steven@midlink.org>
+ Copyright 2012 David Menting <david@nut-bolt.nl>
+ Copyright 2008-2022 Jo-Philipp Wich <jo@mein.io>
+ Licensed to the public under the Apache License 2.0.
+-#}
+
+{% 
+	import { getuid, getspnam } from 'luci.core';
+
+	const boardinfo = ubus.call('system', 'board');
+	const darkpref = uci.get('luci', 'main', 'darkmode') || 'auto';
+	let themepref = null;
+	switch (theme) {
+		case 'm3e-blue': themepref = 'blue'; break;
+		case 'm3e-green': themepref = 'green'; break;
+		case 'm3e-red': themepref = 'red'; break;
+	}
+
+	http.prepare_content('text/html; charset=UTF-8');
+-%}
+
+<!DOCTYPE html>
+<html lang="{{ dispatcher.lang }}" data-darkmode="{{ darkpref }}" {{ themepref ? `data-theme="${themepref}"` : '' }}>
+	<head>
+		<meta charset="utf-8">
+		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<script>
+		(function () {
+			var html = document.documentElement;
+			var mode = html.getAttribute('data-darkmode') || 'auto';
+			var manual = null;
+
+			try {
+				manual = localStorage.getItem('luci-theme-manual');
+			} catch (e) {
+				manual = null;
+			}
+
+			if (manual === 'true' || manual === 'false') {
+				mode = manual;
+			} else if (mode === 'auto') {
+				mode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'true' : 'false';
+			}
+
+			html.setAttribute('data-darkmode', mode);
+			html.style.colorScheme = (mode === 'true') ? 'dark' : 'light';
+		}());
+		</script>
+		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.2.9">
+		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.2.9" />
+		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
+		{% if (node?.css): %}
+		<link rel="stylesheet" href="{{ resource }}/{{ node.css }}">
+		{% endif %}
+		{% if (css): %}
+		<style title="text/css">{{ css }}</style>
+		{% endif %}
+		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
+		<script src="{{ resource }}/cbi.js?v=0.1.3"></script>
+
+
+		<style title="darkmode-support">
+			:root {
+				--transition-duration: 0.2s;
+				--md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+			}
+
+			.header-controls {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-left: auto;
+				padding: 0 8px;
+			}
+
+			@media (max-width: 768px) {
+				.header-controls {
+					gap: 12px;
+				}
+			}
+			html {
+				transition: background-color var(--transition-duration) ease,
+							color var(--transition-duration) ease;
+			}
+
+			.theme-toggle {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				background: transparent;
+				color: var(--md-sys-color-on-surface-variant, currentColor);
+				overflow: hidden;
+				outline: none;
+				transition: color var(--transition-duration) var(--md-sys-motion-easing-standard);
+			}
+
+			.theme-toggle::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				background: currentColor;
+				opacity: 0;
+				transition: opacity var(--transition-duration) var(--md-sys-motion-easing-standard);
+			}
+
+			.theme-toggle:hover {
+				color: var(--md-sys-color-on-surface, currentColor);
+			}
+
+			.theme-toggle:hover::before {
+				opacity: var(--md-sys-state-hover-state-layer-opacity, 0.08);
+			}
+
+			.theme-toggle:active::before {
+				opacity: var(--md-sys-state-pressed-state-layer-opacity, 0.12);
+			}
+
+			.theme-toggle:focus-visible {
+				outline: 3px solid var(--md-sys-color-secondary, currentColor);
+				outline-offset: 2px;
+			}
+
+			.theme-toggle .icon {
+				position: absolute;
+				transition: opacity var(--transition-duration) var(--md-sys-motion-easing-standard),
+							transform var(--transition-duration) var(--md-sys-motion-easing-standard);
+				fill: currentColor;
+				width: 20px;
+				height: 20px;
+			}
+
+			.theme-toggle .moon-icon {
+				opacity: 1;
+				transform: scale(1) rotate(0);
+			}
+
+			.theme-toggle .sun-icon {
+				opacity: 0;
+				transform: scale(0.5) rotate(90deg);
+			}
+
+			html[data-darkmode="true"] .theme-toggle .moon-icon {
+				opacity: 0;
+				transform: scale(0.5) rotate(-90deg);
+			}
+
+			html[data-darkmode="true"] .theme-toggle .sun-icon {
+				opacity: 1;
+				transform: scale(1) rotate(0);
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.theme-toggle,
+				.theme-toggle::before,
+				.theme-toggle .icon {
+					transition: none;
+				}
+			}
+		</style>
+
+
+	</head>
+
+	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
+		{% if (!blank_page): %}
+		<header>
+			<div class="menu-btn">
+				<span aria-label="{{ _('Toggle navigation menu') }}"></span>
+			</div>
+
+			<a class="brand" href="/">{{ striptags(boardinfo.hostname ?? '?') }}</a>
+
+			<div class="header-controls">
+				<a href="#" class="header-icon theme-toggle" id="theme-toggle" title="{{ _('Toggle dark mode') }}">
+					<svg class="icon moon-icon" width="20" height="25" viewBox="0 0 24 24">
+						<path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1-8.313-12.454z"/>
+					</svg>
+					<svg class="icon sun-icon" width="20" height="25" viewBox="0 0 24 24">
+						<path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/>
+					</svg>
+				</a>
+
+				<div id="indicators" class="pull-right"></div>
+			</div>
+		</header>
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const toggle = document.getElementById('theme-toggle');
+			const html = document.documentElement;
+			const transitionDuration = 300;
+
+			function initTheme() {
+				const manualMode = localStorage.getItem('luci-theme-manual');
+				const currentMode = html.getAttribute('data-darkmode');
+				const autoMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'true' : 'false';
+				const initMode = manualMode || currentMode || autoMode;
+
+				html.setAttribute('data-darkmode', initMode);
+				updateToggleState(initMode);
+			}
+
+			function updateToggleState(isDark) {
+				if (toggle) {
+					toggle.setAttribute('aria-pressed', isDark === 'true' ? 'true' : 'false');
+					toggle.classList.add('theme-switching');
+					setTimeout(() => {
+						toggle.classList.remove('theme-switching');
+					}, transitionDuration);
+				}
+			}
+
+			function toggleTheme() {
+				const current = html.getAttribute('data-darkmode');
+				const newMode = current === 'true' ? 'false' : 'true';
+
+				html.classList.add('theme-transition');
+				html.setAttribute('data-darkmode', newMode);
+				localStorage.setItem('luci-theme-manual', newMode);
+				updateToggleState(newMode);
+
+				setTimeout(() => {
+					html.classList.remove('theme-transition');
+				}, transitionDuration);
+
+				fetch('{{ dispatcher.build_url("admin/system/set-darkmode") }}', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						mode: newMode,
+						source: 'manual'
+					})
+				}).catch(error => {
+					console.error('Failed to sync theme preference:', error);
+				});
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+				if (!localStorage.getItem('luci-theme-manual')) {
+					const newMode = e.matches ? 'true' : 'false';
+					html.classList.add('theme-transition');
+					html.setAttribute('data-darkmode', newMode);
+					updateToggleState(newMode);
+					setTimeout(() => {
+						html.classList.remove('theme-transition');
+					}, transitionDuration);
+				}
+			});
+
+			initTheme();
+
+			if (toggle) {
+				toggle.addEventListener('click', function(e) {
+					e.preventDefault();
+					toggleTheme();
+				});
+			}
+		});
+		</script>
+		<aside class="sidebar">
+			<ul class="nav" id="topmenu" style="display:none"></ul>
+		</aside>
+
+		<div id="scroll-wrapper"><div id="maincontent" class="container">
+			{% if (getuid() == 0 && getspnam('root')?.pwdp === ''): %}
+				<div class="alert-message warning">
+					<h4>{{ _('No password set!') }}</h4>
+					<p>{{ _('There is no password set on this router. Please configure a root password to protect the web interface.') }}</p>
+					{% if (dispatcher.lookup("admin/system/admin")): %}
+					  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/admin") }}">{{ _('Go to password configuration...') }}</a></div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			{% if (boardinfo.rootfs_type == "initramfs"): %}
+				<div class="alert-message warning">
+					<h4>{{ _('System running in recovery (initramfs) mode.') }}</h4>
+					<p>{{ _('No changes to settings will be stored and are lost after rebooting. This mode should only be used to install a firmware upgrade') }}</p>
+					{% if (dispatcher.lookup("admin/system/flash")): %}
+					  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/flash") }}">{{ _('Go to firmware upgrade...') }}</a></div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			<noscript>
+				<div class="alert-message warning">
+					<h4>{{ _('JavaScript required!') }}</h4>
+					<p>{{ _('You must enable JavaScript in your browser or LuCI will not work properly.') }}</p>
+				</div>
+			</noscript>
+
+			<div id="tabmenu" style="display:none"></div>
+		{% endif %}

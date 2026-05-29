@@ -4,36 +4,116 @@
 
 return baseclass.extend({
 	__init__: function () {
-		ui.menu.load().then(L.bind(this.render, this));
+		ui.menu.load().then(L.bind(function (tree) {
+			this.render(tree);
+			this.decorateActionGroups();
+		}, this));
 		this.initMenuToggle();
-		this.initRippleEffect();
 		this.initHeaderShadow();
+		this.initActionGroupObserver();
 	},
 
-	createRipple: function (event, target) {
-		// 如果元素已经处于 active 状态，直接阻断水波纹渲染，避免重复触发和离场动画
-		var p = target.parentNode;
-		if ((p && p.classList && (p.classList.contains('active') || p.classList.contains('cbi-tab-active'))) ||
-			(target.classList && (target.classList.contains('active') || target.classList.contains('cbi-tab-active') || target.classList.contains('open')))) {
+	initActionGroupObserver: function () {
+		var self = this,
+			scheduled = false,
+			root = document.getElementById('maincontent') || document.body;
+
+		function schedule() {
+			if (scheduled)
+				return;
+
+			scheduled = true;
+			window.requestAnimationFrame(function () {
+				scheduled = false;
+				self.decorateActionGroups();
+			});
+		}
+
+		schedule();
+
+		if (!root || !window.MutationObserver)
 			return;
+
+		this.actionGroupObserver = new MutationObserver(schedule);
+		this.actionGroupObserver.observe(root, {
+			childList: true,
+			subtree: true
+		});
+	},
+
+	decorateActionGroups: function () {
+		function applyFullPillRadius(control) {
+			if (!control || !control.style)
+				return;
+
+			control.style.setProperty('border-radius', '999px', 'important');
+			control.style.setProperty('border-top-left-radius', '999px', 'important');
+			control.style.setProperty('border-top-right-radius', '999px', 'important');
+			control.style.setProperty('border-bottom-right-radius', '999px', 'important');
+			control.style.setProperty('border-bottom-left-radius', '999px', 'important');
 		}
 
-		// 移除已有的水波纹
-		var oldRipple = target.querySelector('.ripple');
-		if (oldRipple) {
-			oldRipple.remove();
+		function isActionControl(node) {
+			return !!node && node.nodeType === 1 && node.matches('.btn, .cbi-button, .cbi-dropdown.btn, .cbi-dropdown.cbi-button');
 		}
 
-		// 创建并设置水波纹
-		var ripple = document.createElement('div');
-		ripple.className = 'ripple';
-		ripple.style.left = event.clientX - target.getBoundingClientRect().left + 'px';
-		ripple.style.top = event.clientY - target.getBoundingClientRect().top + 'px';
+		function getActionControl(item) {
+			if (!item || item.nodeType !== 1)
+				return null;
 
-		// 添加水波纹并设置自动移除
-		target.appendChild(ripple);
-		ripple.addEventListener('animationend', function () {
-			ripple.remove();
+			if (isActionControl(item))
+				return item;
+
+			if (item.tagName === 'FORM' && isActionControl(item.firstElementChild))
+				return item.firstElementChild;
+
+			return null;
+		}
+
+		function getActionItems(wrapper) {
+			return Array.prototype.filter.call(wrapper.children || [], function (child) {
+				return !!getActionControl(child);
+			});
+		}
+
+		Array.prototype.forEach.call(document.querySelectorAll('.actions, .cbi-page-actions, .td.cbi-section-actions > *, td.cbi-section-actions > *'), function (wrapper) {
+			var items = getActionItems(wrapper);
+
+			wrapper.classList.remove('m3e-button-group');
+
+			Array.prototype.forEach.call(wrapper.children || [], function (child) {
+				child.classList.remove('m3e-button-group-item');
+
+				var control = getActionControl(child);
+
+				if (control) {
+					control.classList.remove('m3e-button-group-first', 'm3e-button-group-middle', 'm3e-button-group-last');
+					control.style.removeProperty('border-radius');
+					control.style.removeProperty('border-top-left-radius');
+					control.style.removeProperty('border-top-right-radius');
+					control.style.removeProperty('border-bottom-right-radius');
+					control.style.removeProperty('border-bottom-left-radius');
+				}
+			});
+
+			if (items.length < 2)
+				return;
+
+			wrapper.classList.add('m3e-button-group');
+
+			items.forEach(function (item, index) {
+				var control = getActionControl(item),
+					positionClass = (index === 0)
+						? 'm3e-button-group-first'
+						: (index === items.length - 1 ? 'm3e-button-group-last' : 'm3e-button-group-middle');
+
+				item.classList.add('m3e-button-group-item');
+
+				if (control) {
+					control.classList.add(positionClass);
+					applyFullPillRadius(control);
+				}
+			});
 		});
 	},
 
@@ -173,9 +253,6 @@ return baseclass.extend({
 					'class': linkclass,
 					'href': linkurl,
 					'click': (function (submenu, hasSubmenu, targetUrl, ev) {
-						// 添加水波纹效果
-						self.createRipple(ev, ev.currentTarget);
-
 						if (hasSubmenu) {
 							ev.preventDefault();
 							ev.stopPropagation();
@@ -234,23 +311,15 @@ return baseclass.extend({
 			ul.style.display = '';
 	},
 
-	initRippleEffect: function () {
-		var self = this;
-		document.addEventListener('click', function (e) {
-			// 排除一级菜单的点击，因为它们已经在自己的点击事件中处理了水波纹
-			var target = e.target.closest('.dropdown-menu>li>a, .tabs>li, .cbi-tabmenu>li');
-			if (!target) return;
-
-			self.createRipple(e, target);
-		});
-	},
-
 	initHeaderShadow: function () {
 		var header = document.querySelector('header');
+		var scrollTarget = document.getElementById('scroll-wrapper') || window;
 		var scrollThreshold = 10; // 滚动阈值
 
-		window.addEventListener('scroll', function () {
-			if (window.scrollY > scrollThreshold) {
+		scrollTarget.addEventListener('scroll', function () {
+			var scrollTop = scrollTarget === window ? window.scrollY : scrollTarget.scrollTop;
+
+			if (scrollTop > scrollThreshold) {
 				header.classList.add('with-shadow');
 			} else {
 				header.classList.remove('with-shadow');

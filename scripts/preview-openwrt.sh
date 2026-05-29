@@ -143,6 +143,8 @@ sync_assets() {
 
 sync_templates() {
   local theme
+  copy_dir "ucode/template/m3e" "/usr/share/ucode/luci/template/m3e"
+
   for theme in m3e m3e-blue m3e-green m3e-red; do
     copy_dir "ucode/template/themes/${theme}" "/usr/share/ucode/luci/template/themes/${theme}"
   done
