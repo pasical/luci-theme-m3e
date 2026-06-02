@@ -4422,12 +4422,13 @@ textarea[disabled],
 	--m3e-button-padding-x: 18px;
 	--m3e-chip-height: 32px;
 	--m3e-field-gap: 12px;
+	--m3e-field-max-inline: 32rem;
 	--m3e-row-gap: 14px;
 	--m3e-label-column: 15rem;
-	--m3e-icon-clear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M18.3 5.71 12 12l6.3 6.29-1.41 1.41L10.59 13.41 4.29 19.7 2.88 18.29 9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.29-6.3z'/%3E%3C/svg%3E");
-	--m3e-icon-confirm: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/%3E%3C/svg%3E");
-	--m3e-icon-visibility: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6m0 8c-4.3 0-8.06-2.74-9.43-6.5C3.94 6.74 7.7 4 12 4s8.06 2.74 9.43 6.5C20.06 14.26 16.3 17 12 17m0-11c-3.23 0-6.18 1.79-7.83 4.5C5.82 13.21 8.77 15 12 15s6.18-1.79 7.83-4.5C18.18 7.79 15.23 6 12 6'/%3E%3C/svg%3E");
-	--m3e-icon-visibility-off: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m2.81 2.81 18.38 18.38-1.42 1.41-2.58-2.57A10.94 10.94 0 0 1 12 21c-4.3 0-8.06-2.74-9.43-6.5a11.8 11.8 0 0 1 3.11-4.61L1.4 4.23zM12 7c3.23 0 6.18 1.79 7.83 4.5a11.74 11.74 0 0 1-1.29 2.1l-1.49-1.49A4.99 4.99 0 0 0 12 7m0 3c.64 0 1.23.24 1.68.64l-3.04 3.04A2.99 2.99 0 0 1 12 10m-6.36.14A11 11 0 0 0 4.17 11.5C5.82 14.21 8.77 16 12 16c1.47 0 2.88-.37 4.12-1.04l-1.57-1.57A4.98 4.98 0 0 1 8.61 17l-1.46-1.46A10.6 10.6 0 0 1 4.17 11.5c.46-.75.97-1.44 1.47-2.05m5.92-4.1 1.91 1.91L12 8a4.98 4.98 0 0 1 4.99 4.99l-.05 1.46 1.58 1.58.15-.14A11.8 11.8 0 0 0 21.43 14.5C20.06 10.74 16.3 8 12 8h-.44z'/%3E%3C/svg%3E");
+	--m3e-icon-clear: url("icons/clear.svg");
+	--m3e-icon-confirm: url("icons/arrow_forward.svg");
+	--m3e-icon-visibility: url("icons/visibility.svg");
+	--m3e-icon-visibility-off: url("icons/visibility_off.svg");
 }
 
 #maincontent,
@@ -4566,6 +4567,7 @@ textarea[disabled],
 .modal select,
 .modal textarea {
 	min-height: var(--m3e-control-height);
+	max-width: min(100%, var(--m3e-field-max-inline));
 	padding-inline: var(--m3e-control-padding-x);
 	font-size: var(--m3e-text-body);
 	line-height: 20px;
@@ -4713,6 +4715,7 @@ textarea[disabled],
 	flex: 1 1 12rem;
 	min-width: 0;
 	width: auto;
+	max-width: min(100%, var(--m3e-field-max-inline));
 }
 
 #maincontent .controls .control-group>.btn,
@@ -4726,6 +4729,8 @@ textarea[disabled],
 #maincontent .cbi-value-field .control-group.m3e-field-action-group {
 	position: relative;
 	gap: 0 !important;
+	width: min(100%, var(--m3e-field-max-inline));
+	max-width: min(100%, var(--m3e-field-max-inline));
 }
 
 #maincontent .controls .control-group.m3e-field-action-group>input[type=text],
@@ -4736,7 +4741,7 @@ textarea[disabled],
 #maincontent .cbi-value-field .control-group.m3e-field-action-group>input[type=password],
 #maincontent .cbi-value-field .control-group.m3e-field-action-group>select {
 	width: 100%;
-	max-width: none;
+	max-width: 100%;
 	padding-inline-end: calc(var(--m3e-control-height) + 12px) !important;
 	padding-inline-start: var(--m3e-control-padding-x);
 }
@@ -4870,7 +4875,7 @@ body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-ch
 body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>input[type=text],
 body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>.cbi-input-text {
 	flex: 1 1 18rem;
-	max-width: min(100%, 26rem);
+	max-width: min(100%, var(--m3e-field-max-inline));
 }
 
 body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(4) .control-group {
@@ -4888,7 +4893,7 @@ body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-ch
 body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group.m3e-field-action-group>.cbi-input-text {
 	flex: 1 1 auto;
 	width: 100%;
-	max-width: none !important;
+	max-width: 100% !important;
 	padding-inline-end: calc(var(--m3e-control-height) + 12px) !important;
 }
 
@@ -4957,7 +4962,7 @@ body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-ch
 	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(2) .control-group>.cbi-input-text,
 	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>input[type=text],
 	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>.cbi-input-text {
-		max-width: none;
+		max-width: 100%;
 	}
 
 	#maincontent .controls .control-group,
