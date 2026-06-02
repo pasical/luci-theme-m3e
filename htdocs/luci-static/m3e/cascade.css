@@ -4400,3 +4400,468 @@ textarea[disabled],
 		padding-inline: 18px;
 	}
 }
+
+/* M3E typography and spacing tuning */
+:root {
+	--m3e-font-sans: "Segoe UI Variable Text", "Segoe UI Variable", "Google Sans", "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, sans-serif;
+	--m3e-font-display: "Segoe UI Variable Display", "Google Sans", "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, sans-serif;
+	--m3e-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+	--m3e-text-xs: 13px;
+	--m3e-text-sm: 15px;
+	--m3e-text-body: 16px;
+	--m3e-text-md: 17px;
+	--m3e-text-lg: 19px;
+	--m3e-title-sm: 20px;
+	--m3e-title-md: 25px;
+	--m3e-title-lg: 31px;
+	--m3e-leading-tight: 1.25;
+	--m3e-leading-normal: 1.5;
+	--m3e-leading-relaxed: 1.62;
+	--m3e-control-height: 40px;
+	--m3e-control-padding-x: 14px;
+	--m3e-button-padding-x: 18px;
+	--m3e-chip-height: 32px;
+	--m3e-field-gap: 12px;
+	--m3e-row-gap: 14px;
+	--m3e-label-column: 15rem;
+}
+
+#maincontent,
+#maincontent button,
+#maincontent input,
+#maincontent select,
+#maincontent textarea,
+.modal,
+.modal button,
+.modal input,
+.modal select,
+.modal textarea,
+.cbi-tooltip {
+	font-family: var(--m3e-font-sans);
+	font-feature-settings: "kern" 1;
+	font-optical-sizing: auto;
+}
+
+#maincontent,
+.modal,
+.cbi-tooltip {
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-relaxed);
+	letter-spacing: 0;
+}
+
+#maincontent p,
+#maincontent .cbi-map-descr,
+#maincontent .cbi-section-descr,
+#maincontent .cbi-value-description,
+#maincontent .table .tr.cbi-section-table-descr .th,
+.modal p {
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-relaxed);
+	letter-spacing: 0;
+	color: var(--md-sys-color-on-surface-variant);
+}
+
+#maincontent h1,
+#maincontent h2,
+#maincontent h3,
+#maincontent h4,
+#maincontent h5,
+#maincontent h6,
+#maincontent legend,
+#maincontent .cbi-section-title,
+.modal h1,
+.modal h2,
+.modal h3,
+.modal h4,
+.modal h5,
+.modal h6 {
+	font-family: var(--m3e-font-display);
+	font-weight: 600;
+	line-height: var(--m3e-leading-tight);
+	letter-spacing: 0;
+	color: var(--md-sys-color-on-surface);
+}
+
+#maincontent h1 {
+	font-size: var(--m3e-title-lg);
+	line-height: 38px;
+	margin: 0 0 18px;
+}
+
+#maincontent h2 {
+	font-size: var(--m3e-title-md);
+	line-height: 32px;
+	margin: 0 0 14px;
+}
+
+#maincontent h3,
+#maincontent legend,
+.modal h3,
+.modal h4 {
+	font-size: var(--m3e-title-sm);
+	line-height: 28px;
+	margin: 14px 0 10px;
+}
+
+#maincontent h4,
+#maincontent h5,
+#maincontent h6 {
+	font-size: var(--m3e-text-md);
+	line-height: 24px;
+	margin: 12px 0 8px;
+}
+
+#maincontent .cbi-value,
+#maincontent form .clearfix {
+	margin: 14px 0;
+}
+
+#maincontent .cbi-value label.cbi-value-title {
+	font-size: var(--m3e-text-body);
+	font-weight: 600;
+	line-height: 24px;
+	letter-spacing: 0;
+	padding-top: 4px;
+}
+
+#maincontent .cbi-value-field {
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-normal);
+}
+
+#maincontent .cbi-section-node,
+#maincontent .cbi-map fieldset,
+#maincontent .table,
+#maincontent table {
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-normal);
+}
+
+#maincontent .table .td,
+#maincontent .table .th {
+	padding: 10px 12px;
+	line-height: 22px;
+}
+
+#maincontent .table .tr:first-child .th,
+#maincontent .tr.cbi-section-table-titles,
+#maincontent .tr.table-titles {
+	font-size: var(--m3e-text-xs);
+	font-weight: 600;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+#maincontent .cbi-dropdown:not(.btn):not(.cbi-button),
+#maincontent .cbi-select,
+#maincontent input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=reset]):not([type=submit]):not([type=file]),
+#maincontent select,
+#maincontent textarea,
+.modal input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=reset]):not([type=submit]):not([type=file]),
+.modal select,
+.modal textarea {
+	min-height: var(--m3e-control-height);
+	padding-inline: var(--m3e-control-padding-x);
+	font-size: var(--m3e-text-body);
+	line-height: 20px;
+}
+
+#maincontent textarea,
+.modal textarea {
+	min-height: 88px;
+	padding-block: 9px;
+}
+
+#maincontent .cbi-select select,
+#maincontent .cbi-select select:focus {
+	padding-inline: var(--m3e-control-padding-x) 34px;
+}
+
+#maincontent .btn,
+#maincontent .cbi-button,
+#maincontent button,
+.modal .btn,
+.modal .cbi-button,
+.modal button,
+#maincontent .cbi-page-actions .cbi-button,
+#maincontent .cbi-section-actions .cbi-button {
+	min-height: var(--m3e-control-height);
+	min-width: 56px;
+	padding-inline: var(--m3e-button-padding-x);
+	font-size: var(--m3e-text-sm);
+	font-weight: 600;
+	line-height: 22px;
+	letter-spacing: 0;
+	border-radius: calc(var(--m3e-control-height) / 2);
+}
+
+#maincontent .cbi-dropdown[open]>ul.dropdown {
+	font-size: var(--m3e-text-sm);
+	line-height: 20px;
+}
+
+#maincontent .cbi-dropdown[open]>ul.dropdown>li {
+	min-height: 44px;
+	padding-inline: 12px;
+}
+
+#maincontent .label,
+#maincontent .cbi-dynlist>.item,
+#maincontent .ifacebadge,
+#maincontent .zonebadge {
+	min-height: var(--m3e-chip-height);
+	padding-inline: 10px;
+	font-size: var(--m3e-text-xs);
+	font-weight: 600;
+	line-height: 20px;
+	letter-spacing: 0;
+}
+
+#maincontent code,
+#maincontent pre,
+#syslog,
+.modal pre {
+	font-family: var(--m3e-font-mono);
+	font-size: var(--m3e-text-xs);
+	line-height: 1.55;
+	letter-spacing: 0;
+}
+
+#maincontent .alert-message {
+	padding: 16px 18px;
+	margin-bottom: 16px;
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-relaxed);
+}
+
+#maincontent .alert-message h4,
+#maincontent .alert-message h5 {
+	font-size: var(--m3e-text-lg);
+	line-height: 26px;
+	font-weight: 600;
+	margin: 0 0 8px;
+}
+
+#maincontent .alert-message p,
+#maincontent .alert-message ul,
+#maincontent .alert-message pre {
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-relaxed);
+	margin: 0 0 12px;
+}
+
+#maincontent .alert-message .btn,
+#maincontent .alert-message .cbi-button,
+#maincontent .alert-message button {
+	min-height: 38px;
+	padding-inline: 18px;
+	font-size: var(--m3e-text-body);
+	line-height: 20px;
+	white-space: normal;
+	text-align: center;
+}
+
+#maincontent .controls {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	align-items: stretch;
+	gap: 16px;
+	margin: 12px 0 18px;
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-normal);
+}
+
+#maincontent .controls>div {
+	width: 100%;
+	flex: none;
+	display: grid;
+	grid-template-columns: minmax(12rem, var(--m3e-label-column)) minmax(0, 1fr);
+	align-items: center;
+	column-gap: 18px;
+	row-gap: 10px;
+	padding: 4px 0;
+	min-width: 0;
+}
+
+#maincontent .controls>div>label:first-child {
+	font-size: var(--m3e-text-body);
+	font-weight: 600;
+	line-height: 24px;
+	color: var(--md-sys-color-on-surface-variant);
+}
+
+#maincontent .controls .control-group,
+#maincontent .cbi-value-field .control-group {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--m3e-field-gap) !important;
+	min-width: 0;
+	width: 100%;
+}
+
+#maincontent .controls .control-group>input[type=text],
+#maincontent .controls .control-group>input[type=password],
+#maincontent .controls .control-group>.cbi-input-text,
+#maincontent .cbi-value-field .control-group>input[type=text],
+#maincontent .cbi-value-field .control-group>input[type=password] {
+	flex: 1 1 12rem;
+	min-width: 0;
+	width: auto;
+}
+
+#maincontent .controls .control-group>.btn,
+#maincontent .controls .control-group>.cbi-button,
+#maincontent .cbi-value-field .control-group>.btn,
+#maincontent .cbi-value-field .control-group>.cbi-button {
+	flex: 0 0 auto;
+}
+
+#maincontent .controls .control-group>label,
+#maincontent .controls .control-group>span,
+#maincontent .controls .control-group>.radio,
+#maincontent .controls .control-group>.checkbox {
+	font-size: var(--m3e-text-body);
+	line-height: 24px;
+}
+
+#maincontent .controls>div>div:not(.cbi-progressbar),
+#maincontent .controls>div>span:not(.control-group) {
+	font-size: var(--m3e-text-body);
+	line-height: var(--m3e-leading-normal);
+}
+
+#maincontent .controls>div>label:first-child + div > .btn,
+#maincontent .controls>div>label:first-child + div > .cbi-button,
+#maincontent .controls>div>label:first-child + .btn,
+#maincontent .controls>div>label:first-child + .cbi-button {
+	margin-inline-start: 0;
+}
+
+body[data-page="admin-system-package-manager"] #maincontent .controls {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: 24px;
+	row-gap: 18px;
+}
+
+body[data-page="admin-system-package-manager"] #maincontent .controls>div {
+	grid-template-columns: 1fr;
+	align-items: start;
+	row-gap: 8px;
+	padding: 0;
+}
+
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(1),
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(n+4) {
+	grid-column: 1 / -1;
+}
+
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(2),
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) {
+	grid-column: span 1;
+}
+
+body[data-page="admin-system-package-manager"] #maincontent .controls>div>label:first-child {
+	margin-bottom: 2px;
+}
+
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(2) .control-group>input[type=text],
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(2) .control-group>.cbi-input-text,
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>input[type=text],
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>.cbi-input-text {
+	flex: 1 1 18rem;
+	max-width: min(100%, 26rem);
+}
+
+body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(4) .control-group {
+	row-gap: 10px;
+}
+
+@media screen and (max-width: 854px) {
+	#maincontent,
+	.modal {
+		font-size: var(--m3e-text-body);
+		line-height: var(--m3e-leading-relaxed);
+	}
+
+	#maincontent h1 {
+		font-size: 27px;
+		line-height: 34px;
+	}
+
+	#maincontent h2 {
+		font-size: 23px;
+		line-height: 31px;
+	}
+
+	#maincontent h3,
+	#maincontent legend {
+		font-size: 19px;
+		line-height: 27px;
+	}
+
+	#maincontent .cbi-dropdown:not(.btn):not(.cbi-button),
+	#maincontent .cbi-select,
+	#maincontent input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=reset]):not([type=submit]):not([type=file]),
+	#maincontent select,
+	#maincontent .btn,
+	#maincontent .cbi-button,
+	#maincontent button {
+		min-height: 42px;
+	}
+
+	#maincontent .table .td,
+	#maincontent .table .th {
+		line-height: 20px;
+	}
+
+	#maincontent .controls {
+		gap: 14px;
+	}
+
+	#maincontent .controls>div {
+		grid-template-columns: 1fr;
+		row-gap: 10px;
+		min-width: 0;
+		width: 100%;
+		padding: 6px 0;
+	}
+
+	body[data-page="admin-system-package-manager"] #maincontent .controls {
+		grid-template-columns: minmax(0, 1fr);
+		column-gap: 0;
+	}
+
+	body[data-page="admin-system-package-manager"] #maincontent .controls>div,
+	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(2),
+	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) {
+		grid-column: 1 / -1;
+	}
+
+	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(2) .control-group>input[type=text],
+	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(2) .control-group>.cbi-input-text,
+	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>input[type=text],
+	body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-child(3) .control-group>.cbi-input-text {
+		max-width: none;
+	}
+
+	#maincontent .controls .control-group,
+	#maincontent .cbi-value-field .control-group {
+		gap: 10px !important;
+	}
+
+	#maincontent .alert-message {
+		padding: 16px;
+		margin-bottom: 16px;
+	}
+
+	#maincontent .alert-message .btn,
+	#maincontent .alert-message .cbi-button,
+	#maincontent .alert-message button {
+		width: 100%;
+		max-width: 100%;
+		min-height: 40px;
+		margin-top: 4px;
+	}
+}

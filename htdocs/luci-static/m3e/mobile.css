@@ -356,11 +356,27 @@ header h3 a {
 		margin: 0
 	}
 
-	.btn,
-	.cbi-button,
-	button {
-		font-size: 14px !important;
-		padding: 0 8px
+	#maincontent .btn,
+	#maincontent .cbi-button,
+	#maincontent button,
+	.modal .btn,
+	.modal .cbi-button,
+	.modal button {
+		font-size: 15px !important;
+		padding: 0 14px;
+		letter-spacing: 0
+	}
+
+	#maincontent .controls .control-group,
+	#maincontent .cbi-value-field .control-group {
+		gap: 12px !important
+	}
+
+	#maincontent .controls .control-group>.btn,
+	#maincontent .controls .control-group>.cbi-button,
+	#maincontent .cbi-value-field .control-group>.btn,
+	#maincontent .cbi-value-field .control-group>.cbi-button {
+		padding-inline: 16px
 	}
 
 	.actions,
