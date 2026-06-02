@@ -214,10 +214,6 @@ header h3 a {
 		margin: 0 0 .5em
 	}
 
-	.cbi-section-table+.cbi-section-create {
-		/* padding-top: 0; */
-	}
-
 	.tr[data-title]::before {
 		display: block;
 		flex: 1 1 100%;
@@ -324,6 +320,29 @@ header h3 a {
 
 	input.cbi-input-password {
 		width: calc(100% - 25px)
+	}
+
+	#maincontent .cbi-value-field .control-group {
+		display: flex;
+		align-items: stretch;
+		gap: 8px !important;
+		height: auto;
+		min-height: 40px;
+	}
+
+	#maincontent .cbi-value-field .control-group>input[type=password],
+	#maincontent .cbi-value-field .control-group>input[type=text] {
+		flex: 1 1 0;
+		min-width: 0;
+		width: auto;
+	}
+
+	#maincontent .cbi-value-field .control-group>input[type=password]+.cbi-button,
+	#maincontent .cbi-value-field .control-group>input[type=text]+.cbi-button,
+	#maincontent .cbi-value-field .control-group>select+.cbi-button {
+		flex: 0 0 auto;
+		min-width: 56px;
+		padding-inline: 18px;
 	}
 
 	input[type=password]+.cbi-button,
