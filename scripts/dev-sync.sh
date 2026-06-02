@@ -121,6 +121,7 @@ sync_assets() {
   done
 
   sync_file_to "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
+  sync_file_to "htdocs/luci-static/resources/field-actions-m3e.js" "/www/luci-static/resources/field-actions-m3e.js"
   sync_dir_to "htdocs/luci-static/resources/view/m3e/" "/www/luci-static/resources/view/m3e/"
 }
 
