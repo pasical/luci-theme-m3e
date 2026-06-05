@@ -3979,6 +3979,7 @@ textarea {
 
 #maincontent .cbi-section-node,
 #maincontent .cbi-section > .cbi-section-node,
+#maincontent .cbi-map > .cbi-section,
 #maincontent .cbi-map > .cbi-section-node,
 #maincontent .cbi-map > fieldset,
 #maincontent .cbi-section > div:not(.cbi-title):not(.cbi-section-node-tabbed),
@@ -3992,6 +3993,12 @@ textarea {
 	box-shadow: none;
 	width: 100%;
 	padding: 18px 20px 20px;
+}
+
+#maincontent .cbi-map > .cbi-section {
+	margin: 0;
+	padding-top: 12px;
+	padding-bottom: 20px;
 }
 
 #maincontent .cbi-section > .cbi-title,
@@ -5007,6 +5014,20 @@ textarea[disabled],
 	max-width: min(100%, var(--m3e-field-max-inline));
 }
 
+#maincontent .cbi-value-field > input[type=text],
+#maincontent .cbi-value-field > input[type=password],
+#maincontent .cbi-value-field > .cbi-input-text,
+#maincontent .cbi-value-field > select {
+	display: block;
+	width: min(100%, var(--m3e-field-max-inline));
+	max-width: min(100%, var(--m3e-field-max-inline));
+	min-width: min(100%, 18rem);
+}
+
+#maincontent .cbi-value-field > br + .control-group {
+	margin-top: var(--m3e-field-gap);
+}
+
 #maincontent .controls .control-group>.btn,
 #maincontent .controls .control-group>.cbi-button,
 #maincontent .cbi-value-field .control-group>.btn,
@@ -5286,5 +5307,113 @@ body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-ch
 		max-width: 100%;
 		min-height: 40px;
 		margin-top: 4px;
+	}
+}
+
+/* Final real-device form and nested-card fixes */
+#maincontent .cbi-map > .cbi-map-tabbed {
+	margin: 0 !important;
+	padding: 0 20px 20px !important;
+	background: transparent !important;
+}
+
+#maincontent .cbi-map > .cbi-map-tabbed > .cbi-section,
+#maincontent .cbi-map > .cbi-map-tabbed > .cbi-section.cbi-tblsection,
+#maincontent .cbi-map > .cbi-map-tabbed > .cbi-map,
+#maincontent .cbi-map > .cbi-map-tabbed > .cbi-section-node {
+	background: transparent !important;
+	background-color: transparent !important;
+	border: 0 !important;
+	border-color: transparent !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 100% !important;
+}
+
+#maincontent .cbi-map > .cbi-map-tabbed > .cbi-section > h3,
+#maincontent .cbi-map > .cbi-map-tabbed > .cbi-map > h3,
+#maincontent .cbi-map > .cbi-map-tabbed > .cbi-section-node > h3 {
+	margin: 0 !important;
+	padding: 0 0 16px !important;
+	max-width: none !important;
+}
+
+#maincontent .cbi-map > .cbi-section {
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	margin: 0 !important;
+	padding: 12px 20px 20px !important;
+	width: 100% !important;
+}
+
+#maincontent .cbi-map > h2 + .cbi-map-descr,
+#maincontent .cbi-map > h3 + .cbi-map-descr,
+#maincontent .cbi-map > h2 + .cbi-section-descr,
+#maincontent .cbi-map > h3 + .cbi-section-descr {
+	margin-top: 0 !important;
+	padding-top: 10px !important;
+}
+
+#maincontent .cbi-map > .cbi-map-descr + .cbi-section,
+#maincontent .cbi-map > .cbi-section-descr + .cbi-section,
+#maincontent .cbi-map > .cbi-map-descr + .cbi-section-node,
+#maincontent .cbi-map > .cbi-section-descr + .cbi-section-node {
+	padding-top: 12px !important;
+}
+
+#maincontent .cbi-value-field > input[type=text],
+#maincontent .cbi-value-field > input[type=password],
+#maincontent .cbi-value-field > .cbi-input-text,
+#maincontent .cbi-value-field > select,
+#maincontent .cbi-value-field > textarea,
+#maincontent #localtime {
+	display: block;
+	width: min(100%, var(--m3e-field-max-inline)) !important;
+	max-width: min(100%, var(--m3e-field-max-inline)) !important;
+	min-width: min(100%, 18rem) !important;
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#maincontent .cbi-value-field > br + .control-group {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--m3e-field-gap) !important;
+	margin-top: var(--m3e-field-gap) !important;
+	width: min(100%, var(--m3e-field-max-inline));
+	max-width: min(100%, var(--m3e-field-max-inline));
+}
+
+#maincontent .cbi-value-field > br + .control-group > .btn,
+#maincontent .cbi-value-field > br + .control-group > .cbi-button,
+#maincontent .cbi-value-field > br + .control-group > button {
+	flex: 0 0 auto;
+}
+
+@media screen and (max-width: 854px) {
+	#maincontent .cbi-map > .cbi-map-tabbed {
+		padding: 0 16px 16px !important;
+	}
+
+	#maincontent .cbi-map > .cbi-section {
+		padding: 10px 16px 16px !important;
+	}
+
+	#maincontent .cbi-value-field > input[type=text],
+	#maincontent .cbi-value-field > input[type=password],
+	#maincontent .cbi-value-field > .cbi-input-text,
+	#maincontent .cbi-value-field > select,
+	#maincontent .cbi-value-field > textarea,
+	#maincontent #localtime,
+	#maincontent .cbi-value-field > br + .control-group {
+		width: 100% !important;
+		max-width: 100% !important;
+		min-width: 0 !important;
 	}
 }
