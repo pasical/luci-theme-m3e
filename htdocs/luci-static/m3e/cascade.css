@@ -4703,22 +4703,23 @@ textarea[disabled],
 	--m3e-font-display: "Segoe UI Variable Display", "Google Sans", "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, sans-serif;
 	--m3e-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 	--m3e-text-xs: 13px;
-	--m3e-text-sm: 15px;
-	--m3e-text-body: 16px;
-	--m3e-text-md: 17px;
-	--m3e-text-lg: 19px;
+	--m3e-text-sm: 14px;
+	--m3e-text-body: 15px;
+	--m3e-text-md: 16px;
+	--m3e-text-lg: 18px;
 	--m3e-title-sm: 20px;
 	--m3e-title-md: 25px;
 	--m3e-title-lg: 31px;
 	--m3e-leading-tight: 1.25;
 	--m3e-leading-normal: 1.5;
-	--m3e-leading-relaxed: 1.62;
+	--m3e-leading-relaxed: 1.58;
 	--m3e-control-height: 40px;
 	--m3e-control-padding-x: 14px;
 	--m3e-button-padding-x: 18px;
 	--m3e-chip-height: 32px;
 	--m3e-field-gap: 12px;
 	--m3e-field-max-inline: 32rem;
+	--m3e-textarea-max-inline: 46rem;
 	--m3e-row-gap: 14px;
 	--m3e-label-column: 15rem;
 	--m3e-icon-clear: url("icons/clear.svg");
@@ -4872,6 +4873,8 @@ textarea[disabled],
 #maincontent textarea,
 .modal textarea {
 	min-height: 88px;
+	width: min(100%, var(--m3e-textarea-max-inline));
+	max-width: min(100%, var(--m3e-textarea-max-inline));
 	padding-block: 9px;
 }
 
@@ -5378,6 +5381,17 @@ body[data-page="admin-system-package-manager"] #maincontent .controls>div:nth-ch
 	box-sizing: border-box;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+#maincontent .cbi-value-field > textarea {
+	width: min(100%, var(--m3e-textarea-max-inline)) !important;
+	max-width: min(100%, var(--m3e-textarea-max-inline)) !important;
+}
+
+body[data-page="admin-system-crontab"] #maincontent textarea {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-height: 22rem;
 }
 
 #maincontent .cbi-value-field > br + .control-group {
