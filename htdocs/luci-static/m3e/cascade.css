@@ -1617,7 +1617,7 @@
 
 	.cbi-tabmenu,
 	.tabs {
-		--tab-bar-background-color: var(--background-color-high);
+		--tab-bar-background-color: var(--md-sys-color-surface-container-high);
 		--tab-inactive-background-color-h: var(--border-color-low-h);
 		--tab-inactive-background-color-s: var(--border-color-low-s);
 		--tab-inactive-background-color-l: var(--border-color-low-l);
@@ -1625,18 +1625,19 @@
 		--tab-inactive-border-color: var(--border-color-medium);
 		--tab-inactive-text-color-delta-l: 33.33%;
 		--tab-inactive-text-color-l: calc(var(--tab-inactive-background-color-l) + var(--background-color-delta-l-sign) * var(--tab-inactive-text-color-delta-l));
-		--tab-inactive-text-color: hsl(var(--tab-inactive-background-color-hsl));
-		--tab-inactive-hover-background-color: var(--background-color-high);
-		--tab-active-background-color: var(--background-color-high);
-		--tab-active-text-color: #0069d6;
-		--tab-active-border-color: var(--border-color-medium);
+		--tab-inactive-text-color: var(--md-sys-color-on-surface-variant);
+		--tab-inactive-hover-background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+		--tab-active-background-color: var(--md-sys-color-secondary-container);
+		--tab-active-text-color: var(--md-sys-color-on-secondary-container);
+		--tab-active-border-color: transparent;
 		margin: 0 0 12px;
 		list-style: none;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
-		background: var(--md-sys-color-card);
-		border-radius: 1.5rem;
+		background: var(--tab-bar-background-color);
+		border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 28%, transparent);
+		border-radius: 27px;
 		gap: 6px;
 		padding: 6px;
 	}
@@ -1701,6 +1702,8 @@
 	}
 	.tabs>li.active,
 	.cbi-tabmenu>li.cbi-tab-active {
+		background: var(--tab-active-background-color);
+		color: var(--tab-active-text-color);
 		font-weight: 500;
 	}
 
@@ -1722,11 +1725,9 @@
 		background: var(--tab-active-background-color);
 		border: 1px solid var(--tab-active-border-color);
 		border-bottom: none;
-		color: var(--primary-color-high);
+		color: var(--tab-active-text-color);
 		border: none;
 		margin: 0;
-		background: var(--md-sys-color-primary-container);
-		color: #000;
 		font-size: 15px;
 		height: 42px;
 		border-radius: 21px;
@@ -3975,6 +3976,25 @@ textarea {
 	margin: 0;
 	padding: 10px 20px 0;
 	color: var(--md-sys-color-on-surface-variant);
+}
+
+#maincontent .cbi-map > h2 + .cbi-tabmenu,
+#maincontent .cbi-map > h2 + .tabs,
+#maincontent .cbi-map > h3 + .cbi-tabmenu,
+#maincontent .cbi-map > h3 + .tabs,
+#maincontent .cbi-section > h2 + .cbi-tabmenu,
+#maincontent .cbi-section > h2 + .tabs,
+#maincontent .cbi-section > h3 + .cbi-tabmenu,
+#maincontent .cbi-section > h3 + .tabs,
+#maincontent .cbi-map > .cbi-map-descr + .cbi-tabmenu,
+#maincontent .cbi-map > .cbi-map-descr + .tabs,
+#maincontent .cbi-map > .cbi-section-descr + .cbi-tabmenu,
+#maincontent .cbi-map > .cbi-section-descr + .tabs,
+#maincontent .cbi-section > .cbi-map-descr + .cbi-tabmenu,
+#maincontent .cbi-section > .cbi-map-descr + .tabs,
+#maincontent .cbi-section > .cbi-section-descr + .cbi-tabmenu,
+#maincontent .cbi-section > .cbi-section-descr + .tabs {
+	margin-top: 12px;
 }
 
 #maincontent .cbi-section-node,
