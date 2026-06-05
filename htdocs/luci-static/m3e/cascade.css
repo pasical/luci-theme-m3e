@@ -5431,3 +5431,34 @@ body[data-page="admin-system-crontab"] #maincontent textarea {
 		min-width: 0 !important;
 	}
 }
+
+body[data-page="admin-vpn-easytier"] .et-table td:not(:first-child),
+body[data-page="admin-vpn-easytier"] .et-table td:not(:first-child) a,
+body[data-page="admin-vpn-easytier"] .et-pre,
+body[data-page="admin-vpn-easytier"] .et-pre * {
+	color: var(--md-sys-color-on-surface);
+}
+
+body[data-page="admin-vpn-easytier"] .et-table td:not(:first-child),
+body[data-page="admin-vpn-easytier"] .et-pre {
+	background: var(--md-sys-color-surface-container-lowest);
+	border-color: var(--md-sys-color-outline-variant);
+}
+
+body[data-page="admin-vpn-easytier"] .et-conninfo-title,
+body[data-page="admin-vpn-easytier"] .et-refresh-btn,
+body[data-page="admin-vpn-easytier"] .et-restart-btn,
+body[data-page="admin-vpn-easytier"] .et-tab,
+body[data-page="admin-vpn-easytier"] .et-copy-btn {
+	color: var(--md-sys-color-inverse-on-surface);
+	border-color: color-mix(in srgb, var(--md-sys-color-inverse-on-surface) 24%, transparent);
+}
+
+body[data-page="admin-vpn-easytier"] .et-tab.active,
+body[data-page="admin-vpn-easytier"] .et-tab:hover,
+body[data-page="admin-vpn-easytier"] .et-refresh-btn:hover,
+body[data-page="admin-vpn-easytier"] .et-restart-btn:hover,
+body[data-page="admin-vpn-easytier"] .et-copy-btn:hover {
+	background: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
+	color: var(--md-sys-color-inverse-on-surface);
+}
