@@ -3,7 +3,16 @@
 
 	var refreshQueued = false;
 
+	function getFieldIdentity(field) {
+		return [field.getAttribute('name'), field.id]
+			.filter(function (value) { return !!value; })
+			.join(' ')
+			.trim()
+			.toLowerCase();
+	}
+
 	function resolveAction(field, button) {
+		var fieldIdentity = getFieldIdentity(field);
 		var label = [button.getAttribute('aria-label'), button.getAttribute('title'), button.textContent]
 			.filter(function (value) { return !!value; })
 			.join(' ')
@@ -12,6 +21,12 @@
 
 		if (field.type === 'password' || /password/.test(label))
 			return 'password';
+
+		if (fieldIdentity === 'filter' || /(^|[\s_-])filter([\s_-]|$)/.test(fieldIdentity))
+			return 'clear';
+
+		if (fieldIdentity === 'install' || /(^|[\s_-])install([\s_-]|$)/.test(fieldIdentity))
+			return 'confirm';
 
 		if (/(^|\s)clear(\s|$)/.test(label))
 			return 'clear';
