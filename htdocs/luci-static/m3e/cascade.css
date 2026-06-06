@@ -3914,7 +3914,6 @@ html[data-m3e-background="true"] .sidebar-overlay {
 	-webkit-backdrop-filter: blur(var(--m3e-glass-blur, var(--m3e-sidebar-blur, 32px))) saturate(1.25);
 }
 
-html[data-m3e-background="true"] .cbi-section-node,
 html[data-m3e-background="true"] .create-item-input,
 html[data-m3e-background="true"] .ifacebox,
 html[data-m3e-background="true"] .table,
@@ -5723,7 +5722,6 @@ html[data-m3e-background="true"] body.modal-overlay-active #modal_overlay {
 	-webkit-backdrop-filter: blur(var(--m3e-glass-blur, var(--m3e-sidebar-blur, 32px))) saturate(1.12);
 }
 
-html[data-m3e-background="true"] .cbi-section-node,
 html[data-m3e-background="true"] .create-item-input,
 html[data-m3e-background="true"] .ifacebox,
 html[data-m3e-background="true"] .table,
@@ -5732,17 +5730,53 @@ html[data-m3e-background="true"] .cbi-dropdown:not(.btn):not(.cbi-button) {
 	background: var(--md-sys-color-card) !important;
 }
 
-html[data-m3e-background="true"] .cbi-section-node.cbi-section-node-tabbed {
+html[data-m3e-background="true"] #maincontent .cbi-map,
+html[data-m3e-background="true"] #maincontent > .cbi-section,
+html[data-m3e-background="true"] #maincontent > .view > .cbi-section {
+	background: var(--md-sys-color-card) !important;
+	background-color: var(--md-sys-color-card) !important;
 	border-radius: 20px !important;
 	overflow: hidden;
 }
 
-html[data-m3e-background="true"] .cbi-section,
-html[data-m3e-background="true"] .cbi-map {
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-section,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section.cbi-tblsection,
+html[data-m3e-background="true"] #maincontent .cbi-section-node {
+	background: transparent !important;
 	background-color: transparent !important;
 }
 
-html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .cbi-section,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section.cbi-tblsection,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-map,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section-node,
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-section {
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	overflow: visible;
+}
+
+html[data-m3e-background="true"] #maincontent .cbi-section-node .cbi-section {
+	background: transparent !important;
+	background-color: transparent !important;
+	border-radius: 0 !important;
+	overflow: visible;
+}
+
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section > h3 {
+	padding: 0 0 16px !important;
+}
+
+html[data-m3e-background="true"] #maincontent .cbi-section > .cbi-section-node,
+html[data-m3e-background="true"] #maincontent .cbi-section > .cbi-section-node-tabbed,
+html[data-m3e-background="true"] #maincontent .cbi-section-node.cbi-section-node-tabbed {
+	border-radius: 0 !important;
+	overflow: visible;
+}
+
 html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .cbi-map,
 html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .table,
 html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent table,
