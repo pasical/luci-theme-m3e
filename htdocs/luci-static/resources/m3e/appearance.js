@@ -164,6 +164,8 @@
 		root.style.setProperty('--m3e-bg-blur', backgroundBlur + 'px');
 		root.style.setProperty('--m3e-bg-size', fit);
 		root.style.setProperty('--m3e-bg-position', position);
+		root.style.setProperty('--m3e-glass-blur', sidebarBlur + 'px');
+		root.style.setProperty('--m3e-glass-opacity', sidebarOpacity + '%');
 		root.style.setProperty('--m3e-sidebar-blur', sidebarBlur + 'px');
 		root.style.setProperty('--m3e-sidebar-opacity', sidebarOpacity + '%');
 

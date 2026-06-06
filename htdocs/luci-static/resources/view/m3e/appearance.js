@@ -508,14 +508,14 @@ return view.extend({
 		o.unit = '%';
 		o.rmempty = false;
 
-		o = s.taboption('surface', RangeValue, 'sidebar_blur', _('Sidebar blur'));
+		o = s.taboption('surface', RangeValue, 'sidebar_blur', _('Glass blur'));
 		o.default = '32';
 		o.min = 8;
 		o.max = 48;
 		o.unit = 'px';
 		o.rmempty = false;
 
-		o = s.taboption('surface', RangeValue, 'sidebar_opacity', _('Sidebar opacity'));
+		o = s.taboption('surface', RangeValue, 'sidebar_opacity', _('Glass opacity'));
 		o.default = '70';
 		o.min = 45;
 		o.max = 95;
