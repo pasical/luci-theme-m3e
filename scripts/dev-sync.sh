@@ -126,13 +126,14 @@ check_remote_rsync() {
 sync_dir_to() {
   local src="$1"
   local dst="$2"
+  shift 2
 
   if [[ ! -d "${REPO_ROOT}/${src}" ]]; then
     return
   fi
 
   remote "mkdir -p '${dst}'"
-  rsync "${RSYNC_ARGS[@]}" -e "${RSYNC_SSH}" "${REPO_ROOT}/${src}" "${OPENWRT_HOST}:${dst}"
+  rsync "${RSYNC_ARGS[@]}" "$@" -e "${RSYNC_SSH}" "${REPO_ROOT}/${src}" "${OPENWRT_HOST}:${dst}"
 }
 
 sync_file_to() {
@@ -153,11 +154,17 @@ sync_assets() {
   remote "mkdir -p /www/luci-static/resources/view"
 
   for theme in m3e m3e-blue m3e-green m3e-red; do
-    sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/"
+    if [[ "${theme}" == "m3e" ]]; then
+      remote "mkdir -p /www/luci-static/m3e/backgrounds"
+      sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/" --exclude='backgrounds/***'
+    else
+      sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/"
+    fi
   done
 
   sync_file_to "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
   sync_file_to "htdocs/luci-static/resources/field-actions-m3e.js" "/www/luci-static/resources/field-actions-m3e.js"
+  sync_dir_to "htdocs/luci-static/resources/m3e/" "/www/luci-static/resources/m3e/"
   sync_dir_to "htdocs/luci-static/resources/view/m3e/" "/www/luci-static/resources/view/m3e/"
 }
 

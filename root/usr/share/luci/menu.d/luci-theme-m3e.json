@@ -1,0 +1,13 @@
+{
+	"admin/system/m3e": {
+		"title": "M3E Theme",
+		"order": 80,
+		"action": {
+			"type": "view",
+			"path": "m3e/appearance"
+		},
+		"depends": {
+			"acl": [ "luci-theme-m3e" ]
+		}
+	}
+}

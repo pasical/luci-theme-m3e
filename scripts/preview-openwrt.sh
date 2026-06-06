@@ -134,11 +134,18 @@ copy_file() {
 sync_assets() {
   local theme
   for theme in m3e m3e-blue m3e-green m3e-red; do
-    copy_dir "htdocs/luci-static/${theme}" "/www/luci-static/${theme}"
+    if [[ "${theme}" == "m3e" ]]; then
+      exec_in_container "rm -rf /tmp/m3e-backgrounds && mkdir -p /tmp/m3e-backgrounds && if [ -d /www/luci-static/m3e/backgrounds ]; then cp -a /www/luci-static/m3e/backgrounds/. /tmp/m3e-backgrounds/; fi"
+      copy_dir "htdocs/luci-static/${theme}" "/www/luci-static/${theme}"
+      exec_in_container "mkdir -p /www/luci-static/m3e/backgrounds && cp -a /tmp/m3e-backgrounds/. /www/luci-static/m3e/backgrounds/ 2>/dev/null || true; rm -rf /tmp/m3e-backgrounds"
+    else
+      copy_dir "htdocs/luci-static/${theme}" "/www/luci-static/${theme}"
+    fi
   done
 
   copy_file "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
   copy_file "htdocs/luci-static/resources/field-actions-m3e.js" "/www/luci-static/resources/field-actions-m3e.js"
+  copy_dir "htdocs/luci-static/resources/m3e" "/www/luci-static/resources/m3e"
   copy_dir "htdocs/luci-static/resources/view/m3e" "/www/luci-static/resources/view/m3e"
 }
 
