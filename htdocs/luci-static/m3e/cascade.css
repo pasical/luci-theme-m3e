@@ -5748,6 +5748,12 @@ html[data-m3e-background="true"] #maincontent .cbi-section-node {
 	background-color: transparent !important;
 }
 
+html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-tabmenu,
+html[data-m3e-background="true"] #maincontent .cbi-map > .tabs {
+	width: calc(100% - 40px);
+	margin-inline: 20px;
+}
+
 html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section,
 html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-section.cbi-tblsection,
 html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-map-tabbed > .cbi-map,
@@ -5800,6 +5806,12 @@ html[data-m3e-background="true"] body[data-page="admin-status-overview"] #mainco
 
 	html[data-m3e-background="true"]::before {
 		display: none;
+	}
+
+	html[data-m3e-background="true"] #maincontent .cbi-map > .cbi-tabmenu,
+	html[data-m3e-background="true"] #maincontent .cbi-map > .tabs {
+		width: calc(100% - 32px);
+		margin-inline: 16px;
 	}
 
 	html[data-m3e-background="true"] footer.footer-m3e .footer-info {
