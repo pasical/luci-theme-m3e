@@ -5620,7 +5620,6 @@ html[data-m3e-background="true"] body::after {
 }
 
 html[data-m3e-background="true"] header,
-html[data-m3e-background="true"] .sidebar,
 html[data-m3e-background="true"] #scroll-wrapper {
 	position: relative;
 	z-index: 1;
@@ -5632,6 +5631,11 @@ html[data-m3e-background="true"] #maincontent {
 }
 
 html[data-m3e-background="true"] .sidebar {
+	position: fixed;
+	top: var(--header-height);
+	left: 0;
+	bottom: 0;
+	z-index: 1;
 	background: color-mix(in srgb, var(--md-sys-color-surface-dim) var(--m3e-sidebar-opacity, 70%), transparent) !important;
 	backdrop-filter: blur(var(--m3e-sidebar-blur, 32px)) saturate(1.25);
 	-webkit-backdrop-filter: blur(var(--m3e-sidebar-blur, 32px)) saturate(1.25);
@@ -5642,19 +5646,40 @@ html[data-m3e-background="true"] header {
 	background: color-mix(in srgb, var(--md-sys-color-surface-dim) var(--m3e-sidebar-opacity, 70%), transparent) !important;
 	backdrop-filter: blur(var(--m3e-sidebar-blur, 32px)) saturate(1.25);
 	-webkit-backdrop-filter: blur(var(--m3e-sidebar-blur, 32px)) saturate(1.25);
-	box-shadow: inset 0 -1px color-mix(in srgb, var(--md-sys-color-outline-variant) 42%, transparent);
+	box-shadow: none;
 }
 
 html[data-m3e-background="true"] footer.footer-m3e {
-	background: color-mix(in srgb, var(--md-sys-color-surface-dim) 18%, transparent) !important;
-	backdrop-filter: blur(calc(var(--m3e-sidebar-blur, 32px) * .45)) saturate(1.1);
-	-webkit-backdrop-filter: blur(calc(var(--m3e-sidebar-blur, 32px) * .45)) saturate(1.1);
-	border-top: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 22%, transparent);
+	align-items: center;
+	background: transparent !important;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	border: 0;
 	box-shadow: none;
 }
 
 html[data-m3e-background="true"] footer.footer-m3e .footer-wavy-line {
-	opacity: .55;
+	display: none;
+}
+
+html[data-m3e-background="true"] footer.footer-m3e .footer-content {
+	align-items: center;
+	width: auto;
+	max-width: 100%;
+	margin-inline: auto;
+}
+
+html[data-m3e-background="true"] footer.footer-m3e .footer-info {
+	width: fit-content;
+	max-width: min(100%, 760px);
+	min-height: 42px;
+	padding: 9px 22px;
+	border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 26%, transparent);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--md-sys-color-surface-dim) 58%, transparent) !important;
+	backdrop-filter: blur(calc(var(--m3e-sidebar-blur, 32px) * .55)) saturate(1.15);
+	-webkit-backdrop-filter: blur(calc(var(--m3e-sidebar-blur, 32px) * .55)) saturate(1.15);
+	box-shadow: 0 12px 32px color-mix(in srgb, var(--md-sys-color-shadow) 14%, transparent);
 }
 
 html[data-m3e-background="true"] .cbi-section-node,
@@ -5675,9 +5700,26 @@ html[data-m3e-background="true"] .cbi-map {
 	background-color: transparent !important;
 }
 
+html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .cbi-section,
+html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .cbi-map,
+html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .table,
+html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent table,
+html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .ifacebox,
+html[data-m3e-background="true"] body[data-page="admin-status-overview"] #maincontent .alert-message {
+	background: var(--md-sys-color-card) !important;
+	background-color: var(--md-sys-color-card) !important;
+}
+
 @media screen and (max-width: 854px) {
 	html[data-m3e-background="true"] .sidebar {
+		top: var(--header-height);
 		background: color-mix(in srgb, var(--md-sys-color-surface-dim) 82%, transparent) !important;
+	}
+
+	html[data-m3e-background="true"] footer.footer-m3e .footer-info {
+		width: auto;
+		max-width: calc(100vw - 32px);
+		padding-inline: 18px;
 	}
 }
 
