@@ -10,6 +10,7 @@
 
 	const boardinfo = ubus.call('system', 'board');
 	const darkpref = uci.get('luci', 'main', 'darkmode') || 'auto';
+	const appearance = uci.get_all('m3e', 'appearance') || {};
 	let themepref = null;
 	switch (theme) {
 		case 'm3e-blue': themepref = 'blue'; break;
@@ -26,6 +27,10 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
+		<script>
+		window.M3E_APPEARANCE = {{ sprintf('%J', appearance) }};
+		</script>
+		<script src="{{ resource }}/m3e/appearance.js?v=0.1.6"></script>
 		<script>
 		(function () {
 			var html = document.documentElement;
