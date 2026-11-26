@@ -1,0 +1,388 @@
+/* M3E's workspace and navigation surfaces. */
+:root {
+	--m3e-shell-background: #f3edf7;
+	--m3e-content-background: #fef7ff;
+	--m3e-app-background-color: var(--m3e-shell-background);
+	--m3e-app-background-image: none;
+	--m3e-app-background-position: center center;
+	--m3e-app-background-size: cover;
+	--m3e-app-background-repeat: no-repeat;
+	--m3e-app-background-attachment: scroll;
+	--m3e-maincontent-background: transparent;
+	--m3e-content-corner: var(--material3-card-radius);
+	--sidebar-width: 220px;
+	--header-height: 64px;
+}
+
+:root[data-theme="blue"] { --m3e-shell-background: #eceef4; --m3e-content-background: #f8f9ff; }
+:root[data-theme="green"] { --m3e-shell-background: #eaefe8; --m3e-content-background: #f6fbf3; }
+:root[data-theme="red"] { --m3e-shell-background: #fceae7; --m3e-content-background: #fff8f7; }
+:root[data-darkmode="true"] { --m3e-shell-background: #211f26; --m3e-content-background: #2e2b33; }
+:root[data-darkmode="true"][data-theme="blue"] { --m3e-shell-background: #1d2024; --m3e-content-background: #292c32; }
+:root[data-darkmode="true"][data-theme="green"] { --m3e-shell-background: #1c211c; --m3e-content-background: #282e28; }
+:root[data-darkmode="true"][data-theme="red"] { --m3e-shell-background: #281d1b; --m3e-content-background: #352a29; }
+
+:root[data-m3e-palette] {
+	--m3e-shell-background: var(--surface-container);
+	--m3e-content-background: var(--surface);
+}
+
+@layer m3e-palettes {
+	:root[data-m3e-palette] {
+		--background-color-high: var(--surface);
+		--background-color-medium: var(--surface-container-low);
+		--background-color-low: var(--surface-container);
+		--text-color-highest: var(--on-surface);
+		--text-color-high: var(--on-surface);
+		--text-color-medium: var(--on-surface-variant);
+		--text-color-low: var(--on-surface-variant);
+		--button-hover: color-mix(in srgb, var(--primary) 92%, var(--on-primary));
+		--button-pressed: color-mix(in srgb, var(--primary) 88%, var(--on-primary));
+	}
+}
+
+html {
+	background: var(--m3e-app-background-color);
+}
+
+body.m3e-app {
+	display: grid;
+	grid-template-areas: "header header" "sidebar main";
+	grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+	grid-template-rows: var(--header-height) minmax(0, 1fr);
+	height: 100vh;
+	height: 100dvh;
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	overflow: hidden;
+}
+
+.m3e-app > header {
+	grid-area: header;
+	position: relative;
+	z-index: 20;
+	display: flex;
+	height: var(--header-height);
+	padding: 0 16px;
+	align-items: center;
+	justify-content: space-between;
+	border: 0;
+	background: var(--m3e-shell-background);
+	color: var(--on-surface);
+	box-shadow: none;
+	backdrop-filter: none;
+	transition: none;
+}
+
+.m3e-app > header .brand {
+	width: auto;
+	max-width: 50%;
+	margin: 0;
+	padding: 0 0 0 8px;
+	color: var(--primary);
+	font: 400 20px/28px Roboto, Arial, sans-serif;
+	letter-spacing: 0;
+	text-align: start;
+	text-decoration: none;
+}
+
+.m3e-app > header .menu-btn {
+	width: 44px;
+	height: 44px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	color: inherit;
+}
+
+.m3e-app > header .pull-right { margin: 0; }
+
+.m3e-app .header-controls {
+	display: flex;
+	min-width: 0;
+	align-items: center;
+	gap: 12px;
+	margin-inline-start: auto;
+}
+
+.m3e-app > header .theme-toggle {
+	position: relative;
+	display: grid;
+	width: 40px;
+	height: 40px;
+	flex: 0 0 auto;
+	padding: 0;
+	place-items: center;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	color: color-mix(in srgb, var(--on-surface-variant) 74%, var(--m3e-shell-background));
+	cursor: pointer;
+}
+
+.m3e-app > header .theme-toggle[hidden] { display: none; }
+
+.m3e-app > header .theme-toggle:is(:hover, :focus-visible) {
+	background: color-mix(in srgb, currentColor 8%, transparent);
+	color: var(--on-surface-variant);
+}
+
+.m3e-app > header .theme-toggle::before {
+	content: "";
+	width: 18px;
+	height: 18px;
+	background: currentColor;
+	mask: var(--m3e-header-symbol) center / contain no-repeat;
+}
+
+.m3e-app > header #m3e-appearance-toggle { --m3e-header-symbol: url("icons/palette.svg"); }
+.m3e-app > header #theme-toggle { --m3e-header-symbol: url("icons/dark-mode.svg"); }
+:root[data-darkmode="true"] .m3e-app > header #theme-toggle { --m3e-header-symbol: url("icons/light-mode.svg"); }
+
+@media (forced-colors: active) {
+	.m3e-app > header .theme-toggle::before {
+		forced-color-adjust: none;
+		background: ButtonText;
+	}
+}
+
+.m3e-app > .sidebar {
+	grid-area: sidebar;
+	position: relative;
+	inset: auto;
+	width: var(--sidebar-width);
+	height: 100%;
+	min-height: 0;
+	margin: 0;
+	padding: 8px 0 16px;
+	border: 0;
+	background: var(--m3e-shell-background);
+	color: var(--on-surface);
+	overflow-y: auto;
+	scrollbar-width: none;
+	transition: none;
+}
+
+.m3e-app .sidebar .nav { gap: 1px; padding: 8px 10px 16px; }
+
+.m3e-app .sidebar .nav > li > a,
+.m3e-app .sidebar .nav .dropdown-menu > li > a {
+	min-height: 44px;
+	padding: 0 14px;
+	border-radius: 999px;
+	color: var(--on-surface-variant);
+	font: 400 13px/18px Roboto, Arial, sans-serif;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.m3e-app .sidebar .nav > li > a::before {
+	flex: 0 0 20px;
+	width: 20px;
+	height: 20px;
+	margin-inline-end: 10px;
+	background-color: currentColor;
+}
+
+.m3e-app .sidebar .nav .dropdown-menu {
+	display: block;
+	height: 0;
+	margin: 2px 0 8px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	transition: none;
+}
+
+.m3e-app .sidebar .nav > li.open > .dropdown-menu { height: auto; }
+.m3e-app .sidebar .nav > li.dropdown > a::after { transition: transform 200ms ease; }
+
+.m3e-app .sidebar .nav .dropdown-menu > li {
+	margin: 0;
+	background: transparent;
+	transition: none;
+}
+
+.m3e-app .sidebar .nav .dropdown-menu > li > a {
+	min-height: 38px;
+	margin: 2px 6px 2px 22px;
+}
+
+.m3e-app .sidebar .nav > li.active:not(.dropdown) > a,
+.m3e-app .sidebar .nav .dropdown-menu li.active > a {
+	background: var(--secondary-container);
+	color: var(--on-secondary-container);
+	font-weight: 600;
+}
+
+.m3e-app .sidebar .nav > li.active.dropdown > a {
+	background: var(--surface-container-high);
+	color: var(--on-surface);
+	font-weight: 700;
+}
+
+.m3e-app .sidebar .nav a:hover {
+	background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.m3e-app :is(.brand, .menu-btn, .theme-toggle, .sidebar a):focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: -2px;
+}
+
+.m3e-app > #scroll-wrapper {
+	grid-area: main;
+	display: flex;
+	min-width: 0;
+	min-height: 0;
+	flex-direction: column;
+	border-radius: var(--m3e-content-corner) 0 0 0;
+	background: var(--m3e-content-background);
+	overflow: auto;
+}
+
+:root[data-m3e-wallpaper] .m3e-app > #scroll-wrapper {
+	--m3e-wallpaper-overlay: color-mix(in srgb, var(--m3e-content-background) 92%, transparent);
+	background: linear-gradient(var(--m3e-wallpaper-overlay), var(--m3e-wallpaper-overlay)),
+		var(--m3e-app-background-image) var(--m3e-app-background-position) / var(--m3e-app-background-size)
+		var(--m3e-app-background-repeat) var(--m3e-app-background-attachment) var(--m3e-content-background);
+}
+
+.m3e-app #maincontent {
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	min-height: 0;
+	max-width: none;
+	flex: 1 0 auto;
+	margin: 0;
+	padding: clamp(16px, 3vw, 32px) clamp(16px, 4vw, 48px);
+	background: var(--m3e-maincontent-background);
+	overflow: visible;
+}
+
+.m3e-app .footer-m3e {
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+	padding: 24px clamp(16px, 4vw, 48px);
+	background: var(--m3e-content-background);
+	background: color-mix(in srgb, var(--m3e-content-background) 72%, var(--m3e-shell-background));
+	color: var(--on-surface-variant);
+	overflow-wrap: anywhere;
+}
+
+.footer-m3e .separator { margin-inline: .35em; }
+
+@media screen and (max-width: 854px) {
+	body.m3e-app {
+		grid-template-areas: "header" "main";
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.m3e-app > header { padding: 0 8px; }
+	.m3e-app > header .brand {
+		position: static;
+		max-width: none;
+		min-width: 0;
+		flex: 1;
+		padding: 0;
+		transform: none;
+		font-size: 16px;
+		font-weight: 500;
+		text-align: center;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+	.m3e-app .header-controls { gap: 4px; }
+
+	.m3e-app > header .menu-btn { display: inline-flex; }
+	.m3e-app > header:has(.menu-btn.active) { z-index: 950; }
+
+	.m3e-app > .sidebar {
+		position: fixed;
+		z-index: 900;
+		inset: var(--header-height) 0 0;
+		display: flex;
+		width: 100%;
+		height: auto;
+		padding: 16px;
+		border-radius: 0;
+		transform: none;
+		visibility: hidden;
+	}
+
+	.m3e-app > .sidebar.active { visibility: visible; }
+	.m3e-app .sidebar-overlay { display: none; }
+
+	.m3e-app .sidebar .nav {
+		width: min(100%, 360px);
+		max-height: 100%;
+		margin: auto;
+		padding: 0;
+		gap: 4px;
+		overflow-y: auto;
+		scrollbar-width: none;
+	}
+
+	.m3e-app .sidebar .nav > li > a,
+	.m3e-app .sidebar .nav .dropdown-menu > li > a { font-size: 14px; }
+	.m3e-app .sidebar .nav > li > a { min-height: 48px; }
+	.m3e-app .sidebar .nav .dropdown-menu > li > a { min-height: 40px; }
+	.m3e-app > #scroll-wrapper { border-radius: 0; }
+	.m3e-app #maincontent { padding: 16px; }
+	.m3e-app .footer-m3e { padding: 24px 16px 12px; }
+}
+
+/* Keep dialog and color changes immediate. LuCI owns the dropdown and toast events. */
+body.m3e-app #modal_overlay { z-index: 1000; transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+	.m3e-app > header .menu-btn span,
+	.m3e-app > header .menu-btn span::before,
+	.m3e-app > header .menu-btn span::after,
+	.m3e-app .sidebar .nav a,
+	.m3e-app .sidebar .nav > li.dropdown > a::after { transition: none; }
+}
+
+:root[data-m3e-router-accent]:not([data-m3e-palette]) {
+	--primary: var(--m3e-router-primary);
+	--primary-rgb: var(--m3e-router-primary-rgb);
+	--primary-container: color-mix(in srgb, var(--primary) 18%, var(--surface-container-low));
+	--secondary-container: color-mix(in srgb, var(--primary) 16%, var(--surface-container));
+	--button-hover: color-mix(in srgb, var(--primary) 92%, var(--on-primary));
+	--button-pressed: color-mix(in srgb, var(--primary) 88%, var(--on-primary));
+}
+
+/* Router wallpaper is the shared backdrop when the browser has no local wallpaper. */
+:root[data-m3e-background]:not([data-m3e-wallpaper]) body {
+	isolation: isolate;
+}
+
+:root[data-m3e-background]:not([data-m3e-wallpaper]) body::before {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	content: "";
+	pointer-events: none;
+	background:
+		linear-gradient(var(--m3e-router-overlay), var(--m3e-router-overlay)),
+		var(--m3e-bg-image) var(--m3e-bg-position) / var(--m3e-bg-size) no-repeat;
+	--m3e-router-overlay: color-mix(in srgb, var(--m3e-content-background) var(--m3e-bg-overlay), transparent);
+	filter: blur(var(--m3e-bg-blur));
+}
+
+:root[data-m3e-background]:not([data-m3e-wallpaper]) .m3e-app > #scroll-wrapper {
+	background: transparent;
+}
+
+:root[data-m3e-background]:not([data-m3e-wallpaper]) .m3e-app > :is(header, .sidebar) {
+	background: color-mix(in srgb, var(--m3e-shell-background) var(--m3e-glass-opacity), transparent);
+	backdrop-filter: blur(var(--m3e-glass-blur)) saturate(1.25);
+}

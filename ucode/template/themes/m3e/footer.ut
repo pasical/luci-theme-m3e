@@ -1,7 +1,6 @@
 		{% if (!blank_page): %}
 		</div>
 		<footer class="footer-m3e">
-                        <div class="footer-wavy-line"></div>
                         <div class="footer-content">
                                 <div class="footer-info">
                                         <span class="powered-by">Powered by <a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">{{ version.luciname }} {{ version.luciversion }}</a></span>
@@ -17,7 +16,7 @@
                 </footer>
 		</div>
 				<script>L.require('menu-m3e')</script>
-                                                <script src="{{ resource }}/field-actions-m3e.js?v=0.1.6"></script>
+		<script src="{{ resource }}/field-actions-m3e.js?v=0.2.0"></script>
 		{% endif %}
 	</body>
 </html>

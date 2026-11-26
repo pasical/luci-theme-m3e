@@ -106,11 +106,12 @@ remote() {
 }
 
 check_remote_rsync() {
-  remote "command -v rsync >/dev/null 2>&1"
-  local exit_code=$?
+  local exit_code
 
-  if [[ "${exit_code}" -eq 0 ]]; then
+  if remote "command -v rsync >/dev/null 2>&1"; then
     return
+  else
+    exit_code=$?
   fi
 
   if [[ "${exit_code}" -eq 1 ]]; then
@@ -151,15 +152,10 @@ sync_file_to() {
 
 sync_assets() {
   local theme
-  remote "mkdir -p /www/luci-static/resources/view"
 
+  remote "mkdir -p /www/luci-static/m3e/backgrounds"
   for theme in m3e m3e-blue m3e-green m3e-red; do
-    if [[ "${theme}" == "m3e" ]]; then
-      remote "mkdir -p /www/luci-static/m3e/backgrounds"
-      sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/" --exclude='backgrounds/***'
-    else
-      sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/"
-    fi
+    sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/" --exclude='/backgrounds/'
   done
 
   sync_file_to "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
@@ -170,7 +166,9 @@ sync_assets() {
 
 sync_templates() {
   local theme
-  remote "mkdir -p /usr/share/ucode/luci/template/themes"
+  remote "mkdir -p /usr/share/ucode/luci/template/themes /usr/share/ucode/luci/template/m3e"
+
+  sync_dir_to "ucode/template/m3e/" "/usr/share/ucode/luci/template/m3e/"
 
   for theme in m3e m3e-blue m3e-green m3e-red; do
     sync_dir_to "ucode/template/themes/${theme}/" "/usr/share/ucode/luci/template/themes/${theme}/"
@@ -178,7 +176,10 @@ sync_templates() {
 }
 
 sync_root_overlay() {
-  sync_dir_to "root/" "/"
+  sync_dir_to "root/" "/" --no-delete --exclude='/etc/config/m3e'
+  remote "mkdir -p /etc/config"
+  rsync "${RSYNC_ARGS[@]}" --no-delete --ignore-existing -e "${RSYNC_SSH}" \
+    "${REPO_ROOT}/root/etc/config/m3e" "${OPENWRT_HOST}:/etc/config/m3e"
 }
 
 register_theme() {

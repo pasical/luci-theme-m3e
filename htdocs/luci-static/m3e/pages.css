@@ -1,0 +1,177 @@
+/* Status overview groups a heading and its native section content. */
+body[data-page="admin-status-overview"] #view > .cbi-section:has(> .cbi-title) {
+	box-sizing: border-box;
+	padding: 12px clamp(10px, 1.5vw, 16px);
+	border-radius: var(--material3-card-radius);
+	background: var(--material3-card-background);
+}
+
+body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title h3 {
+	margin: 0;
+	padding: 0 10px 4px;
+}
+
+body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title ~ div > .table {
+	margin-block-end: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+/* LuCI's native realtime views set their SVG plot styles inline. */
+body[data-page^="admin-status-realtime"] #map .cbi-section > div:has(> svg > polyline) {
+	background: var(--surface-container-low) !important;
+	border-color: var(--outline-variant) !important;
+	border-radius: var(--material3-card-radius);
+	overflow: hidden;
+}
+
+body[data-page^="admin-status-realtime"] #map svg:has(> polyline) > line {
+	stroke: var(--outline-variant) !important;
+	stroke-width: 1px !important;
+}
+
+body[data-page^="admin-status-realtime"] #map svg:has(> polyline) > text {
+	fill: var(--on-surface) !important;
+	text-shadow: none !important;
+	paint-order: stroke;
+	stroke: var(--surface-container-low);
+	stroke-width: 2px;
+	stroke-linejoin: round;
+}
+
+/* Match each original series color in the plot and its legend underline. */
+[data-darkmode="true"] body[data-page^="admin-status-realtime"] #map :is(
+	polyline[style*="stroke:#ff0000"], polyline[style*="stroke:red"], strong[style$="solid #f00"], strong[style$="solid red"]
+) { --m3e-chart-series: #ff7479; }
+
+[data-darkmode="true"] body[data-page^="admin-status-realtime"] #map :is(polyline[style*="stroke:#ff6600"], strong[style$="solid #f60"]) {
+	--m3e-chart-series: #ffa268;
+}
+
+[data-darkmode="true"] body[data-page^="admin-status-realtime"] #map :is(polyline[style*="stroke:#ffaa00"], strong[style$="solid #fa0"]) {
+	--m3e-chart-series: #f7d16d;
+}
+
+[data-darkmode="true"] body[data-page^="admin-status-realtime"] #map :is(polyline[style*="stroke:blue"], strong[style$="solid blue"]) {
+	--m3e-chart-series: #85b7ff;
+}
+
+[data-darkmode="true"] body[data-page^="admin-status-realtime"] #map :is(polyline[style*="stroke:green"], strong[style$="solid green"]) {
+	--m3e-chart-series: #78d8a2;
+}
+
+[data-darkmode="true"] body[data-page^="admin-status-realtime"] #map svg > polyline:is(
+	[style*="stroke:#ff0000"], [style*="stroke:#ff6600"], [style*="stroke:#ffaa00"],
+	[style*="stroke:red"], [style*="stroke:blue"], [style*="stroke:green"]
+) {
+	fill: var(--m3e-chart-series) !important;
+	fill-opacity: .24 !important;
+	stroke: var(--m3e-chart-series) !important;
+}
+
+[data-darkmode="true"] body[data-page^="admin-status-realtime"] #map .table strong:is(
+	[style$="solid #f00"], [style$="solid #f60"], [style$="solid #fa0"],
+	[style$="solid red"], [style$="solid blue"], [style$="solid green"]
+) {
+	border-bottom-color: var(--m3e-chart-series) !important;
+}
+
+body[data-page="admin-system-system"] [id$="-_systime"] .cbi-value-field > #localtime {
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
+body[data-page="admin-system-system"] [id$="-_systime"] .cbi-value-field > .control-group {
+	max-width: 100%;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-block-start: 8px;
+}
+
+body[data-page="admin-system-startup"] #view td.cbi-section-actions > div {
+	gap: 8px;
+}
+
+body[data-page="admin-system-startup"] #view td.cbi-section-actions > div > .btn {
+	flex: 0 0 auto;
+	margin: 0;
+}
+
+/* The flash view builds each operation in a nested JSONMap section. */
+body[data-page="admin-system-flash"] #cbi-json-actions:has(> .cbi-value > .cbi-section),
+body[data-page="admin-system-flash"] #cbi-json-actions > .cbi-value > .cbi-section > .cbi-section-node {
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+body[data-page="admin-system-flash"] #cbi-json-actions:has(> .cbi-value > .cbi-section) > .cbi-value {
+	padding: 0;
+}
+
+body[data-page="admin-system-flash"] #cbi-json-actions > .cbi-value > .cbi-section {
+	box-sizing: border-box;
+	margin: 0 0 12px;
+	padding: clamp(14px, 2vw, 20px);
+	border-radius: 16px;
+	background: var(--material3-card-background);
+	box-shadow: none;
+}
+
+body[data-page="admin-system-flash"] #cbi-json-actions > .cbi-value > .cbi-section > h3 {
+	margin-block-start: 0;
+}
+
+body[data-page="admin-system-filebrowser"] #cbi-json-files-root > div:has(> .cbi-filebrowser) {
+	min-width: 0;
+	flex: 1;
+}
+
+body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser.open {
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	padding: 8px 12px;
+	border-color: var(--outline-variant);
+	border-radius: 12px;
+	transition: none;
+}
+
+body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser > * {
+	margin-inline: 0;
+	border-color: var(--outline-variant);
+}
+
+body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser > ul > li {
+	min-height: 34px;
+	align-items: center;
+	gap: 8px;
+}
+
+body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser .name {
+	min-width: 0;
+	flex: 1;
+	overflow-wrap: anywhere;
+	white-space: normal;
+}
+
+body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser .mtime {
+	color: var(--on-surface-variant);
+	font-variant-numeric: tabular-nums;
+}
+
+body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser > ul > li > div:last-child {
+	flex: 0 0 auto;
+}
+
+@media screen and (max-width: 854px) {
+	body[data-page="admin-system-startup"] #view td.cbi-section-actions {
+	width: 100%;
+	white-space: normal;
+	}
+
+	body[data-page="admin-system-startup"] #view td.cbi-section-actions > div {
+		flex-wrap: wrap;
+	}
+}

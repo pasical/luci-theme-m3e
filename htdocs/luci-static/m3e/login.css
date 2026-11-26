@@ -1,0 +1,140 @@
+body.m3e-auth {
+	box-sizing: border-box;
+	display: grid;
+	min-height: 100vh;
+	min-height: 100dvh;
+	margin: 0;
+	padding: clamp(12px, 4vw, 44px);
+	place-items: center;
+	background: transparent;
+	color: var(--on-surface);
+	overflow: auto;
+}
+
+:root[data-m3e-wallpaper] body.m3e-auth {
+	--m3e-login-overlay: color-mix(in srgb, var(--m3e-shell-background) 52%, transparent);
+	background: linear-gradient(var(--m3e-login-overlay), var(--m3e-login-overlay)),
+		var(--m3e-app-background-image) var(--m3e-app-background-position) / var(--m3e-app-background-size)
+		var(--m3e-app-background-repeat) var(--m3e-app-background-attachment);
+}
+
+.m3e-login {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+	width: min(100%, 720px);
+	padding: 8px;
+	border: 1px solid var(--outline-variant);
+	border-radius: 32px;
+	background: var(--surface);
+}
+
+.m3e-login-device {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 28px;
+	padding: 28px;
+	border-radius: 24px;
+	background: var(--primary-container);
+	color: var(--on-primary-container);
+}
+
+.m3e-login-logo {
+	display: block;
+	width: 48px;
+	height: 48px;
+	object-fit: contain;
+}
+
+.m3e-login-device p {
+	margin: 0;
+	font: 400 clamp(23px, 4vw, 32px)/1.15 var(--font-sans);
+	overflow-wrap: anywhere;
+}
+
+.m3e-login-form {
+	display: grid;
+	min-width: 0;
+	margin: 0;
+	padding: clamp(18px, 4vw, 38px);
+	gap: 16px;
+}
+
+.m3e-login-form h1 {
+	margin: 0 0 2px;
+	color: var(--on-surface);
+	font: 400 27px/1.2 var(--font-sans);
+}
+
+.m3e-login-field { display: grid; gap: 6px; }
+
+.m3e-login-field label {
+	color: var(--on-surface-variant);
+	font: 400 13px/1.35 var(--font-sans);
+}
+
+.m3e-login-field input {
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	height: 48px;
+	margin: 0;
+	padding: 0 13px;
+	border: 1px solid var(--outline);
+	border-radius: 12px;
+	background: var(--surface-container-low);
+	color: var(--on-surface);
+	font: 400 16px/1.4 var(--font-sans);
+	transition: none;
+}
+
+.m3e-login-error {
+	margin: 0;
+	padding: 10px 12px;
+	border-radius: 12px;
+	background: var(--error-container);
+	color: var(--on-error-container);
+	overflow-wrap: anywhere;
+}
+
+.m3e-login-submit {
+	min-height: 44px;
+	margin: 4px 0 0;
+	padding: 8px 20px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--primary);
+	color: var(--on-primary);
+	font: 500 14px/1.3 var(--font-sans);
+	cursor: pointer;
+}
+
+.m3e-login-submit:hover { background: var(--button-hover); }
+.m3e-login-submit:active { background: var(--button-pressed); border-radius: 14px; }
+
+.m3e-login :is(input, button):focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.m3e-login-submit { transition: border-radius 140ms ease-out; }
+}
+
+@media (max-width: 560px) {
+	.m3e-login { grid-template-columns: minmax(0, 1fr); border-radius: 26px; }
+
+	.m3e-login-device {
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 12px;
+		padding: 16px;
+		border-radius: 19px;
+	}
+
+	.m3e-login-logo { width: 36px; height: 36px; }
+}

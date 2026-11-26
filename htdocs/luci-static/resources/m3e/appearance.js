@@ -16,8 +16,12 @@
 		color_lightness: '0'
 	};
 
-	var cfg = Object.assign({}, DEFAULTS, window.M3E_APPEARANCE || {});
 	var root = document.documentElement;
+	var cfg = Object.assign({}, DEFAULTS);
+
+	try {
+		Object.assign(cfg, JSON.parse(root.getAttribute('data-m3e-router-settings')));
+	} catch (error) {}
 
 	function clamp(value, min, max) {
 		value = Number(value);
@@ -123,12 +127,12 @@
 		if (path === '')
 			return '';
 
-		path = path.replace(/^\/www/, '');
+		path = path.replace(/^\/www(?=\/)/, '');
 
 		if (!/^\/luci-static\/m3e\/backgrounds\/[A-Za-z0-9._ -]+\.(avif|gif|jpe?g|png|webp)$/i.test(path))
 			return '';
 
-		return path.replace(/'/g, '%27').replace(/\)/g, '%29');
+		return encodeURI(path);
 	}
 
 	function applyColor() {
@@ -141,14 +145,11 @@
 		hsl.l += clamp(cfg.color_lightness, -30, 30);
 		primary = hslToHex(hsl);
 
-		root.style.setProperty('--m3e-user-primary', primary);
-		root.style.setProperty('--md-sys-color-primary', primary);
-		root.style.setProperty('--primary-color-high', primary);
-		root.style.setProperty('--primary-color-medium', 'color-mix(in srgb, ' + primary + ' 88%, var(--md-sys-color-on-surface))');
-		root.style.setProperty('--primary-color-low', 'color-mix(in srgb, ' + primary + ' 72%, var(--md-sys-color-on-surface))');
-		root.style.setProperty('--md-sys-color-primary-container', 'color-mix(in srgb, ' + primary + ' 18%, var(--md-sys-color-surface-container-low))');
-		root.style.setProperty('--md-sys-color-primary-container-hover', 'color-mix(in srgb, ' + primary + ' 24%, var(--md-sys-color-surface-container))');
-		root.style.setProperty('--md-sys-color-secondary-container', 'color-mix(in srgb, ' + primary + ' 16%, var(--md-sys-color-surface-container))');
+		if (primary !== DEFAULTS.primary_color) {
+			root.setAttribute('data-m3e-router-accent', '');
+			root.style.setProperty('--m3e-router-primary', primary);
+			root.style.setProperty('--m3e-router-primary-rgb', Object.values(parseHex(primary)).join(', '));
+		}
 	}
 
 	function applyBackground() {
@@ -166,16 +167,10 @@
 		root.style.setProperty('--m3e-bg-position', position);
 		root.style.setProperty('--m3e-glass-blur', sidebarBlur + 'px');
 		root.style.setProperty('--m3e-glass-opacity', sidebarOpacity + '%');
-		root.style.setProperty('--m3e-sidebar-blur', sidebarBlur + 'px');
-		root.style.setProperty('--m3e-sidebar-opacity', sidebarOpacity + '%');
 
 		if (cfg.enabled === '1' && imagePath) {
 			root.style.setProperty('--m3e-bg-image', "url('" + imagePath + "')");
 			root.setAttribute('data-m3e-background', 'true');
-		}
-		else {
-			root.style.removeProperty('--m3e-bg-image');
-			root.removeAttribute('data-m3e-background');
 		}
 	}
 

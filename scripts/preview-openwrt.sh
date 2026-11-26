@@ -137,7 +137,7 @@ sync_assets() {
     if [[ "${theme}" == "m3e" ]]; then
       exec_in_container "rm -rf /tmp/m3e-backgrounds && mkdir -p /tmp/m3e-backgrounds && if [ -d /www/luci-static/m3e/backgrounds ]; then cp -a /www/luci-static/m3e/backgrounds/. /tmp/m3e-backgrounds/; fi"
       copy_dir "htdocs/luci-static/${theme}" "/www/luci-static/${theme}"
-      exec_in_container "mkdir -p /www/luci-static/m3e/backgrounds && cp -a /tmp/m3e-backgrounds/. /www/luci-static/m3e/backgrounds/ 2>/dev/null || true; rm -rf /tmp/m3e-backgrounds"
+      exec_in_container "mkdir -p /www/luci-static/m3e/backgrounds && cp -a /tmp/m3e-backgrounds/. /www/luci-static/m3e/backgrounds/ && rm -rf /tmp/m3e-backgrounds"
     else
       copy_dir "htdocs/luci-static/${theme}" "/www/luci-static/${theme}"
     fi
@@ -151,15 +151,21 @@ sync_assets() {
 
 sync_templates() {
   local theme
+  copy_dir "ucode/template/m3e" "/usr/share/ucode/luci/template/m3e"
+
   for theme in m3e m3e-blue m3e-green m3e-red; do
     copy_dir "ucode/template/themes/${theme}" "/usr/share/ucode/luci/template/themes/${theme}"
   done
 }
 
 sync_root_overlay() {
-  if [[ -d "${REPO_ROOT}/root" ]]; then
-    docker cp "${REPO_ROOT}/root/." "${CONTAINER}:/"
+  copy_file "root/etc/uci-defaults/30_luci-theme-m3e" "/etc/uci-defaults/30_luci-theme-m3e"
+  copy_file "root/usr/share/luci/menu.d/luci-theme-m3e.json" "/usr/share/luci/menu.d/luci-theme-m3e.json"
+  copy_file "root/usr/share/rpcd/acl.d/luci-theme-m3e.json" "/usr/share/rpcd/acl.d/luci-theme-m3e.json"
+  if ! exec_in_container "test -f /etc/config/m3e"; then
+    copy_file "root/etc/config/m3e" "/etc/config/m3e"
   fi
+  exec_in_container "/etc/init.d/rpcd reload"
 }
 
 register_theme() {

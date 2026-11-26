@@ -1,0 +1,162 @@
+{#
+ Copyright 2008 Steven Barth <steven@midlink.org>
+ Copyright 2012 David Menting <david@nut-bolt.nl>
+ Copyright 2008-2022 Jo-Philipp Wich <jo@mein.io>
+ Licensed to the public under the Apache License 2.0.
+-#}
+
+{% 
+	import { getuid, getspnam } from 'luci.core';
+
+	const boardinfo = auth_board ?? ubus.call('system', 'board') ?? {};
+	const appearance = uci.get_all('m3e', 'appearance') || {};
+	const darkpref = uci.get('luci', 'main', 'darkmode') || 'auto';
+	let themepref = null;
+	switch (theme) {
+		case 'm3e-blue': themepref = 'blue'; break;
+		case 'm3e-green': themepref = 'green'; break;
+		case 'm3e-red': themepref = 'red'; break;
+	}
+
+	http.prepare_content('text/html; charset=UTF-8');
+-%}
+
+<!DOCTYPE html>
+<html lang="{{ dispatcher.lang }}" data-darkmode="{{ darkpref }}" data-m3e-router-settings="{{ entityencode(sprintf('%J', appearance), true) }}" {{ themepref ? `data-theme="${themepref}"` : '' }}>
+	<head>
+		<meta charset="utf-8">
+		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script>
+		(function () {
+			var html = document.documentElement;
+			var mode = html.getAttribute('data-darkmode') || 'auto';
+			var manual = null;
+
+			try {
+				manual = localStorage.getItem('luci-theme-manual');
+			} catch (e) {
+				manual = null;
+			}
+
+			if (manual === 'true' || manual === 'false') {
+				mode = manual;
+			} else if (mode === 'auto') {
+				mode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'true' : 'false';
+			}
+
+			html.setAttribute('data-darkmode', mode);
+			html.style.colorScheme = (mode === 'true') ? 'dark' : 'light';
+		}());
+		</script>
+		<script src="{{ resource }}/m3e/appearance.js?v=0.2.0"></script>
+		<script src="{{ media }}/appearance.js?v=0.2.0"></script>
+		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.3.0">
+		<link rel="stylesheet" href="{{ media }}/palettes.css?v=0.4.0">
+		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.3.0" />
+		<link rel="stylesheet" href="{{ media }}/shell.css?v=0.2.0">
+		<link rel="stylesheet" href="{{ media }}/pages.css?v=0.4.1">
+		{% if (blank_page): %}
+		<link rel="stylesheet" href="{{ media }}/login.css?v=0.2.0">
+		{% else %}
+		<link rel="stylesheet" href="{{ media }}/router-settings.css?v=0.2.0">
+		<link rel="stylesheet" href="{{ media }}/appearance.css?v=0.2.0">
+		{% endif %}
+		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
+		{% if (node?.css): %}
+		<link rel="stylesheet" href="{{ resource }}/{{ node.css }}">
+		{% endif %}
+		{% if (css): %}
+		<style title="text/css">{{ css }}</style>
+		{% endif %}
+		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
+		<script src="{{ resource }}/cbi.js?v=0.1.3"></script>
+
+	</head>
+
+	<body class="{{ blank_page ? 'm3e-auth' : 'm3e-app' }} lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
+		{% if (!blank_page): %}
+		<header>
+			<button type="button" class="menu-btn" aria-label="{{ _('Toggle navigation menu') }}"
+				aria-expanded="false" aria-controls="m3e-sidebar">
+				<span aria-hidden="true"></span>
+			</button>
+
+			<a class="brand" href="/">{{ striptags(boardinfo.hostname ?? '?') }}</a>
+
+			<div class="header-controls">
+				<button type="button" class="theme-toggle" id="m3e-appearance-toggle"
+					aria-label="{{ _('Appearance') }}" aria-haspopup="dialog" aria-controls="m3e-appearance" hidden></button>
+				<button type="button" class="theme-toggle" id="theme-toggle" aria-label="{{ _('Toggle dark mode') }}" aria-pressed="false"></button>
+
+				<div id="indicators" class="pull-right"></div>
+			</div>
+		</header>
+		{% include('m3e/appearance') %}
+		<script>
+		(function () {
+			const toggle = document.getElementById('theme-toggle');
+			const html = document.documentElement;
+			const system = window.matchMedia('(prefers-color-scheme: dark)');
+			const storageKey = 'luci-theme-manual';
+
+			function applyMode(dark) {
+				html.dataset.darkmode = String(dark);
+				html.style.colorScheme = dark ? 'dark' : 'light';
+				toggle.setAttribute('aria-pressed', String(dark));
+			}
+
+			let manual = false;
+			try {
+				const saved = localStorage.getItem(storageKey);
+				manual = saved === 'true' || saved === 'false';
+			} catch (e) {}
+
+			applyMode(html.dataset.darkmode === 'true');
+			toggle.addEventListener('click', function () {
+				const dark = html.dataset.darkmode !== 'true';
+				manual = true;
+				applyMode(dark);
+				try { localStorage.setItem(storageKey, String(dark)); } catch (e) {}
+			});
+
+			system.addEventListener('change', function (event) {
+				if (!manual)
+					applyMode(event.matches);
+			});
+		}());
+		</script>
+		<aside class="sidebar" id="m3e-sidebar" aria-label="{{ _('Navigation') }}">
+			<ul class="nav" id="topmenu" style="display:none"></ul>
+		</aside>
+
+		<div id="scroll-wrapper"><div id="maincontent" class="container">
+			{% if (getuid() == 0 && getspnam('root')?.pwdp === ''): %}
+				<div class="alert-message warning">
+					<h4>{{ _('No password set!') }}</h4>
+					<p>{{ _('There is no password set on this router. Please configure a root password to protect the web interface.') }}</p>
+					{% if (dispatcher.lookup("admin/system/admin")): %}
+					  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/admin") }}">{{ _('Go to password configuration...') }}</a></div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			{% if (boardinfo.rootfs_type == "initramfs"): %}
+				<div class="alert-message warning">
+					<h4>{{ _('System running in recovery (initramfs) mode.') }}</h4>
+					<p>{{ _('No changes to settings will be stored and are lost after rebooting. This mode should only be used to install a firmware upgrade') }}</p>
+					{% if (dispatcher.lookup("admin/system/flash")): %}
+					  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/flash") }}">{{ _('Go to firmware upgrade...') }}</a></div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			<noscript>
+				<div class="alert-message warning">
+					<h4>{{ _('JavaScript required!') }}</h4>
+					<p>{{ _('You must enable JavaScript in your browser or LuCI will not work properly.') }}</p>
+				</div>
+			</noscript>
+
+			<div id="tabmenu" style="display:none"></div>
+		{% endif %}
