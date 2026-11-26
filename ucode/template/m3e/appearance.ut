@@ -1,0 +1,77 @@
+{%
+	const families = {
+		red: _('Red'), yellow: _('Yellow'), blue: _('Blue'),
+		green: _('Green'), purple: _('Purple'), gray: _('Grayscale')
+	};
+	const styles = {
+		'tonal-spot': _('Tonal Spot'), vibrant: _('Vibrant'), expressive: _('Expressive'),
+		neutral: _('Neutral'), monochrome: _('Monochrome'), medium: _('Medium contrast'), high: _('High contrast')
+	};
+%}
+<dialog class="m3e-appearance" id="m3e-appearance" aria-labelledby="m3e-appearance-title"
+	data-image-error="{{ entityencode(_('Use a JPEG, PNG or WebP image up to 16 MB.'), true) }}"
+	data-read-error="{{ entityencode(_('Could not read this image. Try a different image.'), true) }}"
+	data-save-error="{{ entityencode(_('Could not save appearance in this browser.'), true) }}">
+	<form>
+		<h2 id="m3e-appearance-title">{{ _('Appearance') }}</h2>
+		<div class="m3e-appearance-content">
+			<fieldset>
+				<legend>{{ _('Color family') }}</legend>
+				<div class="m3e-appearance-families">
+					{% for (let family in keys(families)): %}
+					<label class="m3e-appearance-choice m3e-family-choice">
+						<input type="radio" name="m3e-family" value="{{ family }}">
+						<span class="m3e-family-swatch" data-family="{{ family }}" aria-hidden="true"></span>
+						<span>{{ families[family] }}</span>
+					</label>
+					{% endfor %}
+				</div>
+				<button type="button" id="m3e-reset-color" class="m3e-appearance-text-button">{{ _('Use theme colors') }}</button>
+			</fieldset>
+			<fieldset id="m3e-appearance-styles" hidden>
+				<legend>{{ _('Color style') }}</legend>
+				<div class="m3e-appearance-variants">
+					{% for (let style in keys(styles)): %}
+					<label class="m3e-appearance-choice m3e-style-choice">
+						<input type="radio" name="m3e-style" value="{{ style }}">
+						<span class="m3e-style-swatch" aria-hidden="true">
+							<span class="m3e-swatch-primary"></span>
+							<span class="m3e-swatch-secondary"></span>
+							<span class="m3e-swatch-tertiary"></span>
+						</span>
+						<span class="m3e-style-name">{{ styles[style] }}</span>
+					</label>
+					{% endfor %}
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>{{ _('Background') }}</legend>
+				<figure class="m3e-background-preview">
+					<div class="m3e-background-sample" aria-hidden="true">
+						<div class="m3e-background-nav"></div>
+						<div class="m3e-background-workspace">
+							<div class="m3e-background-card"></div>
+						</div>
+					</div>
+					<figcaption class="m3e-background-caption" aria-live="polite">
+						<span class="m3e-background-default">{{ _('Theme background') }}</span>
+						<span class="m3e-background-custom">{{ _('Custom background') }}</span>
+					</figcaption>
+				</figure>
+				<div class="m3e-appearance-image-actions">
+					<label class="m3e-image-picker">
+						<input type="file" id="m3e-background-file" accept="image/jpeg,image/png,image/webp" aria-describedby="m3e-background-help">
+						<span>{{ _('Choose image') }}</span>
+					</label>
+					<button type="button" id="m3e-reset-background" class="m3e-appearance-text-button">{{ _('Clear background') }}</button>
+				</div>
+				<p class="m3e-appearance-help" id="m3e-background-help">{{ _('JPEG, PNG or WebP up to 16 MB. Appearance is saved in this browser.') }}</p>
+			</fieldset>
+		</div>
+		<p class="m3e-appearance-error" id="m3e-appearance-error" role="alert" hidden></p>
+		<div class="m3e-appearance-actions">
+			<button type="button" id="m3e-appearance-cancel">{{ _('Cancel') }}</button>
+			<button type="submit" id="m3e-appearance-save">{{ _('Save') }}</button>
+		</div>
+	</form>
+</dialog>

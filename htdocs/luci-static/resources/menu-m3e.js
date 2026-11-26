@@ -6,164 +6,55 @@ return baseclass.extend({
 	__init__: function () {
 		ui.menu.load().then(L.bind(function (tree) {
 			this.render(tree);
-			this.decorateActionGroups();
 		}, this));
 		this.initMenuToggle();
-		this.initHeaderShadow();
-		this.initActionGroupObserver();
-	},
-
-	initActionGroupObserver: function () {
-		var self = this,
-			scheduled = false,
-			root = document.getElementById('maincontent') || document.body;
-
-		function schedule() {
-			if (scheduled)
-				return;
-
-			scheduled = true;
-			window.requestAnimationFrame(function () {
-				scheduled = false;
-				self.decorateActionGroups();
-			});
-		}
-
-		schedule();
-
-		if (!root || !window.MutationObserver)
-			return;
-
-		this.actionGroupObserver = new MutationObserver(schedule);
-		this.actionGroupObserver.observe(root, {
-			childList: true,
-			subtree: true
-		});
-	},
-
-	decorateActionGroups: function () {
-		function applyFullPillRadius(control) {
-			if (!control || !control.style)
-				return;
-
-			control.style.setProperty('border-radius', '999px', 'important');
-			control.style.setProperty('border-top-left-radius', '999px', 'important');
-			control.style.setProperty('border-top-right-radius', '999px', 'important');
-			control.style.setProperty('border-bottom-right-radius', '999px', 'important');
-			control.style.setProperty('border-bottom-left-radius', '999px', 'important');
-		}
-
-		function isActionControl(node) {
-			return !!node && node.nodeType === 1 && node.matches('.btn, .cbi-button, .cbi-dropdown.btn, .cbi-dropdown.cbi-button');
-		}
-
-		function getActionControl(item) {
-			if (!item || item.nodeType !== 1)
-				return null;
-
-			if (isActionControl(item))
-				return item;
-
-			if (item.tagName === 'FORM' && isActionControl(item.firstElementChild))
-				return item.firstElementChild;
-
-			return null;
-		}
-
-		function getActionItems(wrapper) {
-			return Array.prototype.filter.call(wrapper.children || [], function (child) {
-				return !!getActionControl(child);
-			});
-		}
-
-		Array.prototype.forEach.call(document.querySelectorAll('.actions, .cbi-page-actions, .td.cbi-section-actions > *, td.cbi-section-actions > *'), function (wrapper) {
-			var items = getActionItems(wrapper);
-
-			wrapper.classList.remove('m3e-button-group');
-
-			Array.prototype.forEach.call(wrapper.children || [], function (child) {
-				child.classList.remove('m3e-button-group-item');
-
-				var control = getActionControl(child);
-
-				if (control) {
-					control.classList.remove('m3e-button-group-first', 'm3e-button-group-middle', 'm3e-button-group-last');
-					control.style.removeProperty('border-radius');
-					control.style.removeProperty('border-top-left-radius');
-					control.style.removeProperty('border-top-right-radius');
-					control.style.removeProperty('border-bottom-right-radius');
-					control.style.removeProperty('border-bottom-left-radius');
-				}
-			});
-
-			if (items.length < 2)
-				return;
-
-			wrapper.classList.add('m3e-button-group');
-
-			items.forEach(function (item, index) {
-				var control = getActionControl(item),
-					positionClass = (index === 0)
-						? 'm3e-button-group-first'
-						: (index === items.length - 1 ? 'm3e-button-group-last' : 'm3e-button-group-middle');
-
-				item.classList.add('m3e-button-group-item');
-
-				if (control) {
-					control.classList.add(positionClass);
-					applyFullPillRadius(control);
-				}
-			});
-		});
 	},
 
 	initMenuToggle: function () {
-		var menuBtn = document.querySelector('.menu-btn');
-		var sidebar = document.querySelector('.sidebar');
-		var body = document.body;
+		const menuBtn = document.querySelector('.menu-btn');
+		const sidebar = document.getElementById('m3e-sidebar');
+		const workspace = document.getElementById('scroll-wrapper');
+		const compact = window.matchMedia('(max-width: 854px)');
 
-		// 创建遮罩层
-		var overlay = document.createElement('div');
-		overlay.className = 'sidebar-overlay';
-		document.body.appendChild(overlay);
-
-		if (menuBtn && sidebar) {
-			// 点击菜单按钮
-			menuBtn.addEventListener('click', function () {
-				menuBtn.classList.toggle('active');
-				sidebar.classList.toggle('active');
-				overlay.classList.toggle('active');
-				body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-			});
-
-			// 点击遮罩层关闭菜单
-			overlay.addEventListener('click', function () {
-				menuBtn.classList.remove('active');
-				sidebar.classList.remove('active');
-				overlay.classList.remove('active');
-				body.style.overflow = '';
-			});
+		function setOpen(open) {
+			menuBtn.classList.toggle('active', open);
+			sidebar.classList.toggle('active', open);
+			menuBtn.setAttribute('aria-expanded', String(open));
+			workspace.inert = open;
 		}
-	},
 
-	// 关闭其他展开的菜单
-	closeOtherMenus: function (currentMenu) {
-		var openMenus = document.querySelectorAll('#topmenu > li.open');
-
-		openMenus.forEach(function (menu) {
-			if (menu !== currentMenu) {
-				var submenu = menu.querySelector('.dropdown-menu');
-				if (submenu) {
-					// 先设置实际高度，以便动画正常工作
-					submenu.style.height = submenu.scrollHeight + 'px';
-					// 强制重排
-					submenu.offsetHeight;
-					// 开始收起动画
-					submenu.style.height = '0px';
-					menu.classList.remove('open');
-				}
+		menuBtn.addEventListener('click', function () {
+			setOpen(!sidebar.classList.contains('active'));
+		});
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape' && sidebar.classList.contains('active')) {
+				event.preventDefault();
+				setOpen(false);
+				menuBtn.focus();
 			}
 		});
+		compact.addEventListener('change', function () {
+			if (!compact.matches)
+				setOpen(false);
+		});
+	},
+
+	setGroupOpen: function (link, submenu, open) {
+		const animate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		// On a quick reversal, start from the currently visible height.
+		const from = animate ? submenu.getBoundingClientRect().height : 0;
+		submenu.getAnimations().forEach(animation => animation.cancel());
+		link.parentElement.classList.toggle('open', open);
+		link.setAttribute('aria-expanded', String(open));
+		submenu.inert = !open;
+
+		if (animate) {
+			const to = submenu.getBoundingClientRect().height;
+			submenu.animate({ height: [from + 'px', to + 'px'] }, {
+				duration: 220,
+				easing: 'cubic-bezier(0.2, 0, 0, 1)'
+			});
+		}
 	},
 
 	render: function (tree) {
@@ -222,64 +113,37 @@ return baseclass.extend({
 			return E([]);
 
 		for (var i = 0; i < children.length; i++) {
-			var submenu = this.renderMainMenu(children[i], url + '/' + children[i].name, (level || 0) + 1),
-				subclass = (!level && submenu.firstElementChild) ? 'dropdown' : null,
-				linkclass = (!level && submenu.firstElementChild) ? 'menu' : null,
-				linkurl = submenu.firstElementChild ? '#' : L.url(url, children[i].name);
+			const itemPath = (url + '/' + children[i].name).replace(/^\/+/, '');
+			const submenu = this.renderMainMenu(children[i], itemPath, (level || 0) + 1);
+			const hasSubmenu = !!submenu.firstElementChild;
+			const isActive = L.env.requestpath.join('/').startsWith(itemPath);
+			const classes = [hasSubmenu && 'dropdown', isActive && 'active', hasSubmenu && isActive && 'open'];
 
-			var currentPath = L.env.requestpath.join('/');
-			var itemPath = (url + '/' + children[i].name).replace(/^\/+/, '');
-			var isActive = currentPath.startsWith(itemPath);
-
-			if (isActive && submenu.firstElementChild) {
-				subclass = 'dropdown open active';
-				// 直接设置展开状态
-				submenu.style.display = 'block';
-				submenu.style.height = 'auto';
-			}
-			else if (isActive) {
-				subclass = 'active';
-			}
-			else if (submenu.firstElementChild) {
-				subclass = 'dropdown';
-				submenu.style.height = '0px';
-			}
+			if (hasSubmenu)
+				submenu.inert = !isActive;
 
 			var li = E('li', {
-				'class': subclass,
+				'class': classes.filter(Boolean).join(' '),
 				'data-path': itemPath
 			}, [
 				E('a', {
-					'class': linkclass,
-					'href': linkurl,
-					'click': (function (submenu, hasSubmenu, targetUrl, ev) {
-						if (hasSubmenu) {
-							ev.preventDefault();
-							ev.stopPropagation();
+					'class': hasSubmenu ? 'menu' : null,
+					'href': hasSubmenu ? '#' : L.url(itemPath),
+					'aria-expanded': hasSubmenu ? String(isActive) : null,
+					'click': hasSubmenu ? function (ev) {
+						ev.preventDefault();
+						const link = ev.currentTarget;
+						const open = !link.parentElement.classList.contains('open');
 
-							var parentLi = ev.currentTarget.parentNode;
-							var dropdownMenu = submenu;
-
-							if (parentLi.classList.contains('open')) {
-								// 先获取当前高度
-								dropdownMenu.style.height = dropdownMenu.scrollHeight + 'px';
-								// 强制重排
-								dropdownMenu.offsetHeight;
-								// 开始收起动画
-								parentLi.classList.remove('open');
-								dropdownMenu.style.height = '0px';
-							} else {
-								self.closeOtherMenus(parentLi);
-								parentLi.classList.add('open');
-								// 移除auto和display设置，以便动画生效
-								dropdownMenu.style.display = '';
-								dropdownMenu.style.height = dropdownMenu.scrollHeight + 'px';
+						if (open) {
+							for (const other of ul.querySelectorAll(':scope > li.open > a')) {
+								if (other !== link)
+									self.setGroupOpen(other, other.nextElementSibling, false);
 							}
 						}
-						else if (targetUrl) {
-							location.href = targetUrl;
-						}
-					}).bind(null, submenu, !!submenu.firstElementChild, linkurl)
+
+						self.setGroupOpen(link, submenu, open);
+					} : null
 				}, [children[i].name === 'nas' ? 'NAS' : _(children[i].title)]),
 				submenu
 			]);
@@ -309,21 +173,5 @@ return baseclass.extend({
 
 		if (ul.children.length > 1)
 			ul.style.display = '';
-	},
-
-	initHeaderShadow: function () {
-		var header = document.querySelector('header');
-		var scrollTarget = document.getElementById('scroll-wrapper') || window;
-		var scrollThreshold = 10; // 滚动阈值
-
-		scrollTarget.addEventListener('scroll', function () {
-			var scrollTop = scrollTarget === window ? window.scrollY : scrollTarget.scrollTop;
-
-			if (scrollTop > scrollThreshold) {
-				header.classList.add('with-shadow');
-			} else {
-				header.classList.remove('with-shadow');
-			}
-		});
 	}
 });

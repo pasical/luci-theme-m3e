@@ -2,7 +2,7 @@
 .DS_Store
 .AppleDouble
 .LSOverride
-Icon?
+Icon[[:cntrl:]]
 ._*
 
 # ----- Editors / IDE -----

@@ -114,14 +114,12 @@ sync_file_to() {
 
 sync_assets() {
   local theme
-  remote "mkdir -p /www/luci-static/resources/view"
 
   for theme in m3e m3e-blue m3e-green m3e-red; do
     sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/"
   done
 
   sync_file_to "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
-  sync_dir_to "htdocs/luci-static/resources/view/m3e/" "/www/luci-static/resources/view/m3e/"
 }
 
 sync_templates() {
