@@ -183,6 +183,13 @@
 	background-size: cover;
 }
 
+:root[data-m3e-background]:not([data-m3e-wallpaper]) .m3e-background-workspace {
+	background-image: var(--m3e-bg-image);
+	background-position: var(--m3e-bg-position);
+	background-size: var(--m3e-bg-size);
+	background-repeat: no-repeat;
+}
+
 .m3e-background-card {
 	width: min(52%, 136px);
 	padding: 10px;
@@ -210,7 +217,9 @@
 }
 
 :root:not([data-m3e-wallpaper]) .m3e-background-custom,
-:root[data-m3e-wallpaper] .m3e-background-default { display: none; }
+:root[data-m3e-wallpaper] :is(.m3e-background-default, .m3e-background-router),
+:root[data-m3e-background] .m3e-background-default,
+:root:not([data-m3e-background]) .m3e-background-router { display: none; }
 
 .m3e-appearance-image-actions,
 .m3e-appearance-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }

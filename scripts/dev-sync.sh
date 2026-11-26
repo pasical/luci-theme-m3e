@@ -8,6 +8,7 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 OPENWRT_HOST="${OPENWRT_HOST:-root@192.168.1.1}"
 OPENWRT_PORT="${OPENWRT_PORT:-22}"
 OPENWRT_THEME="${OPENWRT_THEME:-m3e}"
+OPENWRT_SSH_MULTIPLEX="${OPENWRT_SSH_MULTIPLEX:-1}"
 DRY_RUN="${DRY_RUN:-0}"
 RESTART_UHTTPD="${RESTART_UHTTPD:-auto}"
 CLEAR_LUCI_CACHE="${CLEAR_LUCI_CACHE:-auto}"
@@ -29,6 +30,7 @@ Environment:
   OPENWRT_HOST=root@192.168.1.1   SSH target.
   OPENWRT_PORT=22                 SSH port.
   OPENWRT_SSH_OPTS="..."          Extra ssh options.
+  OPENWRT_SSH_MULTIPLEX=1         Reuse one SSH login across the sync run.
   OPENWRT_THEME=m3e               Theme variant to set as active mediaurlbase.
   RESTART_UHTTPD=auto|1|0         Restart policy. auto restarts except assets mode.
   CLEAR_LUCI_CACHE=auto|1|0       Cache cleanup policy. auto clears except assets mode.
@@ -65,6 +67,30 @@ if [[ -n "${OPENWRT_SSH_OPTS:-}" ]]; then
   SSH_ARGS+=("${EXTRA_SSH_ARGS[@]}")
 fi
 
+SSH_CONTROL_DIR=""
+SSH_CONTROL_PATH=""
+if [[ "${OPENWRT_SSH_MULTIPLEX}" == "1" ]]; then
+  SSH_CONTROL_DIR="$(mktemp -d "/tmp/m3e-sync.XXXXXX")"
+  SSH_CONTROL_PATH="${SSH_CONTROL_DIR}/%C"
+  SSH_ARGS+=(
+    -o ControlMaster=auto
+    -o "ControlPath=${SSH_CONTROL_PATH}"
+    -o ControlPersist=600
+  )
+fi
+
+cleanup_ssh_mux() {
+  if [[ -n "${SSH_CONTROL_PATH}" ]]; then
+    ssh "${SSH_ARGS[@]}" -O exit "${OPENWRT_HOST}" >/dev/null 2>&1 || true
+  fi
+
+  if [[ -n "${SSH_CONTROL_DIR}" ]]; then
+    rm -rf "${SSH_CONTROL_DIR}"
+  fi
+}
+
+trap cleanup_ssh_mux EXIT
+
 RSYNC_SSH="ssh"
 for arg in "${SSH_ARGS[@]}"; do
   RSYNC_SSH+=" $(printf '%q' "${arg}")"
@@ -80,23 +106,35 @@ remote() {
 }
 
 check_remote_rsync() {
-  if ! remote "command -v rsync >/dev/null 2>&1"; then
+  local exit_code
+
+  if remote "command -v rsync >/dev/null 2>&1"; then
+    return
+  else
+    exit_code=$?
+  fi
+
+  if [[ "${exit_code}" -eq 1 ]]; then
     echo "Remote target is missing rsync." >&2
     echo "Install it once on OpenWrt with: opkg update && opkg install rsync" >&2
-    exit 1
+  else
+    echo "Failed to connect to ${OPENWRT_HOST} over SSH." >&2
   fi
+
+  exit 1
 }
 
 sync_dir_to() {
   local src="$1"
   local dst="$2"
+  shift 2
 
   if [[ ! -d "${REPO_ROOT}/${src}" ]]; then
     return
   fi
 
   remote "mkdir -p '${dst}'"
-  rsync "${RSYNC_ARGS[@]}" -e "${RSYNC_SSH}" "${REPO_ROOT}/${src}" "${OPENWRT_HOST}:${dst}"
+  rsync "${RSYNC_ARGS[@]}" "$@" -e "${RSYNC_SSH}" "${REPO_ROOT}/${src}" "${OPENWRT_HOST}:${dst}"
 }
 
 sync_file_to() {
@@ -109,17 +147,21 @@ sync_file_to() {
   fi
 
   remote "mkdir -p '${dst_dir}'"
-  rsync -az --exclude='.DS_Store' --exclude='._*' ${DRY_RUN:+--dry-run --itemize-changes} -e "${RSYNC_SSH}" "${REPO_ROOT}/${src}" "${OPENWRT_HOST}:${dst}"
+  rsync "${RSYNC_ARGS[@]}" -e "${RSYNC_SSH}" "${REPO_ROOT}/${src}" "${OPENWRT_HOST}:${dst}"
 }
 
 sync_assets() {
   local theme
 
+  remote "mkdir -p /www/luci-static/m3e/backgrounds"
   for theme in m3e m3e-blue m3e-green m3e-red; do
-    sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/"
+    sync_dir_to "htdocs/luci-static/${theme}/" "/www/luci-static/${theme}/" --exclude='/backgrounds/'
   done
 
   sync_file_to "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
+  sync_file_to "htdocs/luci-static/resources/field-actions-m3e.js" "/www/luci-static/resources/field-actions-m3e.js"
+  sync_dir_to "htdocs/luci-static/resources/m3e/" "/www/luci-static/resources/m3e/"
+  sync_dir_to "htdocs/luci-static/resources/view/m3e/" "/www/luci-static/resources/view/m3e/"
 }
 
 sync_templates() {
@@ -134,7 +176,10 @@ sync_templates() {
 }
 
 sync_root_overlay() {
-  sync_dir_to "root/" "/"
+  sync_dir_to "root/" "/" --no-delete --exclude='/etc/config/m3e'
+  remote "mkdir -p /etc/config"
+  rsync "${RSYNC_ARGS[@]}" --no-delete --ignore-existing -e "${RSYNC_SSH}" \
+    "${REPO_ROOT}/root/etc/config/m3e" "${OPENWRT_HOST}:/etc/config/m3e"
 }
 
 register_theme() {

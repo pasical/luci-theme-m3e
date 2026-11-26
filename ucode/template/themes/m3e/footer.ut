@@ -16,6 +16,7 @@
                 </footer>
 		</div>
 				<script>L.require('menu-m3e')</script>
+		<script src="{{ resource }}/field-actions-m3e.js?v=0.2.0"></script>
 		{% endif %}
 	</body>
 </html>

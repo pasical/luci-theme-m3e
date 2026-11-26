@@ -55,6 +55,7 @@
 					</div>
 					<figcaption class="m3e-background-caption" aria-live="polite">
 						<span class="m3e-background-default">{{ _('Theme background') }}</span>
+						<span class="m3e-background-router">{{ _('Router background') }}</span>
 						<span class="m3e-background-custom">{{ _('Custom background') }}</span>
 					</figcaption>
 				</figure>

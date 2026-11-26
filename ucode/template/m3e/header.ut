@@ -9,6 +9,7 @@
 	import { getuid, getspnam } from 'luci.core';
 
 	const boardinfo = auth_board ?? ubus.call('system', 'board') ?? {};
+	const appearance = uci.get_all('m3e', 'appearance') || {};
 	const darkpref = uci.get('luci', 'main', 'darkmode') || 'auto';
 	let themepref = null;
 	switch (theme) {
@@ -21,7 +22,7 @@
 -%}
 
 <!DOCTYPE html>
-<html lang="{{ dispatcher.lang }}" data-darkmode="{{ darkpref }}" {{ themepref ? `data-theme="${themepref}"` : '' }}>
+<html lang="{{ dispatcher.lang }}" data-darkmode="{{ darkpref }}" data-m3e-router-settings="{{ entityencode(sprintf('%J', appearance), true) }}" {{ themepref ? `data-theme="${themepref}"` : '' }}>
 	<head>
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
@@ -48,16 +49,18 @@
 			html.style.colorScheme = (mode === 'true') ? 'dark' : 'light';
 		}());
 		</script>
-		<script src="{{ media }}/appearance.js?v=0.4.0"></script>
+		<script src="{{ resource }}/m3e/appearance.js?v=0.2.0"></script>
+		<script src="{{ media }}/appearance.js?v=0.2.0"></script>
 		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.3.0">
 		<link rel="stylesheet" href="{{ media }}/palettes.css?v=0.4.0">
 		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.3.0" />
-		<link rel="stylesheet" href="{{ media }}/shell.css?v=0.4.2">
+		<link rel="stylesheet" href="{{ media }}/shell.css?v=0.2.0">
 		<link rel="stylesheet" href="{{ media }}/pages.css?v=0.4.1">
 		{% if (blank_page): %}
-		<link rel="stylesheet" href="{{ media }}/login.css?v=0.4.2">
+		<link rel="stylesheet" href="{{ media }}/login.css?v=0.2.0">
 		{% else %}
-		<link rel="stylesheet" href="{{ media }}/appearance.css?v=0.4.4">
+		<link rel="stylesheet" href="{{ media }}/router-settings.css?v=0.2.0">
+		<link rel="stylesheet" href="{{ media }}/appearance.css?v=0.2.0">
 		{% endif %}
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
