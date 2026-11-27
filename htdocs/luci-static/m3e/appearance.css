@@ -69,6 +69,9 @@
 	cursor: pointer;
 }
 
+.m3e-appearance-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.m3e-mode-choice { justify-content: center; border-radius: 999px; text-align: center; }
+
 .m3e-family-choice {
 	flex-direction: column;
 	justify-content: start;
@@ -89,7 +92,7 @@
 	border-color: var(--outline-variant);
 }
 
-.m3e-style-choice:has(input:checked) {
+:is(.m3e-style-choice, .m3e-mode-choice):has(input:checked) {
 	background: var(--secondary-container);
 	color: var(--on-secondary-container);
 }
@@ -183,13 +186,6 @@
 	background-size: cover;
 }
 
-:root[data-m3e-background]:not([data-m3e-wallpaper]) .m3e-background-workspace {
-	background-image: var(--m3e-bg-image);
-	background-position: var(--m3e-bg-position);
-	background-size: var(--m3e-bg-size);
-	background-repeat: no-repeat;
-}
-
 .m3e-background-card {
 	width: min(52%, 136px);
 	padding: 10px;
@@ -217,9 +213,7 @@
 }
 
 :root:not([data-m3e-wallpaper]) .m3e-background-custom,
-:root[data-m3e-wallpaper] :is(.m3e-background-default, .m3e-background-router),
-:root[data-m3e-background] .m3e-background-default,
-:root:not([data-m3e-background]) .m3e-background-router { display: none; }
+:root[data-m3e-wallpaper] .m3e-background-default { display: none; }
 
 .m3e-appearance-image-actions,
 .m3e-appearance-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }

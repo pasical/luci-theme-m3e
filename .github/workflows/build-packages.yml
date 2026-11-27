@@ -11,11 +11,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch:
-          - x86_64
-        branch:
-          - openwrt-24.10
-          - SNAPSHOT
+        include:
+          - arch: x86_64
+            branch: openwrt-24.10
+            format: ipk
+          - arch: x86_64
+            branch: openwrt-25.12
+            format: apk
+          - arch: x86_64
+            branch: SNAPSHOT
+            format: apk
 
     steps:
       - name: checkout
@@ -31,10 +36,29 @@ jobs:
           PACKAGES: ${{ github.event.repository.name }}
           NO_REFRESH_CHECK: true
 
+      - name: Collect theme package
+        env:
+          ARCH: ${{ matrix.arch }}
+          BRANCH: ${{ matrix.branch }}
+          FORMAT: ${{ matrix.format }}
+        run: |
+          shopt -s nullglob
+          packages=(bin/packages/"$ARCH"/action/luci-theme-m3e[-_]*."$FORMAT")
+          if [[ ${#packages[@]} != 1 ]]; then
+            echo "Expected one luci-theme-m3e .$FORMAT package for $BRANCH" >&2
+            exit 1
+          fi
+          mkdir -p dist
+          name="${packages[0]##*/}"
+          if [[ "$FORMAT" == apk ]]; then
+            suffix=$(printf '%s' "$BRANCH" | tr '[:upper:]' '[:lower:]')
+            name="${name%.apk}-$suffix.apk"
+          fi
+          cp "${packages[0]}" "dist/$name"
+
       - name: upload
         uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.branch }}-packages
-          path: |
-            bin/packages/${{ matrix.arch }}/action/*.ipk
-            bin/packages/${{ matrix.arch }}/action/*.apk
+          path: dist/
+          if-no-files-found: error

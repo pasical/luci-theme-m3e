@@ -160,8 +160,6 @@ sync_assets() {
 
   sync_file_to "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
   sync_file_to "htdocs/luci-static/resources/field-actions-m3e.js" "/www/luci-static/resources/field-actions-m3e.js"
-  sync_dir_to "htdocs/luci-static/resources/m3e/" "/www/luci-static/resources/m3e/"
-  sync_dir_to "htdocs/luci-static/resources/view/m3e/" "/www/luci-static/resources/view/m3e/"
 }
 
 sync_templates() {
@@ -180,6 +178,9 @@ sync_root_overlay() {
   remote "mkdir -p /etc/config"
   rsync "${RSYNC_ARGS[@]}" --no-delete --ignore-existing -e "${RSYNC_SSH}" \
     "${REPO_ROOT}/root/etc/config/m3e" "${OPENWRT_HOST}:/etc/config/m3e"
+  if [[ "${DRY_RUN}" != 1 ]]; then
+    remote "rm -f /usr/share/luci/menu.d/luci-theme-m3e.json && /etc/init.d/rpcd reload"
+  fi
 }
 
 register_theme() {

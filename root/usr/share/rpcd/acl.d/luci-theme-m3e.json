@@ -2,25 +2,16 @@
 	"luci-theme-m3e": {
 		"description": "Grant access to M3E theme settings",
 		"read": {
-			"file": {
-				"/www/luci-static/m3e/backgrounds": [ "list", "stat" ],
-				"/www/luci-static/m3e/backgrounds/*": [ "read", "stat" ]
-			},
-			"ubus": {
-				"file": [ "list", "stat" ],
-				"uci": [ "changes", "get" ]
-			},
+			"ubus": { "uci": [ "get" ] },
 			"uci": [ "m3e" ]
 		},
 		"write": {
-			"cgi-io": [ "upload" ],
 			"file": {
-				"/bin/chmod": [ "exec" ],
-				"/www/luci-static/m3e/backgrounds/*": [ "write" ]
+				"/www/luci-static/m3e/backgrounds/m3e-wallpaper-*.jpg": [ "write" ]
 			},
 			"ubus": {
-				"file": [ "exec", "remove", "write" ],
-				"uci": [ "add", "apply", "changes", "confirm", "delete", "get", "set" ]
+				"file": [ "remove", "write" ],
+				"uci": [ "commit", "set" ]
 			},
 			"uci": [ "m3e" ]
 		}

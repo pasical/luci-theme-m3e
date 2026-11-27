@@ -271,8 +271,8 @@ body.m3e-app {
 	min-width: 0;
 	margin: 0;
 	padding: 24px clamp(16px, 4vw, 48px);
-	background: var(--m3e-content-background);
-	background: color-mix(in srgb, var(--m3e-content-background) 72%, var(--m3e-shell-background));
+	border-top: 0;
+	background: transparent;
 	color: var(--on-surface-variant);
 	overflow-wrap: anywhere;
 }
@@ -349,40 +349,4 @@ body.m3e-app #modal_overlay { z-index: 1000; transition: none; }
 	.m3e-app > header .menu-btn span::after,
 	.m3e-app .sidebar .nav a,
 	.m3e-app .sidebar .nav > li.dropdown > a::after { transition: none; }
-}
-
-:root[data-m3e-router-accent]:not([data-m3e-palette]) {
-	--primary: var(--m3e-router-primary);
-	--primary-rgb: var(--m3e-router-primary-rgb);
-	--primary-container: color-mix(in srgb, var(--primary) 18%, var(--surface-container-low));
-	--secondary-container: color-mix(in srgb, var(--primary) 16%, var(--surface-container));
-	--button-hover: color-mix(in srgb, var(--primary) 92%, var(--on-primary));
-	--button-pressed: color-mix(in srgb, var(--primary) 88%, var(--on-primary));
-}
-
-/* Router wallpaper is the shared backdrop when the browser has no local wallpaper. */
-:root[data-m3e-background]:not([data-m3e-wallpaper]) body {
-	isolation: isolate;
-}
-
-:root[data-m3e-background]:not([data-m3e-wallpaper]) body::before {
-	position: fixed;
-	inset: 0;
-	z-index: -1;
-	content: "";
-	pointer-events: none;
-	background:
-		linear-gradient(var(--m3e-router-overlay), var(--m3e-router-overlay)),
-		var(--m3e-bg-image) var(--m3e-bg-position) / var(--m3e-bg-size) no-repeat;
-	--m3e-router-overlay: color-mix(in srgb, var(--m3e-content-background) var(--m3e-bg-overlay), transparent);
-	filter: blur(var(--m3e-bg-blur));
-}
-
-:root[data-m3e-background]:not([data-m3e-wallpaper]) .m3e-app > #scroll-wrapper {
-	background: transparent;
-}
-
-:root[data-m3e-background]:not([data-m3e-wallpaper]) .m3e-app > :is(header, .sidebar) {
-	background: color-mix(in srgb, var(--m3e-shell-background) var(--m3e-glass-opacity), transparent);
-	backdrop-filter: blur(var(--m3e-glass-blur)) saturate(1.25);
 }

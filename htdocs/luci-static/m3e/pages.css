@@ -17,6 +17,24 @@ body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title ~ div 
 	box-shadow: none;
 }
 
+/* Channel Analysis sets the plot frame and axes inline. */
+body[data-page="admin-status-channel_analysis"] #channel_graph {
+	box-sizing: border-box;
+	border-color: var(--outline-variant) !important;
+	border-radius: var(--material3-card-radius);
+	background: var(--surface-container-low) !important;
+}
+
+body[data-page="admin-status-channel_analysis"] #channel_graph > svg > line {
+	stroke: var(--outline) !important;
+	stroke-width: 0.5 !important;
+}
+
+body[data-page="admin-status-channel_analysis"] #channel_graph > svg > text {
+	fill: var(--on-surface-variant) !important;
+	text-shadow: none !important;
+}
+
 /* LuCI's native realtime views set their SVG plot styles inline. */
 body[data-page^="admin-status-realtime"] #map .cbi-section > div:has(> svg > polyline) {
 	background: var(--surface-container-low) !important;

@@ -145,8 +145,6 @@ sync_assets() {
 
   copy_file "htdocs/luci-static/resources/menu-m3e.js" "/www/luci-static/resources/menu-m3e.js"
   copy_file "htdocs/luci-static/resources/field-actions-m3e.js" "/www/luci-static/resources/field-actions-m3e.js"
-  copy_dir "htdocs/luci-static/resources/m3e" "/www/luci-static/resources/m3e"
-  copy_dir "htdocs/luci-static/resources/view/m3e" "/www/luci-static/resources/view/m3e"
 }
 
 sync_templates() {
@@ -160,7 +158,7 @@ sync_templates() {
 
 sync_root_overlay() {
   copy_file "root/etc/uci-defaults/30_luci-theme-m3e" "/etc/uci-defaults/30_luci-theme-m3e"
-  copy_file "root/usr/share/luci/menu.d/luci-theme-m3e.json" "/usr/share/luci/menu.d/luci-theme-m3e.json"
+  exec_in_container "rm -f /usr/share/luci/menu.d/luci-theme-m3e.json"
   copy_file "root/usr/share/rpcd/acl.d/luci-theme-m3e.json" "/usr/share/rpcd/acl.d/luci-theme-m3e.json"
   if ! exec_in_container "test -f /etc/config/m3e"; then
     copy_file "root/etc/config/m3e" "/etc/config/m3e"

@@ -9,7 +9,11 @@
 	import { getuid, getspnam } from 'luci.core';
 
 	const boardinfo = auth_board ?? ubus.call('system', 'board') ?? {};
-	const appearance = uci.get_all('m3e', 'appearance') || {};
+	const appearance = {
+		palette: uci.get('m3e', 'appearance', 'palette') ?? '',
+		background_image: uci.get('m3e', 'appearance', 'background_image') ?? '',
+		enabled: uci.get('m3e', 'appearance', 'enabled') ?? '1'
+	};
 	const darkpref = uci.get('luci', 'main', 'darkmode') || 'auto';
 	let themepref = null;
 	switch (theme) {
@@ -22,45 +26,21 @@
 -%}
 
 <!DOCTYPE html>
-<html lang="{{ dispatcher.lang }}" data-darkmode="{{ darkpref }}" data-m3e-router-settings="{{ entityencode(sprintf('%J', appearance), true) }}" {{ themepref ? `data-theme="${themepref}"` : '' }}>
+<html lang="{{ dispatcher.lang }}" data-darkmode="{{ darkpref }}" data-m3e-settings="{{ entityencode(sprintf('%J', appearance), true) }}" {{ themepref ? `data-theme="${themepref}"` : '' }}>
 	<head>
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script>
-		(function () {
-			var html = document.documentElement;
-			var mode = html.getAttribute('data-darkmode') || 'auto';
-			var manual = null;
-
-			try {
-				manual = localStorage.getItem('luci-theme-manual');
-			} catch (e) {
-				manual = null;
-			}
-
-			if (manual === 'true' || manual === 'false') {
-				mode = manual;
-			} else if (mode === 'auto') {
-				mode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'true' : 'false';
-			}
-
-			html.setAttribute('data-darkmode', mode);
-			html.style.colorScheme = (mode === 'true') ? 'dark' : 'light';
-		}());
-		</script>
-		<script src="{{ resource }}/m3e/appearance.js?v=0.2.0"></script>
-		<script src="{{ media }}/appearance.js?v=0.2.0"></script>
+		<script src="{{ media }}/appearance.js?v=0.2.1"></script>
 		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.3.0">
 		<link rel="stylesheet" href="{{ media }}/palettes.css?v=0.4.0">
 		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.3.0" />
-		<link rel="stylesheet" href="{{ media }}/shell.css?v=0.2.0">
-		<link rel="stylesheet" href="{{ media }}/pages.css?v=0.4.1">
+		<link rel="stylesheet" href="{{ media }}/shell.css?v=0.2.1">
+		<link rel="stylesheet" href="{{ media }}/pages.css?v=0.4.2">
 		{% if (blank_page): %}
-		<link rel="stylesheet" href="{{ media }}/login.css?v=0.2.0">
+		<link rel="stylesheet" href="{{ media }}/login.css?v=0.2.1">
 		{% else %}
-		<link rel="stylesheet" href="{{ media }}/router-settings.css?v=0.2.0">
-		<link rel="stylesheet" href="{{ media }}/appearance.css?v=0.2.0">
+		<link rel="stylesheet" href="{{ media }}/appearance.css?v=0.2.1">
 		{% endif %}
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -93,39 +73,6 @@
 			</div>
 		</header>
 		{% include('m3e/appearance') %}
-		<script>
-		(function () {
-			const toggle = document.getElementById('theme-toggle');
-			const html = document.documentElement;
-			const system = window.matchMedia('(prefers-color-scheme: dark)');
-			const storageKey = 'luci-theme-manual';
-
-			function applyMode(dark) {
-				html.dataset.darkmode = String(dark);
-				html.style.colorScheme = dark ? 'dark' : 'light';
-				toggle.setAttribute('aria-pressed', String(dark));
-			}
-
-			let manual = false;
-			try {
-				const saved = localStorage.getItem(storageKey);
-				manual = saved === 'true' || saved === 'false';
-			} catch (e) {}
-
-			applyMode(html.dataset.darkmode === 'true');
-			toggle.addEventListener('click', function () {
-				const dark = html.dataset.darkmode !== 'true';
-				manual = true;
-				applyMode(dark);
-				try { localStorage.setItem(storageKey, String(dark)); } catch (e) {}
-			});
-
-			system.addEventListener('change', function (event) {
-				if (!manual)
-					applyMode(event.matches);
-			});
-		}());
-		</script>
 		<aside class="sidebar" id="m3e-sidebar" aria-label="{{ _('Navigation') }}">
 			<ul class="nav" id="topmenu" style="display:none"></ul>
 		</aside>

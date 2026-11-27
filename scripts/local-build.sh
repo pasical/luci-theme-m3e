@@ -4,6 +4,7 @@ set -euo pipefail
 # One-click local build for luci-theme-m3e via OpenWrt SDK.
 # Usage examples:
 #   ./scripts/local-build.sh 24.10
+#   ./scripts/local-build.sh 25.12
 #   ./scripts/local-build.sh snapshot
 #   TARGET_PATH=ramips/mt7621 ./scripts/local-build.sh 24.10
 #   SDK_DIR=/path/to/openwrt-sdk ./scripts/local-build.sh snapshot
@@ -55,13 +56,17 @@ case "${MODE}" in
     MODE="24.10"
     BASE_URL="https://downloads.openwrt.org/releases/24.10.0/targets/${TARGET_PATH}"
     ;;
+  25.12|openwrt-25.12)
+    MODE="25.12"
+    BASE_URL="https://downloads.openwrt.org/releases/25.12.6/targets/${TARGET_PATH}"
+    ;;
   snapshot|SNAPSHOT)
     MODE="snapshot"
     BASE_URL="https://downloads.openwrt.org/snapshots/targets/${TARGET_PATH}"
     ;;
   *)
     echo "Unsupported mode: ${MODE}"
-    echo "Use: 24.10 or snapshot"
+    echo "Use: 24.10, 25.12 or snapshot"
     exit 1
     ;;
 esac
@@ -222,6 +227,6 @@ make "package/${PKG_DIR_NAME}/compile" V=s -j"${JOBS}"
 echo
 
 echo "Build complete. Candidate artifacts:"
-find "${SDK_DIR}/bin/packages" -type f \( -name "${PKG_DIR_NAME}_*.ipk" -o -name "${PKG_DIR_NAME}_*.apk" \) | sort
+find "${SDK_DIR}/bin/packages" -type f \( -name "${PKG_DIR_NAME}_*.ipk" -o -name "${PKG_DIR_NAME}-*.apk" \) | sort
 
 popd >/dev/null

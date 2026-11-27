@@ -11,10 +11,21 @@
 <dialog class="m3e-appearance" id="m3e-appearance" aria-labelledby="m3e-appearance-title"
 	data-image-error="{{ entityencode(_('Use a JPEG, PNG or WebP image up to 16 MB.'), true) }}"
 	data-read-error="{{ entityencode(_('Could not read this image. Try a different image.'), true) }}"
-	data-save-error="{{ entityencode(_('Could not save appearance in this browser.'), true) }}">
+	data-save-error="{{ entityencode(_('Could not save appearance. Check your router connection and write permissions.'), true) }}">
 	<form>
 		<h2 id="m3e-appearance-title">{{ _('Appearance') }}</h2>
 		<div class="m3e-appearance-content">
+			<fieldset>
+				<legend>{{ _('Light and dark mode') }}</legend>
+				<div class="m3e-appearance-modes">
+					{% for (let mode in ['system', 'light', 'dark']): %}
+					<label class="m3e-appearance-choice m3e-mode-choice">
+						<input type="radio" name="m3e-mode" value="{{ mode }}">
+						<span>{{ mode == 'system' ? _('System') : mode == 'light' ? _('Light') : _('Dark') }}</span>
+					</label>
+					{% endfor %}
+				</div>
+			</fieldset>
 			<fieldset>
 				<legend>{{ _('Color family') }}</legend>
 				<div class="m3e-appearance-families">
@@ -55,7 +66,6 @@
 					</div>
 					<figcaption class="m3e-background-caption" aria-live="polite">
 						<span class="m3e-background-default">{{ _('Theme background') }}</span>
-						<span class="m3e-background-router">{{ _('Router background') }}</span>
 						<span class="m3e-background-custom">{{ _('Custom background') }}</span>
 					</figcaption>
 				</figure>
@@ -66,7 +76,7 @@
 					</label>
 					<button type="button" id="m3e-reset-background" class="m3e-appearance-text-button">{{ _('Clear background') }}</button>
 				</div>
-				<p class="m3e-appearance-help" id="m3e-background-help">{{ _('JPEG, PNG or WebP up to 16 MB. Appearance is saved in this browser.') }}</p>
+				<p class="m3e-appearance-help" id="m3e-background-help">{{ _('JPEG, PNG or WebP up to 16 MB. Colors and background are shared across devices.') }}</p>
 			</fieldset>
 		</div>
 		<p class="m3e-appearance-error" id="m3e-appearance-error" role="alert" hidden></p>

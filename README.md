@@ -6,9 +6,7 @@ luci-theme-m3e is a LuCI theme project for OpenWrt.
 
 Open **Appearance** from the palette icon in the LuCI header. Red, yellow, blue, green and purple each offer Tonal Spot, Vibrant, Expressive and Neutral. Grayscale offers three Material Monochrome contrast levels. Each preset supplies colors for the light and dark workspace, including the default backdrop.
 
-Choose a JPEG, PNG or WebP image up to 16 MB to preview a custom background. **Clear background** restores the router background or the preset backdrop. Saving applies the choices to this browser, including its LuCI sign-in screen.
-
-**System → M3E Theme** manages the router-wide background and accent color. Browser wallpaper and palette choices take precedence over their router-wide counterparts.
+Choose a JPEG, PNG or WebP image up to 16 MB to preview a custom background. **Clear background** restores the preset backdrop. Saving stores the palette and background on the router, including for the LuCI sign-in screen. Light and dark mode follows the device setting by default, with a per-browser override in Appearance.
 
 ## Local development
 

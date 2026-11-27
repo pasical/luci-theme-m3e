@@ -1,11 +1,7 @@
 body.m3e-auth {
-	box-sizing: border-box;
-	display: grid;
-	min-height: 100vh;
-	min-height: 100dvh;
+	display: block;
 	margin: 0;
-	padding: clamp(12px, 4vw, 44px);
-	place-items: center;
+	padding: 0;
 	background: transparent;
 	color: var(--on-surface);
 	overflow: auto;
@@ -16,6 +12,15 @@ body.m3e-auth {
 	background: linear-gradient(var(--m3e-login-overlay), var(--m3e-login-overlay)),
 		var(--m3e-app-background-image) var(--m3e-app-background-position) / var(--m3e-app-background-size)
 		var(--m3e-app-background-repeat) var(--m3e-app-background-attachment);
+}
+
+.m3e-login-layout {
+	box-sizing: border-box;
+	display: grid;
+	min-height: 100vh;
+	min-height: 100dvh;
+	padding: clamp(12px, 4vw, 44px);
+	place-items: center;
 }
 
 .m3e-login {

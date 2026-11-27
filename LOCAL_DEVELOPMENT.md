@@ -141,6 +141,9 @@ bash scripts/local-build.sh 24.10
 # 编译 OpenWrt 24.10，默认 x86/64
 bash scripts/local-build.sh 24.10
 
+# 用 25.12 稳定版 SDK 生成 APK
+bash scripts/local-build.sh 25.12
+
 # 编译 snapshot
 bash scripts/local-build.sh snapshot
 
@@ -316,7 +319,7 @@ rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
 /etc/init.d/uhttpd restart
 ```
 
-OpenWrt 24.10 仍常见 `.ipk`，snapshot 或未来版本可能输出 `.apk`。脚本最后会列出实际产物路径，以该路径为准。
+OpenWrt 24.10 构建 `.ipk`。OpenWrt 25.12 和 Snapshot 分别构建对应版本的 `.apk`。GitHub Release 的 APK 文件名会标注 `openwrt-25.12` 或 `snapshot`。脚本最后会列出实际产物路径。
 
 ## 7. 常见问题
 

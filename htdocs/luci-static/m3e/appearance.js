@@ -2,27 +2,48 @@
 
 (() => {
 	const root = document.documentElement;
-	const storageKey = 'luci-m3e-appearance';
+	const modeKey = 'luci-m3e-color-mode';
+	const systemMode = window.matchMedia('(prefers-color-scheme: dark)');
+	const backgroundDir = '/www/luci-static/m3e/backgrounds/';
+	const backgroundPattern = /^\/luci-static\/m3e\/backgrounds\/[A-Za-z0-9._ -]+\.(?:avif|gif|jpe?g|png|webp)$/i;
+	const managedBackground = /^\/www\/luci-static\/m3e\/backgrounds\/m3e-wallpaper-[a-f0-9]{24}\.jpg$/;
 	const palettePattern = /^(?:(?:red|yellow|blue|green|purple)-(?:tonal-spot|vibrant|expressive|neutral)|gray-(?:monochrome|medium|high))$/;
 	const imageTypes = ['image/jpeg', 'image/png', 'image/webp'];
 	const imagePrefix = 'data:image/jpeg;base64,';
 	const maxFileBytes = 16 * 1024 * 1024;
 	const maxStoredLength = 700000;
 
-	function readSettings() {
+	function routerSettings(config) {
+		const path = (config.background_image || '').replace(/^\/www(?=\/)/, '');
+		return {
+			palette: palettePattern.test(config.palette) ? config.palette : '',
+			wallpaper: config.enabled !== '0' && backgroundPattern.test(path) ? encodeURI(path) : ''
+		};
+	}
+
+	function readMode() {
 		try {
-			const settings = JSON.parse(localStorage.getItem(storageKey));
-			const palette = settings?.palette;
-			const wallpaper = settings?.wallpaper;
-			return {
-				palette: typeof palette === 'string' && palettePattern.test(palette) ? palette : '',
-				wallpaper: typeof wallpaper === 'string' && wallpaper.length <= maxStoredLength &&
-					wallpaper.startsWith(imagePrefix) && /^[A-Za-z0-9+/]+={0,2}$/.test(wallpaper.slice(imagePrefix.length))
-					? wallpaper : ''
-			};
-		} catch (error) {
-			return { palette: '', wallpaper: '' };
-		}
+			const saved = localStorage.getItem(modeKey);
+			if (saved === 'light' || saved === 'dark')
+				return saved;
+		} catch (error) {}
+		return 'system';
+	}
+
+	function applyMode(mode) {
+		const dark = mode === 'system' ? systemMode.matches : mode === 'dark';
+		root.dataset.darkmode = String(dark);
+		root.style.colorScheme = dark ? 'dark' : 'light';
+		document.getElementById('theme-toggle')?.setAttribute('aria-pressed', String(dark));
+	}
+
+	function saveMode(mode) {
+		try {
+			if (mode === 'system')
+				localStorage.removeItem(modeKey);
+			else
+				localStorage.setItem(modeKey, mode);
+		} catch (error) {}
 	}
 
 	function apply(settings) {
@@ -67,15 +88,30 @@
 		}
 	}
 
-	apply(readSettings());
+	let saved = routerSettings(JSON.parse(root.dataset.m3eSettings || '{}'));
+	let mode = readMode();
+	apply(saved);
+	applyMode(mode);
 
 	document.addEventListener('DOMContentLoaded', () => {
+		let draftMode;
 		const dialog = document.getElementById('m3e-appearance');
 		const trigger = document.getElementById('m3e-appearance-toggle');
+		const toggle = document.getElementById('theme-toggle');
+		applyMode(mode);
+		systemMode.addEventListener('change', () => applyMode(dialog?.open ? draftMode : mode));
+		toggle?.addEventListener('click', () => {
+			mode = root.dataset.darkmode === 'true' ? 'light' : 'dark';
+			saveMode(mode);
+			applyMode(mode);
+		});
 		if (!dialog || typeof dialog.showModal !== 'function')
 			return;
 
+		const cancel = document.getElementById('m3e-appearance-cancel');
 		const form = dialog.querySelector('form');
+		const fieldsets = form.querySelectorAll('fieldset');
+		const modes = form.querySelectorAll('[name="m3e-mode"]');
 		const families = form.querySelectorAll('[name="m3e-family"]');
 		const styles = form.querySelectorAll('[name="m3e-style"]');
 		const styleGroup = document.getElementById('m3e-appearance-styles');
@@ -84,9 +120,9 @@
 		const resetBackground = document.getElementById('m3e-reset-background');
 		const save = document.getElementById('m3e-appearance-save');
 		const error = document.getElementById('m3e-appearance-error');
-		let initial;
 		let draft;
 		let busy = false;
+		let saving = false;
 		let imageRequest = 0;
 
 		function showError(message = '') {
@@ -102,6 +138,9 @@
 		}
 
 		function preview() {
+			for (const input of modes)
+				input.checked = input.value === draftMode;
+			applyMode(draftMode);
 			const [family, style] = draft.palette.split(/-(.+)/);
 			for (const input of families)
 				input.checked = input.value === family;
@@ -120,8 +159,8 @@
 
 		trigger.hidden = false;
 		trigger.addEventListener('click', () => {
-			initial = readSettings();
-			draft = { ...initial };
+			draft = { ...saved };
+			draftMode = mode;
 			setBusy(false);
 			showError();
 			preview();
@@ -130,7 +169,10 @@
 
 		form.addEventListener('change', event => {
 			const input = event.target;
-			if (input.name === 'm3e-family') {
+			if (input.name === 'm3e-mode') {
+				draftMode = input.value;
+				applyMode(draftMode);
+			} else if (input.name === 'm3e-family') {
 				const style = draft.palette.slice(draft.palette.indexOf('-') + 1);
 				const sameStyle = `${input.value}-${style}`;
 				const defaultStyle = input.value === 'gray' ? 'monochrome' : 'tonal-spot';
@@ -187,35 +229,83 @@
 			fileInput.focus();
 		});
 
-		form.addEventListener('submit', event => {
+		async function saveRouterSettings() {
+			const rpc = await L.require('rpc');
+			const get = rpc.declare({
+				object: 'uci', method: 'get', params: ['config', 'section'], expect: { values: {} }, reject: true
+			});
+			const set = rpc.declare({
+				object: 'uci', method: 'set', params: ['config', 'section', 'values'], reject: true
+			});
+			const commit = rpc.declare({
+				object: 'uci', method: 'commit', params: ['config'], reject: true
+			});
+			const write = rpc.declare({
+				object: 'file', method: 'write', params: ['path', 'data', 'mode', 'base64'], reject: true
+			});
+			const remove = rpc.declare({
+				object: 'file', method: 'remove', params: ['path'], reject: true
+			});
+
+			const current = await get('m3e', 'appearance');
+			const changes = {};
+			if (draft.palette !== saved.palette)
+				changes.palette = draft.palette;
+			if (draft.wallpaper !== saved.wallpaper) {
+				changes.background_image = '';
+				if (draft.wallpaper) {
+					const nonce = Array.from(crypto.getRandomValues(new Uint8Array(12)),
+						byte => byte.toString(16).padStart(2, '0')).join('');
+					changes.background_image = `${backgroundDir}m3e-wallpaper-${nonce}.jpg`;
+					changes.enabled = '1';
+					await write(changes.background_image, draft.wallpaper.slice(imagePrefix.length), 0o644, true);
+				}
+			}
+
+			if (Object.keys(changes).length) {
+				await set('m3e', 'appearance', changes);
+				await commit('m3e');
+			}
+			if (changes.background_image !== undefined && managedBackground.test(current.background_image))
+				remove(current.background_image).catch(() => {});
+
+			return routerSettings({ ...current, ...changes });
+		}
+
+		form.addEventListener('submit', async event => {
 			event.preventDefault();
-			if (busy)
+			if (busy || saving)
 				return;
-			const latest = readSettings();
-			const next = {
-				palette: draft.palette === initial.palette ? latest.palette : draft.palette,
-				wallpaper: draft.wallpaper === initial.wallpaper ? latest.wallpaper : draft.wallpaper
-			};
+			saving = true;
+			showError();
+			for (const fieldset of fieldsets)
+				fieldset.disabled = true;
+			save.disabled = cancel.disabled = true;
 			try {
-				if (next.palette || next.wallpaper)
-					localStorage.setItem(storageKey, JSON.stringify(next));
-				else
-					localStorage.removeItem(storageKey);
+				if (draft.palette !== saved.palette || draft.wallpaper !== saved.wallpaper)
+					saved = await saveRouterSettings();
+				mode = draftMode;
+				saveMode(mode);
+				dialog.close();
 			} catch (error) {
 				showError(dialog.dataset.saveError);
-				return;
+			} finally {
+				saving = false;
+				for (const fieldset of fieldsets)
+					fieldset.disabled = false;
+				save.disabled = cancel.disabled = false;
 			}
-			dialog.close();
 		});
 
-		document.getElementById('m3e-appearance-cancel').addEventListener('click', () => dialog.close());
+		cancel.addEventListener('click', () => dialog.close());
+		dialog.addEventListener('cancel', event => {
+			if (saving)
+				event.preventDefault();
+		});
 		dialog.addEventListener('close', () => {
 			imageRequest++;
-			apply(readSettings());
-		});
-		window.addEventListener('storage', event => {
-			if ((event.key === storageKey || event.key === null) && !dialog.open)
-				apply(readSettings());
+			apply(saved);
+			applyMode(mode);
 		});
 	});
 })();

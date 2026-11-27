@@ -8,28 +8,30 @@
 	include('header', { blank_page: true, auth_board });
 %}
 
-<main class="m3e-login" aria-labelledby="m3e-login-title">
-	<div class="m3e-login-device">
-		<img class="m3e-login-logo" src="{{ media }}/logo.svg" width="48" height="48" alt="">
-		<p>{{ entityencode(auth_board.hostname ?? version.distname ?? 'OpenWrt') }}</p>
-	</div>
-	<form method="post" class="m3e-login-form">
-		<h1 id="m3e-login-title">{{ _('Log in') }}</h1>
-		{% if (fuser): %}
-		<p class="m3e-login-error" id="m3e-login-error" role="alert">{{ _('Invalid username and/or password! Please try again.') }}</p>
-		{% endif %}
-		<div class="m3e-login-field">
-			<label for="luci_username">{{ _('Username') }}</label>
-			<input name="luci_username" id="luci_username" type="text" autocomplete="username"
-				value="{{ entityencode(duser ?? '', true) }}" spellcheck="false" autocapitalize="none">
+<div class="m3e-login-layout">
+	<main class="m3e-login" aria-labelledby="m3e-login-title">
+		<div class="m3e-login-device">
+			<img class="m3e-login-logo" src="{{ media }}/logo.svg" width="48" height="48" alt="">
+			<p>{{ entityencode(auth_board.hostname ?? version.distname ?? 'OpenWrt') }}</p>
 		</div>
-		<div class="m3e-login-field">
-			<label for="luci_password">{{ _('Password') }}</label>
-			<input name="luci_password" id="luci_password" type="password" autocomplete="current-password"
-				{% if (fuser): %} aria-describedby="m3e-login-error"{% endif %}>
-		</div>
-		<button type="submit" class="m3e-login-submit">{{ _('Log in') }}</button>
-	</form>
-</main>
+		<form method="post" class="m3e-login-form">
+			<h1 id="m3e-login-title">{{ _('Log in') }}</h1>
+			{% if (fuser): %}
+			<p class="m3e-login-error" id="m3e-login-error" role="alert">{{ _('Invalid username and/or password! Please try again.') }}</p>
+			{% endif %}
+			<div class="m3e-login-field">
+				<label for="luci_username">{{ _('Username') }}</label>
+				<input name="luci_username" id="luci_username" type="text" autocomplete="username"
+					value="{{ entityencode(duser ?? '', true) }}" spellcheck="false" autocapitalize="none">
+			</div>
+			<div class="m3e-login-field">
+				<label for="luci_password">{{ _('Password') }}</label>
+				<input name="luci_password" id="luci_password" type="password" autocomplete="current-password"
+					{% if (fuser): %} aria-describedby="m3e-login-error"{% endif %}>
+			</div>
+			<button type="submit" class="m3e-login-submit">{{ _('Log in') }}</button>
+		</form>
+	</main>
+</div>
 
 {% include('footer', { blank_page: true }) %}
