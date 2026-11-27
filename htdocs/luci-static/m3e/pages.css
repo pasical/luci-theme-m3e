@@ -1,14 +1,14 @@
 /* Status overview groups a heading and its native section content. */
 body[data-page="admin-status-overview"] #view > .cbi-section:has(> .cbi-title) {
 	box-sizing: border-box;
-	padding: 12px clamp(10px, 1.5vw, 16px);
+	padding: 12px var(--m3e-card-space);
 	border-radius: var(--material3-card-radius);
 	background: var(--material3-card-background);
 }
 
 body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title h3 {
 	margin: 0;
-	padding: 0 10px 4px;
+	padding: 0 12px 8px;
 }
 
 body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title ~ div > .table {
@@ -102,17 +102,7 @@ body[data-page="admin-system-system"] [id$="-_systime"] .cbi-value-field > #loca
 body[data-page="admin-system-system"] [id$="-_systime"] .cbi-value-field > .control-group {
 	max-width: 100%;
 	flex-wrap: wrap;
-	gap: 8px;
-	margin-block-start: 8px;
-}
-
-body[data-page="admin-system-startup"] #view td.cbi-section-actions > div {
-	gap: 8px;
-}
-
-body[data-page="admin-system-startup"] #view td.cbi-section-actions > div > .btn {
-	flex: 0 0 auto;
-	margin: 0;
+	margin-block-start: var(--m3e-action-gap);
 }
 
 /* The flash view builds each operation in a nested JSONMap section. */
@@ -131,7 +121,7 @@ body[data-page="admin-system-flash"] #cbi-json-actions:has(> .cbi-value > .cbi-s
 body[data-page="admin-system-flash"] #cbi-json-actions > .cbi-value > .cbi-section {
 	box-sizing: border-box;
 	margin: 0 0 12px;
-	padding: clamp(14px, 2vw, 20px);
+	padding: calc(var(--m3e-card-space) + 4px);
 	border-radius: 16px;
 	background: var(--material3-card-background);
 	box-shadow: none;
@@ -162,7 +152,7 @@ body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser
 }
 
 body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser > ul > li {
-	min-height: 34px;
+	min-height: 36px;
 	align-items: center;
 	gap: 8px;
 }
@@ -183,13 +173,94 @@ body[data-page="admin-system-filebrowser"] #cbi-json-files-root .cbi-filebrowser
 	flex: 0 0 auto;
 }
 
-@media screen and (max-width: 854px) {
+@media (max-width: 854px) {
+	.m3e-app #view .td.cbi-section-actions > :is(div, form):not(.cbi-dropdown) {
+		flex-wrap: wrap;
+	}
+
 	body[data-page="admin-system-startup"] #view td.cbi-section-actions {
-	width: 100%;
-	white-space: normal;
+		width: 100%;
+		white-space: normal;
 	}
 
 	body[data-page="admin-system-startup"] #view td.cbi-section-actions > div {
-		flex-wrap: wrap;
+		justify-content: flex-start;
+	}
+}
+
+/* Nikki renders the status actions as separate cells in a LuCI table. */
+body[data-page="admin-services-nikki"] #cbi-nikki-status {
+	container: nikki-status / inline-size;
+}
+
+body[data-page="admin-services-nikki"] #cbi-nikki-status :is(th, td):where(:not(:last-child)) {
+	width: 1%;
+}
+
+body[data-page="admin-services-nikki"] #cbi-nikki-status th:not([data-widget="CBI.ButtonValue"]) {
+	white-space: nowrap;
+}
+
+body[data-page="admin-services-nikki"] #cbi-nikki-status td[data-widget="CBI.ButtonValue"] {
+	padding-inline: 0 var(--m3e-action-gap);
+	text-align: start;
+}
+
+body[data-page="admin-services-nikki"] #cbi-nikki-status td[data-widget="CBI.ButtonValue"]:where(:last-child) {
+	padding-inline-end: 12px;
+}
+
+@container nikki-status (width < 1040px) {
+	#cbi-nikki-status :is(table, tbody) {
+		display: block;
+	}
+
+	#cbi-nikki-status thead {
+		display: none;
+	}
+
+	#cbi-nikki-status tbody > tr {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: var(--m3e-action-gap);
+		box-sizing: border-box;
+		max-inline-size: 640px;
+		margin: 0;
+		padding: 12px;
+	}
+
+	body[data-page="admin-services-nikki"] #cbi-nikki-status tbody > tr > td {
+		display: block;
+		grid-column: span 4;
+		width: auto;
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+	}
+
+	#cbi-nikki-status td:not([data-widget="CBI.ButtonValue"])[data-title]::before {
+		display: block;
+		margin-block-end: var(--m3e-item-gap);
+		content: attr(data-title);
+		overflow-wrap: anywhere;
+	}
+
+	body[data-page="admin-services-nikki"] #cbi-nikki-status tbody > tr > td[data-widget="CBI.ButtonValue"] {
+		grid-column: span 6;
+		padding-inline: 0;
+	}
+
+	#cbi-nikki-status td[data-widget="CBI.ButtonValue"] .cbi-button {
+		width: 100%;
+		min-height: var(--m3e-control-height);
+		padding: 4px 8px;
+		line-height: 20px;
+		white-space: normal;
+	}
+}
+
+@container nikki-status (600px <= width < 1040px) {
+	body[data-page="admin-services-nikki"] #cbi-nikki-status tbody > tr > td[data-widget="CBI.ButtonValue"] {
+		grid-column: span 3;
 	}
 }

@@ -19,14 +19,14 @@ header h3 a {
 
 @media screen and (max-width: 600px) {
 	.modal {
-		margin: 1.5em auto;
+		margin: 20px auto;
 	}
 
 	.tabs,
 	.cbi-tabmenu {
 		background: var(--material3-card-background);
 		border-radius: var(--material3-card-radius);
-		margin: 1px 1px 10px;
+		margin: 0 0 12px;
 	}
 
 	.tabs>li,
@@ -46,7 +46,7 @@ header h3 a {
 
 	body[data-page^="admin-services-dockerman"] #view a[href*="/dockerman/"]>div[style*="min-height: 120px"] {
 		min-height: 96px !important;
-		padding: 10px !important;
+		padding: 12px !important;
 	}
 
 	body[data-page^="admin-services-dockerman"] #view a[href*="/dockerman/"] img[src*="dockerman/"][src$=".svg"] {
@@ -70,8 +70,8 @@ header h3 a {
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: flex-end;
-		padding: 5px 0;
-		margin: 0 -3px;
+		padding: 4px 0;
+		margin: 0;
 	}
 
 	.table .th,
@@ -84,7 +84,7 @@ header h3 a {
 		word-wrap: break-word;
 		display: inline-block;
 		border-top: none;
-		padding: 3px;
+		padding: 4px;
 		box-sizing: border-box;
 	}
 
@@ -155,7 +155,7 @@ header h3 a {
 	.td.cbi-value-field {
 		align-self: flex-start;
 		flex-basis: 100%;
-		margin-bottom: .3em;
+		margin-bottom: 4px;
 	}
 
 	.td.cbi-value-field .cbi-button {
@@ -181,7 +181,7 @@ header h3 a {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		margin: 0 0 .5em 0;
+		margin: 0 0 8px;
 	}
 
 	.cbi-section-table+.cbi-section-create {
@@ -216,7 +216,7 @@ header h3 a {
 	.td.cbi-section-actions {
 		overflow: initial;
 		max-width: 100%;
-		padding: 3px 2px;
+		padding: 4px 4px;
 		flex-basis: 100%;
 		text-align: left;
 	}
@@ -243,14 +243,12 @@ header h3 a {
 	}
 
 	.cbi-tab-descr {
-		margin: 0 0 .5em 0;
+		margin: 0 0 8px;
 	}
 
 	.cbi-value {
-		padding-bottom: .5em;
-		margin-bottom: .5em;
 		display: block;
-		align-items: baseline;
+		padding-block: var(--m3e-row-padding);
 	}
 
 	.cbi-value.hidden {
@@ -259,11 +257,13 @@ header h3 a {
 
 	.cbi-value .cbi-value:last-child {
 		border-bottom: none;
-		padding-bottom: inherit;
-		margin-bottom: inherit;
 	}
 
 	.cbi-value label.cbi-value-title {
+		display: block;
+		margin-block-end: var(--m3e-item-gap);
+		padding-block-start: 0;
+		text-align: start;
 		font-weight: bold;
 	}
 
@@ -271,7 +271,7 @@ header h3 a {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) max-content;
 		align-items: center;
-		column-gap: 10px;
+		gap: var(--m3e-item-gap) var(--m3e-field-gap);
 	}
 
 	.cbi-value:not(.hidden)[data-widget="CBI.FlagValue"]:has(> .cbi-value-field > .cbi-checkbox)>label.cbi-value-title {
@@ -295,9 +295,9 @@ header h3 a {
 	.cbi-value:not(.hidden)[data-widget="CBI.FlagValue"]:has(> .cbi-value-field > .cbi-checkbox)>.cbi-value-field>.cbi-value-description {
 		grid-column: 1 / -1;
 		width: auto;
-		max-width: calc(100% - 1.25em);
+		max-width: calc(100% - 20px);
 		box-sizing: border-box;
-		margin: .25em 0 0 1.25em;
+		margin: 0 0 0 20px;
 	}
 
 	.cbi-value-description:not(:empty)::before {
@@ -317,7 +317,7 @@ header h3 a {
 	}
 
 	.cbi-dynlist>.item {
-		min-height: 30px;
+		min-height: var(--m3e-control-height);
 		display: flex;
 		align-items: center;
 	}
@@ -337,14 +337,18 @@ header h3 a {
 	select,
 	input[type="text"],
 	input[type="password"],
-	.cbi-dropdown>ul>li input[type="text"],
+	.cbi-dropdown>ul>li input[type="text"] {
+		width: 100%;
+		height: var(--m3e-control-height);
+	}
+
 	.cbi-value-field .control-group {
 		width: 100%;
-		height: 30px;
+		flex-wrap: wrap;
 	}
 
 	input.cbi-input-password {
-		width: calc(100% - 25px);
+		width: calc(100% - 24px);
 	}
 
 	input[type="text"]+.cbi-button,
@@ -366,10 +370,13 @@ header h3 a {
 		padding: 0 8px;
 	}
 
-	.actions,
-	.cbi-page-actions {
+	.actions {
 		border-top: none;
 		padding: 8px;
+	}
+
+	.cbi-page-actions {
+		padding: 8px 0;
 	}
 
 	:is([data-page="admin-status-overview"], [data-page=""]) .td[width="33%"] {
@@ -391,7 +398,7 @@ header h3 a {
 	}
 
 	:is([data-page="admin-dashboard"], [data-page="admin"], [data-page=""]) .Dashboard .devices-list .devices-info .tr .td {
-		padding: 3px !important;
+		padding: 4px !important;
 	}
 
 	:is([data-page="admin-dashboard"], [data-page="admin"], [data-page=""]) .Dashboard .router-status-wifi.dashboard-bg.box-s1 .assoclist.devices-info.table>.tr:not(.dashboard-table-titles)>.td {
@@ -412,11 +419,11 @@ header h3 a {
 		display: inline-block;
 		text-align: center;
 		line-height: 12px;
-		margin: 1px 0;
+		margin: 0;
 	}
 
 	header>.fill {
-		padding: 1px;
+		padding: 0;
 	}
 
 	header>.fill>.container {
@@ -426,14 +433,14 @@ header h3 a {
 
 	header .nav {
 		flex: 3 3 80%;
-		margin: 2px 5px 2px 0;
+		margin: 4px 4px 4px 0;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: flex-start;
 	}
 
 	header .nav a {
-		padding: 2px 6px;
+		padding: 4px 8px;
 	}
 
 	header .pull-right {
@@ -443,7 +450,7 @@ header h3 a {
 		gap: 4px;
 		padding: 0;
 		justify-content: flex-end;
-		margin: .2em 5px .2em auto;
+		margin: 4px 4px 4px auto;
 	}
 
 	header [data-indicator] {
@@ -479,12 +486,12 @@ header h3 a {
 
 	.menu-dropdown,
 	.dropdown-menu {
-		top: 23px;
+		top: 24px;
 	}
 
 	.cbi-optionals,
 	.cbi-section-create {
-		padding: 0 0 14px 0;
+		padding: 0 0 16px 0;
 	}
 
 	#cbi-network-switch_vlan .th,
@@ -541,8 +548,7 @@ header h3 a {
 @media screen and (max-width: 375px) {
 	.cbi-page-actions {
 		display: flex;
-		justify-content: space-between;
-		margin: 0 -1px;
+		margin: 0;
 		padding: 0;
 	}
 
@@ -553,7 +559,7 @@ header h3 a {
 
 	.cbi-page-actions .cbi-button {
 		flex: 1;
-		margin: 1px !important;
+		margin: 0 !important;
 		line-height: 2em;
 	}
 
@@ -566,7 +572,7 @@ header h3 a {
 	.cbi-section-actions .cbi-button {
 		overflow: hidden;
 		text-overflow: ellipsis;
-		margin: 1px !important;
+		margin: 0 !important;
 	}
 
 	body[data-page="admin-network-wireless"] .td[data-name="_badge"] {
@@ -615,7 +621,7 @@ header h3 a {
 
 	.td .ifacebox .ifacebox-head>*,
 	.ifacebox .ifacebox-body>* {
-		margin: .125em;
+		margin: 0;
 	}
 }
 
@@ -637,7 +643,7 @@ header h3 a {
 		min-width: 0;
 		height: auto;
 		margin: 0 0 4px;
-		row-gap: 3px;
+		row-gap: 4px;
 		background: transparent;
 	}
 
@@ -672,7 +678,7 @@ header h3 a {
 
 	.cbi-filebrowser.open { box-sizing: border-box; width: 100%; min-width: 0; }
 	.cbi-filebrowser.open > * { white-space: normal; }
-	.cbi-filebrowser.open > ul > li { align-items: center; gap: 6px; }
+	.cbi-filebrowser.open > ul > li { align-items: center; gap: 8px; }
 	.cbi-filebrowser.open > ul > li > div:first-child { flex: 1; min-width: 0; }
 	.cbi-filebrowser.open > ul > li > div:last-child { flex: 0 0 auto; }
 	.cbi-filebrowser.open .name { overflow-wrap: anywhere; }
@@ -702,7 +708,7 @@ header h3 a {
 		min-width: 0;
 		flex: 1 1 100%;
 		flex-wrap: wrap;
-		gap: 4px;
+		gap: var(--m3e-action-gap);
 	}
 
 	body[data-page="admin-system-package-manager"] #view .controls .control-group > input {

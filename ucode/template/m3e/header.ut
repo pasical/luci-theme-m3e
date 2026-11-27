@@ -32,15 +32,15 @@
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<script src="{{ media }}/appearance.js?v=0.2.1"></script>
-		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.3.0">
+		<link rel="stylesheet" href="{{ media }}/cascade.css?v=0.2.1-r1">
 		<link rel="stylesheet" href="{{ media }}/palettes.css?v=0.4.0">
-		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.3.0" />
-		<link rel="stylesheet" href="{{ media }}/shell.css?v=0.2.1">
-		<link rel="stylesheet" href="{{ media }}/pages.css?v=0.4.2">
+		<link rel="stylesheet" media="screen and (max-width: 854px)" href="{{ media }}/mobile.css?v=0.2.1-r1" />
+		<link rel="stylesheet" href="{{ media }}/shell.css?v=0.2.1-r1">
+		<link rel="stylesheet" href="{{ media }}/pages.css?v=0.2.1-r1">
 		{% if (blank_page): %}
-		<link rel="stylesheet" href="{{ media }}/login.css?v=0.2.1">
+		<link rel="stylesheet" href="{{ media }}/login.css?v=0.2.1-r1">
 		{% else %}
-		<link rel="stylesheet" href="{{ media }}/appearance.css?v=0.2.1">
+		<link rel="stylesheet" href="{{ media }}/appearance.css?v=0.2.1-r1">
 		{% endif %}
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}

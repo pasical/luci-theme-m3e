@@ -60,7 +60,7 @@
 	min-height: 44px;
 	align-items: center;
 	gap: 8px;
-	padding: 8px 10px;
+	padding: 8px 12px;
 	border: 1px solid transparent;
 	background: var(--surface-container);
 	color: var(--on-surface);
@@ -75,8 +75,8 @@
 .m3e-family-choice {
 	flex-direction: column;
 	justify-content: start;
-	gap: 7px;
-	padding: 7px 2px;
+	gap: 8px;
+	padding: 8px 4px;
 	border-radius: 14px;
 	background: transparent;
 	text-align: center;
@@ -84,7 +84,7 @@
 
 .m3e-style-choice {
 	gap: 12px;
-	padding: 10px 12px;
+	padding: 8px 12px;
 	border-radius: 16px;
 }
 
@@ -117,7 +117,7 @@
 
 .m3e-family-choice:has(input:checked) .m3e-family-swatch {
 	outline: 2px solid var(--on-surface);
-	outline-offset: 2px;
+	outline-offset: 4px;
 }
 
 .m3e-style-swatch {
@@ -166,7 +166,7 @@
 
 .m3e-background-nav {
 	height: 10px;
-	margin: 8px 14%;
+	margin: 8px 12px;
 	border-radius: 999px;
 	background: var(--secondary-container);
 	box-shadow: 0 16px 0 var(--surface-container-high);
@@ -188,7 +188,7 @@
 
 .m3e-background-card {
 	width: min(52%, 136px);
-	padding: 10px;
+	padding: 12px;
 	border: 1px solid var(--outline-variant);
 	border-radius: 10px;
 	background: var(--surface-container-low);
@@ -203,7 +203,7 @@
 }
 
 .m3e-background-card::before { width: 48%; background: var(--primary); }
-.m3e-background-card::after { width: 80%; margin-top: 6px; background: var(--outline-variant); }
+.m3e-background-card::after { width: 80%; margin-top: 8px; background: var(--outline-variant); }
 
 .m3e-background-caption {
 	padding: 8px 12px;
@@ -216,7 +216,7 @@
 :root[data-m3e-wallpaper] .m3e-background-default { display: none; }
 
 .m3e-appearance-image-actions,
-.m3e-appearance-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.m3e-appearance-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m3e-action-gap); }
 .m3e-appearance-image-actions { margin-top: 8px; }
 
 .m3e-appearance-image-actions .m3e-image-picker,
@@ -228,7 +228,7 @@
 	align-items: center;
 	justify-content: center;
 	margin: 0;
-	padding: 6px 14px;
+	padding: 8px 12px;
 	border: 0;
 	border-radius: 999px;
 	background: transparent;
@@ -246,11 +246,11 @@
 .m3e-appearance :is(.m3e-appearance-choice, .m3e-image-picker):has(input:focus-visible),
 .m3e-appearance button:focus-visible {
 	outline: 2px solid var(--primary);
-	outline-offset: 2px;
+	outline-offset: 4px;
 }
 
 .m3e-appearance-help {
-	margin: 5px 0 0;
+	margin: 4px 0 0;
 	color: var(--on-surface-variant);
 	font: 400 12px/1.35 var(--font-sans);
 }

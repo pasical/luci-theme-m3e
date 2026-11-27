@@ -10,8 +10,28 @@
 	--m3e-app-background-attachment: scroll;
 	--m3e-maincontent-background: transparent;
 	--m3e-content-corner: var(--material3-card-radius);
-	--sidebar-width: 220px;
+	--m3e-page-gutter: 16px;
+	--m3e-page-block-space: 16px;
+	--m3e-card-space: 12px;
+	--sidebar-width: 224px;
 	--header-height: 64px;
+}
+
+/* Advance page and card spacing in 4px steps as the workspace widens. */
+@media (width > 854px) {
+	:root { --m3e-page-gutter: 24px; --m3e-page-block-space: 24px; }
+}
+
+@media (min-width: 1024px) {
+	:root { --m3e-page-gutter: 32px; --m3e-card-space: 16px; }
+}
+
+@media (min-width: 1280px) {
+	:root { --m3e-page-gutter: 40px; --m3e-page-block-space: 32px; }
+}
+
+@media (min-width: 1600px) {
+	:root { --m3e-page-gutter: 48px; }
 }
 
 :root[data-theme="blue"] { --m3e-shell-background: #eceef4; --m3e-content-background: #f8f9ff; }
@@ -166,12 +186,12 @@ body.m3e-app {
 	transition: none;
 }
 
-.m3e-app .sidebar .nav { gap: 1px; padding: 8px 10px 16px; }
+.m3e-app .sidebar .nav { gap: 4px; padding: 8px 12px 16px; }
 
 .m3e-app .sidebar .nav > li > a,
 .m3e-app .sidebar .nav .dropdown-menu > li > a {
 	min-height: 44px;
-	padding: 0 14px;
+	padding: 0 12px;
 	border-radius: 999px;
 	color: var(--on-surface-variant);
 	font: 400 13px/18px Roboto, Arial, sans-serif;
@@ -183,14 +203,14 @@ body.m3e-app {
 	flex: 0 0 20px;
 	width: 20px;
 	height: 20px;
-	margin-inline-end: 10px;
+	margin-inline-end: 12px;
 	background-color: currentColor;
 }
 
 .m3e-app .sidebar .nav .dropdown-menu {
 	display: block;
 	height: 0;
-	margin: 2px 0 8px;
+	margin: 4px 0 8px;
 	padding: 0;
 	border: 0;
 	background: transparent;
@@ -208,8 +228,8 @@ body.m3e-app {
 }
 
 .m3e-app .sidebar .nav .dropdown-menu > li > a {
-	min-height: 38px;
-	margin: 2px 6px 2px 22px;
+	min-height: 40px;
+	margin: 4px 4px 0 24px;
 }
 
 .m3e-app .sidebar .nav > li.active:not(.dropdown) > a,
@@ -231,7 +251,7 @@ body.m3e-app {
 
 .m3e-app :is(.brand, .menu-btn, .theme-toggle, .sidebar a):focus-visible {
 	outline: 2px solid var(--primary);
-	outline-offset: -2px;
+	outline-offset: -4px;
 }
 
 .m3e-app > #scroll-wrapper {
@@ -260,7 +280,7 @@ body.m3e-app {
 	max-width: none;
 	flex: 1 0 auto;
 	margin: 0;
-	padding: clamp(16px, 3vw, 32px) clamp(16px, 4vw, 48px);
+	padding: var(--m3e-page-block-space) var(--m3e-page-gutter);
 	background: var(--m3e-maincontent-background);
 	overflow: visible;
 }
@@ -270,14 +290,14 @@ body.m3e-app {
 	width: 100%;
 	min-width: 0;
 	margin: 0;
-	padding: 24px clamp(16px, 4vw, 48px);
+	padding: 24px var(--m3e-page-gutter);
 	border-top: 0;
 	background: transparent;
 	color: var(--on-surface-variant);
 	overflow-wrap: anywhere;
 }
 
-.footer-m3e .separator { margin-inline: .35em; }
+.footer-m3e .separator { margin-inline: 4px; }
 
 @media screen and (max-width: 854px) {
 	body.m3e-app {
@@ -336,8 +356,7 @@ body.m3e-app {
 	.m3e-app .sidebar .nav > li > a { min-height: 48px; }
 	.m3e-app .sidebar .nav .dropdown-menu > li > a { min-height: 40px; }
 	.m3e-app > #scroll-wrapper { border-radius: 0; }
-	.m3e-app #maincontent { padding: 16px; }
-	.m3e-app .footer-m3e { padding: 24px 16px 12px; }
+	.m3e-app .footer-m3e { padding-block-end: 12px; }
 }
 
 /* Keep dialog and color changes immediate. LuCI owns the dropdown and toast events. */
